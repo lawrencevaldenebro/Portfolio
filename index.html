@@ -1,312 +1,394 @@
-<!-- index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Lawrence Valdenebro</title>
-  <link rel="stylesheet" href="style.css" />
-</head>
+  <title>Lawrence Valdenebro | Marketing Automation & Funnel Specialist</title>
 
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+</head>
 <body>
-  <nav>
-    <div class="nav-inner">
-      <a href="#home" class="active">Home</a> 
+  <div class="page-bg">
+    <div class="bg-orb orb-one"></div>
+    <div class="bg-orb orb-two"></div>
+    <div class="bg-grid"></div>
+  </div>
+
+  <header class="site-header">
+    <div class="container nav-wrap glass">
+      <a href="#home" class="brand">
+        <span class="brand-dot"></span>
+        <span>Lawrence V.</span>
+      </a>
+
+      <nav class="desktop-nav">
+        <a href="#home">Home</a>
+        <a href="#about">About</a>
+        <a href="#services">Services</a>
+        <a href="#experience">Experience</a>
+        <a href="#projects">Projects</a>
+        <a href="#skills">Skills</a>
+        <a href="#contact">Contact</a>
+      </nav>
+
+      <a href="mailto:lawrencevaldenebro@gmail.com" class="nav-cta">Let’s Talk</a>
+
+      <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+
+    <div class="mobile-menu glass" id="mobileMenu">
+      <a href="#home">Home</a>
+      <a href="#about">About</a>
+      <a href="#services">Services</a>
       <a href="#experience">Experience</a>
-      <a href="#portfolio">Projects</a>
+      <a href="#projects">Projects</a>
       <a href="#skills">Skills</a>
-      <a href="#hobbies">Hobbies</a>
       <a href="#contact">Contact</a>
     </div>
-  </nav>
+  </header>
 
-  <section class="hero" id="home">
-    <div class="hero-content">
-      <div class="hero-text">
-        <h1>Lawrence Valdenebro</h1>
-        <p>
-          Digital Marketing Manager and Virtual Assistant with experience in
-          GoHighLevel CRM automation, funnels, email/SMS campaigns, and backend
-          system operations. Focused on accuracy, clean data, and scalable systems.
-        </p>
-
-        <div class="hero-actions">
-          <a class="connect-btn" href="mailto:lawrencevaldenebro@gmail.com">CONNECT</a>
-          <a class="cv-btn" href="Lawrence Valdenebro - Resume_signed.pdf" download>DOWNLOAD MY CV</a>
-        </div>
-      </div>
-
-      <div class="hero-image">
-        <div class="hero-photo-wrapper">
-          <img src="/images/formal.jpg" alt="Lawrence Valdenebro" class="hero-photo" />
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section id="experience" class="section">
-  <h2>Work Experience</h2>
-
-  <!-- VANGUARD / BUZZWAVE -->
-  <div class="job">
-    <h3>Marketing Automation & Funnel Specialist — Vanguard / Buzzwave Marketing</h3>
-    <div class="meta">2025 – Present · US Clients</div>
-
-    <ul>
-      <li>Built funnels, quizzes, and surveys inside GoHighLevel for lead generation.</li>
-      <li>Integrated Facebook Lead Ads with GoHighLevel CRM pipelines.</li>
-      <li>Implemented score-tier systems that trigger automations based on lead qualification.</li>
-      <li>Configured workflows, tagging systems, and conditional automation triggers.</li>
-    </ul>
-  </div>
-
-  <!-- SPHEREROCKET -->
-  <div class="job">
-    <h3>Digital Marketing Manager — SphereRocket VA</h3>
-    <div class="meta">Aug 2025 – Nov 2025 · US Client</div>
-
-    <ul>
-      <li>Built the website, forms, and automations for the NYC Pain MD client.</li>
-      <li>Managed GoHighLevel funnels, pipelines, workflows, and backend system configuration.</li>
-      <li>Maintained CRM data accuracy and automation reliability.</li>
-      <li>Troubleshot domain, funnel, and messaging system issues.</li>
-    </ul>
-
-    <div class="glass-slider">
-      <div class="slider fade" data-slider data-autoplay="true" data-interval="3500">
-
-        <button class="slider-btn prev" data-prev aria-label="Previous">‹</button>
-
-        <div class="slider-track" data-track>
-
-          <div class="slide">
-            <img src="./images/SRVA1.png" alt="SphereRocket Work 1">
+  <main>
+    <!-- HERO -->
+    <section class="hero-section" id="home">
+      <div class="container hero-shell glass">
+        <div class="hero-copy reveal">
+          <div class="eyebrow">
+            <span class="eyebrow-pill"></span>
+            Marketing Automation • Funnels • AI Systems
           </div>
 
-          <div class="slide">
-            <img src="./images/SRVA2.png" alt="SphereRocket Work 2">
+          <h1>
+  <span class="gradient-text">Funnels & Websites</span><br>
+  automations, <span class="gradient-text">AI integrations</span><br>
+  built to help businesses convert better.
+</h1>
+
+          <p class="hero-description">
+            I’m Lawrence D. Valdenebro, a Marketing Automation & Funnel Specialist
+            focused on GoHighLevel, AI-powered systems, lead generation workflows,
+            websites, CRM setup, and technical implementation for growing brands.
+          </p>
+
+          <div class="hero-actions">
+            <a href="mailto:lawrencevaldenebro@gmail.com" class="btn btn-primary">
+              <i class="fas fa-paper-plane"></i>
+              Hire Me
+            </a>
+
+            <a href="#projects" class="btn btn-secondary">
+              <i class="fas fa-briefcase"></i>
+              See My Work
+            </a>
           </div>
 
-          <div class="slide">
-            <img src="./images/SRVA3.png" alt="SphereRocket Work 3">
+          <div class="hero-mini-stats">
+            <div class="mini-stat glass-lite">
+              <strong>GoHighLevel</strong>
+              <span>funnels, pipelines, workflows</span>
+            </div>
+            <div class="mini-stat glass-lite">
+              <strong>AI Systems</strong>
+              <span>chatbots, scoring, qualification</span>
+            </div>
+            <div class="mini-stat glass-lite">
+              <strong>Tech Setup</strong>
+              <span>domains, DNS, hosting, ads</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-visual reveal">
+          <div class="hero-image-card">
+            <div class="hero-badge badge-top">
+              <i class="fas fa-bolt"></i>
+              Fast execution
+            </div>
+
+            <img src="./images/formal.png" alt="Lawrence Valdenebro" class="hero-photo" />
+
+            <div class="hero-badge badge-bottom">
+              <i class="fas fa-chart-line"></i>
+              Marketing-focused
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section class="section-block" id="about">
+      <div class="container">
+        <div class="section-heading reveal">
+          <span class="section-kicker">ABOUT</span>
+          <h2>I build complete lead generation systems, not just pages.</h2>
+          <p>
+            My work combines funnels, websites, automations, CRM structure,
+            AI tools, lead qualification, and technical setup so businesses can
+            move from scattered tools to one cleaner growth system.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SERVICES -->
+    <section class="section-block" id="services">
+      <div class="container">
+        <div class="section-heading reveal">
+          <span class="section-kicker">SERVICES</span>
+          <h2>What I can do for your business.</h2>
+        </div>
+
+        <div class="projects-grid">
+          <div class="project-card glass reveal">
+            <div class="project-icon"><i class="fas fa-filter"></i></div>
+            <h3>Funnels & Landing Pages</h3>
+            <p>Lead capture pages, booking funnels, quizzes, and survey-based flows built for conversions.</p>
           </div>
 
-          <div class="slide">
-            <img src="./images/SRVA4.png" alt="SphereRocket Work 4">
+          <div class="project-card glass reveal">
+            <div class="project-icon"><i class="fas fa-gears"></i></div>
+            <h3>CRM Automation</h3>
+            <p>GoHighLevel workflows, tagging systems, nurture sequences, and smart trigger logic.</p>
           </div>
 
-          <div class="slide">
-            <img src="./images/SRVA5.png" alt="SphereRocket Work 5">
+          <div class="project-card glass reveal">
+            <div class="project-icon"><i class="fas fa-robot"></i></div>
+            <h3>AI Chatbots & Systems</h3>
+            <p>AI-assisted follow-up, qualification flows, and automation systems for faster response handling.</p>
           </div>
 
+          <div class="project-card glass reveal">
+            <div class="project-icon"><i class="fas fa-globe"></i></div>
+            <h3>Tech & Domain Setup</h3>
+            <p>Cloudflare, SiteGround, DNS records, custom domains, hosting setup, and Microsoft Ads support.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- EXPERIENCE -->
+    <section class="section-block" id="experience">
+      <div class="container">
+        <div class="section-heading reveal">
+          <span class="section-kicker">EXPERIENCE</span>
+          <h2>Recent work across marketing systems, client setup, and automation.</h2>
         </div>
 
-        <button class="slider-btn next" data-next aria-label="Next">›</button>
+        <div class="experience-layout">
+          <article class="experience-card glass reveal">
+            <div class="experience-top">
+              <div>
+                <span class="job-tag">Current</span>
+                <h3>Marketing Automation & Funnel Specialist</h3>
+                <p class="job-company">Freelance / OnlineJobs.ph Clients</p>
+              </div>
+              <span class="job-date">Dec 2025 – Present</span>
+            </div>
 
+            <ul class="feature-list">
+              <li>Built AI-powered funnels and websites using GoHighLevel and Replit</li>
+              <li>Created surveys, quizzes, and lead-scoring workflows</li>
+              <li>Implemented AI agents and chatbot systems</li>
+              <li>Handled domains, DNS, hosting, and technical troubleshooting</li>
+            </ul>
+          </article>
+
+          <article class="experience-card glass reveal">
+            <div class="experience-top">
+              <div>
+                <span class="job-tag blue">Client Role</span>
+                <h3>Digital Marketing Manager</h3>
+                <p class="job-company">NYC Pain MD / Aesthetics21 LLC</p>
+              </div>
+              <span class="job-date">Aug 2025 – Nov 2025</span>
+            </div>
+
+            <ul class="feature-list">
+              <li>Managed funnels, automations, pipelines, and campaigns</li>
+              <li>Built and optimized email and SMS follow-up systems</li>
+              <li>Troubleshot CRM, domain, and integration issues</li>
+              <li>Supported backend digital marketing operations</li>
+            </ul>
+          </article>
+
+          <article class="experience-card glass reveal">
+            <div class="experience-top">
+              <div>
+                <span class="job-tag soft">Remote</span>
+                <h3>Virtual Assistant (Digital Marketing)</h3>
+                <p class="job-company">Outsourced Doers</p>
+              </div>
+              <span class="job-date">Sep 2024 – Jul 2025</span>
+            </div>
+
+            <ul class="feature-list">
+              <li>Handled email marketing and GoHighLevel tasks</li>
+              <li>Managed CRM contacts and social scheduling</li>
+              <li>Supported eCommerce posting and admin work</li>
+              <li>Created marketing assets in Canva</li>
+            </ul>
+          </article>
+
+          <article class="experience-card glass reveal">
+            <div class="experience-top">
+              <div>
+                <span class="job-tag muted">Internship</span>
+                <h3>E-Commerce Intern</h3>
+                <p class="job-company">Jacinto & Lirio</p>
+              </div>
+              <span class="job-date">Mar 2024 – Jul 2024</span>
+            </div>
+
+            <ul class="feature-list">
+              <li>Managed Shopify product listings and inventory</li>
+              <li>Assisted with email marketing and support tasks</li>
+              <li>Helped improve product visuals and content</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROJECTS -->
+    <section class="section-block" id="projects">
+      <div class="container">
+        <div class="section-heading reveal">
+          <span class="section-kicker">PROJECTS</span>
+          <h2>Portfolio categories and selected work.</h2>
+        </div>
+
+        <div class="projects-grid">
+          <a class="project-card glass reveal" href="https://drive.google.com/drive/folders/1RfINq17vSVeiT2ZllKmIyr_I7RYuai_J?usp=drive_link" target="_blank">
+            <div class="project-icon"><i class="fas fa-layer-group"></i></div>
+            <h3>GoHighLevel</h3>
+            <p>Funnels, workflows, pipelines, CRM systems, and automations.</p>
+            <span>Open Folder <i class="fas fa-arrow-right"></i></span>
+          </a>
+
+          <a class="project-card glass reveal" href="https://drive.google.com/drive/folders/1YvkvlpK3Zqj49iybnXSjqmGGKJBIwbnn?usp=drive_link" target="_blank">
+            <div class="project-icon"><i class="fas fa-pen-ruler"></i></div>
+            <h3>Graphic Design</h3>
+            <p>Branding visuals, marketing graphics, layouts, and ad creatives.</p>
+            <span>Open Folder <i class="fas fa-arrow-right"></i></span>
+          </a>
+
+          <a class="project-card glass reveal" href="https://drive.google.com/drive/folders/1O1Ozkiy5qn6K1Hz8acEF07GbO9kSh-Oy?usp=drive_link" target="_blank">
+            <div class="project-icon"><i class="fas fa-film"></i></div>
+            <h3>Video Editing</h3>
+            <p>Edited content, presentation-style assets, and support materials.</p>
+            <span>Open Folder <i class="fas fa-arrow-right"></i></span>
+          </a>
+
+          <a class="project-card glass reveal" href="https://drive.google.com/drive/folders/1Pbk6khu04pOdy9XIOLdCxnTnf5zYhMP6?usp=drive_link" target="_blank">
+            <div class="project-icon"><i class="fas fa-code"></i></div>
+            <h3>Web & Digital Marketing</h3>
+            <p>Landing pages, websites, client-facing digital builds, and technical setup.</p>
+            <span>Open Folder <i class="fas fa-arrow-right"></i></span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- SKILLS -->
+    <section class="section-block" id="skills">
+      <div class="container">
+        <div class="skills-wrap glass reveal">
+          <div class="skills-left">
+            <span class="section-kicker">SKILLS</span>
+            <h2>Tools I use to build reliable marketing systems.</h2>
+            <p>
+              My workflow covers automation, websites, AI tools, integrations,
+              domain setup, CRM management, and marketing execution.
+            </p>
+          </div>
+
+          <div class="skills-right">
+            <div class="skill-pill">GoHighLevel</div>
+            <div class="skill-pill">Funnels</div>
+            <div class="skill-pill">CRM Automations</div>
+            <div class="skill-pill">AI Chatbots</div>
+            <div class="skill-pill">Lead Gen Systems</div>
+            <div class="skill-pill">Email & SMS Automation</div>
+            <div class="skill-pill">Cloudflare</div>
+            <div class="skill-pill">SiteGround</div>
+            <div class="skill-pill">DNS Setup</div>
+            <div class="skill-pill">Microsoft Ads</div>
+            <div class="skill-pill">Canva</div>
+            <div class="skill-pill">Adobe Photoshop</div>
+            <div class="skill-pill">Zapier</div>
+            <div class="skill-pill">API Integrations</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section class="section-block" id="contact">
+      <div class="container">
+        <div class="contact-shell">
+          <div class="contact-intro glass reveal">
+            <span class="section-kicker">CONTACT</span>
+            <h2>Let’s build a cleaner system for your business.</h2>
+            <p>
+              Available for freelance work in GoHighLevel, funnels, CRM automation,
+              domains, technical setup, and digital marketing support.
+            </p>
+          </div>
+
+          <div class="contact-grid">
+            <a href="mailto:lawrencevaldenebro@gmail.com" class="contact-card glass reveal">
+              <div class="contact-icon"><i class="fas fa-envelope"></i></div>
+              <div>
+                <h3>Email</h3>
+                <p>lawrencevaldenebro@gmail.com</p>
+              </div>
+            </a>
+
+            <a href="tel:+639922925659" class="contact-card glass reveal">
+              <div class="contact-icon"><i class="fas fa-phone"></i></div>
+              <div>
+                <h3>Phone</h3>
+                <p>09922925659</p>
+              </div>
+            </a>
+
+            <div class="contact-card glass reveal">
+              <div class="contact-icon"><i class="fas fa-location-dot"></i></div>
+              <div>
+                <h3>Location</h3>
+                <p>Quezon, Philippines</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner glass">
+      <div>
+        <h3>Lawrence D. Valdenebro</h3>
+        <p>Marketing Automation & Funnel Specialist</p>
       </div>
 
-      <div class="slider-dots" data-dots></div>
+      <div class="footer-links">
+        <a href="#home">Home</a>
+        <a href="#services">Services</a>
+        <a href="#experience">Experience</a>
+        <a href="#projects">Projects</a>
+        <a href="#contact">Contact</a>
+      </div>
+
+      <p class="footer-copy">© 2026 Lawrence Valdenebro. All rights reserved.</p>
     </div>
-  </div>
-
-  <!-- OUTSOURCED DOERS -->
-  <div class="job">
-    <h3>Virtual Assistant — Outsourced Doers / Doneverse</h3>
-    <div class="meta">Sep 2024 – Jul 2025</div>
-
-    <ul>
-      <li>Transcribed and organized contact data for CRM systems.</li>
-      <li>Listed products and managed merchant store postings on platforms such as eBay.</li>
-      <li>Executed email marketing campaigns using ActiveCampaign and GoHighLevel.</li>
-      <li>Scheduled and managed social media content through GoHighLevel Social Planner.</li>
-      <li>Created marketing assets using Canva and Canva bulk creation tools.</li>
-    </ul>
-  </div>
-
-  <!-- JACINTO & LIRIO -->
-  <div class="job">
-    <h3>Website Administrator — Jacinto & Lirio</h3>
-    <div class="meta">Mar 2024 – Jul 2024</div>
-
-    <ul>
-      <li>Managed Shopify website products, inventory, and order listings.</li>
-      <li>Assisted in basic customer service and email responses.</li>
-      <li>Helped create simple email marketing campaigns.</li>
-      <li>Produced graphic design assets for product and marketing materials.</li>
-      <li>Assisted with basic website design and content updates.</li>
-    </ul>
-  </div>
-
-</section>
-
-  <section id="portfolio" class="section">
-  <h2>Portfolio</h2>
-  <p class="section-intro">
-    Selected work samples organized by specialty. Click any category to view the full folder.
-  </p>
-
-  <div class="portfolio-grid">
-    <a
-      class="portfolio-card"
-      href="https://drive.google.com/drive/folders/1RfINq17vSVeiT2ZllKmIyr_I7RYuai_J?usp=drive_link"
-      target="_blank"
-      rel="noopener noreferrer"
-    >
-      <div class="portfolio-icon">
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M4 6.5A2.5 2.5 0 0 1 6.5 4h3.1c.5 0 1 .24 1.3.65l.82 1.1c.19.25.48.4.8.4H17.5A2.5 2.5 0 0 1 20 8.65v8.85A2.5 2.5 0 0 1 17.5 20h-11A2.5 2.5 0 0 1 4 17.5v-11Z"/>
-        </svg>
-      </div>
-      <div class="portfolio-content">
-        <h3>GoHighLevel</h3>
-        <p>Funnels, CRM setups, workflows, automations, and backend system work.</p>
-        <span class="portfolio-link">Open folder</span>
-      </div>
-    </a>
-
-    <a
-      class="portfolio-card"
-      href="https://drive.google.com/drive/folders/1YvkvlpK3Zqj49iybnXSjqmGGKJBIwbnn?usp=drive_link"
-      target="_blank"
-      rel="noopener noreferrer"
-    >
-      <div class="portfolio-icon">
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M4 5.75A1.75 1.75 0 0 1 5.75 4h12.5A1.75 1.75 0 0 1 20 5.75v8.5A1.75 1.75 0 0 1 18.25 16H8.41l-3.9 3.25A.75.75 0 0 1 3.25 18.7V5.75ZM8 8.25h8M8 11.25h5"/>
-        </svg>
-      </div>
-      <div class="portfolio-content">
-        <h3>Graphics Design</h3>
-        <p>Brand visuals, layouts, social content, edits, and creative asset work.</p>
-        <span class="portfolio-link">Open folder</span>
-      </div>
-    </a>
-
-    <a
-      class="portfolio-card"
-      href="https://drive.google.com/drive/folders/1O1Ozkiy5qn6K1Hz8acEF07GbO9kSh-Oy?usp=drive_link"
-      target="_blank"
-      rel="noopener noreferrer"
-    >
-      <div class="portfolio-icon">
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M7 5.25A2.25 2.25 0 0 1 9.25 3h5.5A2.25 2.25 0 0 1 17 5.25v13.5A2.25 2.25 0 0 1 14.75 21h-5.5A2.25 2.25 0 0 1 7 18.75V5.25Zm3.2 2.55v8.4l6.2-4.2-6.2-4.2Z"/>
-        </svg>
-      </div>
-      <div class="portfolio-content">
-        <h3>Video Editing</h3>
-        <p>Short-form edits, pacing cuts, content polish, and attention-grabbing visuals.</p>
-        <span class="portfolio-link">Open folder</span>
-      </div>
-    </a>
-
-    <a
-      class="portfolio-card"
-      href="https://drive.google.com/drive/folders/1Pbk6khu04pOdy9XIOLdCxnTnf5zYhMP6?usp=drive_link"
-      target="_blank"
-      rel="noopener noreferrer"
-    >
-      <div class="portfolio-icon">
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M8.25 7A2.25 2.25 0 0 0 6 9.25v5.5A2.25 2.25 0 0 0 8.25 17h1.5a.75.75 0 0 0 0-1.5h-1.5a.75.75 0 0 1-.75-.75v-5.5c0-.414.336-.75.75-.75h1.5a.75.75 0 0 0 0-1.5h-1.5Zm6 0a.75.75 0 0 0 0 1.5h1.5c.414 0 .75.336.75.75v5.5a.75.75 0 0 1-.75.75h-1.5a.75.75 0 0 0 0 1.5h1.5A2.25 2.25 0 0 0 18 14.75v-5.5A2.25 2.25 0 0 0 15.75 7h-1.5ZM10.72 17.53a.75.75 0 0 1-.25-1.03l3-9a.75.75 0 1 1 1.42.48l-3 9a.75.75 0 0 1-1.17.55Z"/>
-        </svg>
-      </div>
-      <div class="portfolio-content">
-        <h3>Web Development & Digital Marketing</h3>
-        <p>Web builds, landing pages, digital campaigns, and client-facing online assets.</p>
-        <span class="portfolio-link">Open folder</span>
-      </div>
-    </a>
-  </div>
-</section>
-
-  <section id="skills" class="section">
-    <h2>Skills</h2>
-    <ul>
-      <li>GoHighLevel (Funnels, Workflows, CRM, Email & SMS)</li>
-      <li>CRM Automation & Data Management</li>
-      <li>Shopify Administration</li>
-      <li>Email Marketing & Campaign Setup</li>
-      <li>Google Workspace & Reporting</li>
-      <li>Canva & Basic Graphic Design</li>
-    </ul>
-  </section>
-
-  <section id="hobbies" class="section">
-  <h2>Hobbies & Interests</h2>
-
-  <!-- FULL WIDTH MUSIC -->
-  <div class="hobby-card hobby-full">
-    <span class="hobby-icon">🎧</span>
-    <h3>Favorite Music</h3>
-
-    <div class="spotify-slider" data-spotify-slider>
-      <div class="spotify-track">
-        <div class="spotify-slide">
-          <iframe style="border-radius:12px"
-            src="https://open.spotify.com/embed/track/3TN0iGCBNNPbuqD7DyAe7A"
-            width="100%" height="352" frameborder="0"
-            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-            loading="lazy"></iframe>
-        </div>
-
-        <div class="spotify-slide">
-          <iframe style="border-radius:12px"
-            src="https://open.spotify.com/embed/track/78Sw5GDo6AlGwTwanjXbGh"
-            width="100%" height="352" frameborder="0"
-            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-            loading="lazy"></iframe>
-        </div>
-
-        <div class="spotify-slide">
-          <iframe style="border-radius:12px"
-            src="https://open.spotify.com/embed/track/0Fd4oSOZ2nHtdHOkgyI4qz"
-            width="100%" height="352" frameborder="0"
-            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-            loading="lazy"></iframe>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- TWO CARDS UNDER -->
-  <div class="hobbies-two">
-
-    <div class="hobby-card">
-      <span class="hobby-icon">🎮</span>
-      <h3>Favorite Games</h3>
-
-      <div class="mini-slider" data-mini-slider>
-        <div class="mini-track">
-          <img src="./images/games-1.jpg" alt="Game 1">
-          <img src="./images/games-2.jpg" alt="Game 2">
-          <img src="./images/games-3.jpg" alt="Game 3">
-        </div>
-      </div>
-    </div>
-
-    <div class="hobby-card">
-      <span class="hobby-icon">📺</span>
-      <h3>TV Shows & Series</h3>
-
-      <div class="mini-slider" data-mini-slider>
-        <div class="mini-track">
-          <img src="./images/tv-1.jpg" alt="TV Show 1">
-          <img src="./images/tv-2.jpg" alt="TV Show 2">
-          <img src="./images/tv-3.jpg" alt="TV Show 3">
-        </div>
-      </div>
-    </div>
-
-  </div>
-</section>
-
-
-  <section id="contact" class="section">
-    <h2>Contact</h2>
-    <p>Email: lawrencevaldenebro@gmail.com</p>
-    <p>Phone: +639922925659</p>
-  </section>
+  </footer>
 
   <script src="script.js"></script>
 </body>

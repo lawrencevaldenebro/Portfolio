@@ -246,14 +246,18 @@ li { margin-bottom: 8px; }
   will-change: transform;
 }
 
-.slide { min-width: 100%; padding: 10px; }
+.slide {
+  min-width: 100%;
+  padding: 10px;
+}
 
 .slide img {
   width: 100%;
-  height: auto;
+  height: 420px;        /* force uniform height */
+  object-fit: cover;    /* crop instead of stretch */
   display: block;
   border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(255,255,255,0.18);
 }
 
 /* ARROWS */

@@ -140,20 +140,33 @@ setActiveLink();
   });
 })();
 
-const openBtn = document.getElementById("openForm");
-const modal = document.getElementById("formModal");
-const closeOverlay = document.getElementById("closeForm");
-const closeBtn = document.getElementById("closeFormBtn");
+document.addEventListener("DOMContentLoaded", () => {
+  const openBtn = document.getElementById("openForm");
+  const modal = document.getElementById("formModal");
+  const closeOverlay = document.getElementById("closeForm");
+  const closeBtn = document.getElementById("closeFormBtn");
 
-openBtn.addEventListener("click", (e) => {
-  e.preventDefault();
-  modal.classList.add("active");
-});
+  if (!openBtn || !modal || !closeOverlay || !closeBtn) {
+    console.log("Modal elements missing");
+    return;
+  }
 
-closeOverlay.addEventListener("click", () => {
-  modal.classList.remove("active");
-});
+  openBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    modal.classList.add("active");
+  });
 
-closeBtn.addEventListener("click", () => {
-  modal.classList.remove("active");
+  closeOverlay.addEventListener("click", () => {
+    modal.classList.remove("active");
+  });
+
+  closeBtn.addEventListener("click", () => {
+    modal.classList.remove("active");
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+      modal.classList.remove("active");
+    }
+  });
 });

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -8,9 +9,11 @@
   <link rel="stylesheet" href="style.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;700;800;900&display=swap"
+    rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
 </head>
+
 <body>
   <div class="page-bg">
     <div class="bg-orb orb-one"></div>
@@ -64,9 +67,10 @@
           </div>
 
           <h1>
-  <span class="gradient-text">Funnels & Websites,</span><br>CRM automations,<br><span class="gradient-text">AI integrations</span><br>
-  built to help businesses convert better.
-</h1>
+            <span class="gradient-text">Funnels & Websites,</span><br>CRM automations,<br><span class="gradient-text">AI
+              integrations</span><br>
+            built to help businesses convert better.
+          </h1>
 
           <p class="hero-description">
             I’m Lawrence D. Valdenebro, a Marketing Automation & Funnel Specialist
@@ -76,9 +80,9 @@
 
           <div class="hero-actions">
             <a href="#" class="btn btn-primary" id="openForm">
-  <i class="fas fa-paper-plane"></i>
-  Contact Me
-</a>
+              <i class="fas fa-paper-plane"></i>
+              Contact Me
+            </a>
 
             <a href="#projects" class="btn btn-secondary">
               <i class="fas fa-briefcase"></i>
@@ -263,28 +267,36 @@
         </div>
 
         <div class="projects-grid">
-          <a class="project-card glass reveal" href="https://drive.google.com/drive/folders/1RfINq17vSVeiT2ZllKmIyr_I7RYuai_J?usp=drive_link" target="_blank">
+          <a class="project-card glass reveal"
+            href="https://drive.google.com/drive/folders/1RfINq17vSVeiT2ZllKmIyr_I7RYuai_J?usp=drive_link"
+            target="_blank">
             <div class="project-icon"><i class="fas fa-layer-group"></i></div>
             <h3>GoHighLevel</h3>
             <p>Funnels, workflows, pipelines, CRM systems, and automations.</p>
             <span>Open Folder <i class="fas fa-arrow-right"></i></span>
           </a>
 
-          <a class="project-card glass reveal" href="https://drive.google.com/drive/folders/1YvkvlpK3Zqj49iybnXSjqmGGKJBIwbnn?usp=drive_link" target="_blank">
+          <a class="project-card glass reveal"
+            href="https://drive.google.com/drive/folders/1YvkvlpK3Zqj49iybnXSjqmGGKJBIwbnn?usp=drive_link"
+            target="_blank">
             <div class="project-icon"><i class="fas fa-pen-ruler"></i></div>
             <h3>Graphic Design</h3>
             <p>Branding visuals, marketing graphics, layouts, and ad creatives.</p>
             <span>Open Folder <i class="fas fa-arrow-right"></i></span>
           </a>
 
-          <a class="project-card glass reveal" href="https://drive.google.com/drive/folders/1O1Ozkiy5qn6K1Hz8acEF07GbO9kSh-Oy?usp=drive_link" target="_blank">
+          <a class="project-card glass reveal"
+            href="https://drive.google.com/drive/folders/1O1Ozkiy5qn6K1Hz8acEF07GbO9kSh-Oy?usp=drive_link"
+            target="_blank">
             <div class="project-icon"><i class="fas fa-film"></i></div>
             <h3>Video Editing</h3>
             <p>Edited content, presentation-style assets, and support materials.</p>
             <span>Open Folder <i class="fas fa-arrow-right"></i></span>
           </a>
 
-          <a class="project-card glass reveal" href="https://drive.google.com/drive/folders/1Pbk6khu04pOdy9XIOLdCxnTnf5zYhMP6?usp=drive_link" target="_blank">
+          <a class="project-card glass reveal"
+            href="https://drive.google.com/drive/folders/1Pbk6khu04pOdy9XIOLdCxnTnf5zYhMP6?usp=drive_link"
+            target="_blank">
             <div class="project-icon"><i class="fas fa-code"></i></div>
             <h3>Web & Digital Marketing</h3>
             <p>Landing pages, websites, client-facing digital builds, and technical setup.</p>
@@ -392,19 +404,32 @@
   <script src="script.js"></script>
 
   <div class="form-modal" id="formModal">
-  <div class="form-overlay" id="closeForm"></div>
+    <div class="form-overlay" id="closeForm"></div>
 
-  <div class="form-box">
-    <button class="form-close" id="closeFormBtn">&times;</button>
+    <div class="form-box">
+      <button class="form-close" id="closeFormBtn" type="button" aria-label="Close">&times;</button>
+      <h3>Send a Message</h3>
 
-    <h3>Send a Message</h3>
+      <form action="https://formspree.io/f/xpqynpdn" method="POST">
+        <label>
+          Name
+          <input type="text" name="name" required>
+        </label>
 
-    <form action="https://formspree.io/f/xpqynpdn" method="POST">
-      <input type="email" name="email" placeholder="Your email" required>
-      <textarea name="message" placeholder="Your message" required></textarea>
-      <button type="submit">Send Message</button>
-    </form>
+        <label>
+          Email
+          <input type="email" name="email" required>
+        </label>
+
+        <label>
+          Message
+          <textarea name="message" required></textarea>
+        </label>
+        <button type="submit">Send Message</button>
+      </form>
+    </div>
   </div>
-</div>
+
 </body>
+
 </html>

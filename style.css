@@ -1088,7 +1088,6 @@ img {
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
-
 .form-modal {
   position: fixed;
   inset: 0;
@@ -1107,13 +1106,14 @@ img {
   inset: 0;
   background: rgba(0, 0, 0, 0.62);
   backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
 .form-box {
   position: relative;
   z-index: 2;
-  width: min(92%, 540px);
-  padding: 32px 28px 28px;
+  width: min(92%, 560px);
+  padding: 38px 34px 30px;
   border-radius: 28px;
   background: linear-gradient(180deg, rgba(10, 27, 52, 0.96), rgba(7, 18, 34, 0.96));
   border: 1px solid rgba(130, 180, 255, 0.16);
@@ -1124,46 +1124,68 @@ img {
   position: absolute;
   top: 14px;
   right: 16px;
-  width: 38px;
-  height: 38px;
+  width: 42px;
+  height: 42px;
   border: none;
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.06);
   color: #ffffff;
-  font-size: 26px;
+  font-size: 28px;
   line-height: 1;
   cursor: pointer;
   display: grid;
   place-items: center;
   box-shadow: none;
   padding: 0;
+  transition: background 0.2s ease, transform 0.2s ease;
 }
 
 .form-close:hover {
   background: rgba(255, 255, 255, 0.12);
+  transform: scale(1.04);
 }
 
 .form-box h3 {
-  margin: 0 0 18px;
+  margin: 0 0 24px;
   font-size: 1.4rem;
   color: #eef4ff;
 }
 
 .form-box form {
-  display: grid;
-  gap: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.form-box label {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 0 8px;
+  color: #d9e8ff;
+  font-size: 0.98rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
 }
 
 .form-box input,
 .form-box textarea {
   width: 100%;
-  padding: 14px 16px;
-  border-radius: 16px;
+  padding: 16px 18px;
+  border-radius: 18px;
   border: 1px solid rgba(130, 180, 255, 0.16);
   background: rgba(255, 255, 255, 0.04);
   color: #ffffff;
   font-size: 1rem;
   outline: none;
+  transition: border-color 0.22s ease, box-shadow 0.22s ease, background 0.22s ease;
+}
+
+.form-box input:focus,
+.form-box textarea:focus {
+  border-color: rgba(110, 170, 255, 0.34);
+  background: rgba(255, 255, 255, 0.055);
+  box-shadow: 0 0 0 4px rgba(40, 110, 255, 0.08);
 }
 
 .form-box input::placeholder,
@@ -1172,22 +1194,118 @@ img {
 }
 
 .form-box textarea {
-  min-height: 140px;
+  min-height: 170px;
   resize: vertical;
 }
 
 .form-box form button[type="submit"] {
+  position: relative;
   border: none;
   border-radius: 999px;
-  padding: 14px 20px;
-  background: linear-gradient(135deg, #1b74e4, #2d88ff, #64a8ff);
+  padding: 16px 22px;
+  background: linear-gradient(135deg, #0800ff, #0084ff, #00c3ff);
   color: #fff;
   font-weight: 700;
   font-size: 1rem;
   cursor: pointer;
+  overflow: hidden;
+  isolation: isolate;
   box-shadow: 0 10px 24px rgba(30, 120, 255, 0.22);
+  transition: transform 0.25s ease, filter 0.25s ease, box-shadow 0.25s ease;
+}
+
+.form-box form button[type="submit"]::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -80%;
+  width: 50%;
+  height: 100%;
+  transform: skewX(-20deg);
+  background: linear-gradient(
+    120deg,
+    transparent,
+    rgba(255, 255, 255, 0.4),
+    transparent
+  );
+  opacity: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.form-box form button[type="submit"] > * {
+  position: relative;
+  z-index: 2;
 }
 
 .form-box form button[type="submit"]:hover {
+  transform: translateY(-2px);
   filter: brightness(1.05);
+  box-shadow: 0 14px 30px rgba(30, 120, 255, 0.28);
+}
+
+.form-box form button[type="submit"]:hover::before {
+  animation: formBtnShine 0.7s ease forwards;
+  opacity: 1;
+}
+
+@keyframes formBtnShine {
+  0% {
+    left: -80%;
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  100% {
+    left: 120%;
+    opacity: 0;
+  }
+}
+
+@media (max-width: 560px) {
+  .form-box {
+    width: min(94%, 560px);
+    padding: 28px 18px 22px;
+    border-radius: 22px;
+  }
+
+  .form-close {
+    top: 12px;
+    right: 12px;
+    width: 38px;
+    height: 38px;
+    font-size: 24px;
+  }
+
+  .form-box h3 {
+    font-size: 1.2rem;
+    margin-bottom: 18px;
+  }
+
+  .form-box form {
+    gap: 18px;
+  }
+
+  .form-box label {
+    gap: 8px;
+    padding: 0 4px;
+    font-size: 0.92rem;
+  }
+
+  .form-box input,
+  .form-box textarea {
+    padding: 14px 14px;
+    font-size: 0.96rem;
+    border-radius: 16px;
+  }
+
+  .form-box textarea {
+    min-height: 140px;
+  }
+
+  .form-box form button[type="submit"] {
+    padding: 14px 18px;
+    font-size: 0.96rem;
+  }
 }

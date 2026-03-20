@@ -1113,7 +1113,7 @@ img {
   background: rgba(10, 23, 42, 0.92);
   border: 1px solid rgba(130, 180, 255, 0.12);
   color: var(--muted);
-  font-size: 0.84rem;
+  font-size: 1rem;
   font-weight: 600;
   letter-spacing: 0.02em;
 }

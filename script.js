@@ -139,3 +139,21 @@ setActiveLink();
     start();
   });
 })();
+
+const openBtn = document.getElementById("openForm");
+const modal = document.getElementById("formModal");
+const closeOverlay = document.getElementById("closeForm");
+const closeBtn = document.getElementById("closeFormBtn");
+
+openBtn.addEventListener("click", (e) => {
+  e.preventDefault();
+  modal.classList.add("active");
+});
+
+closeOverlay.addEventListener("click", () => {
+  modal.classList.remove("active");
+});
+
+closeBtn.addEventListener("click", () => {
+  modal.classList.remove("active");
+});

@@ -75,10 +75,10 @@
           </p>
 
           <div class="hero-actions">
-            <a href="mailto:lawrencevaldenebro@gmail.com" class="btn btn-primary">
-              <i class="fas fa-paper-plane"></i>
-              Contact Me
-            </a>
+            <a href="#" class="btn btn-primary" id="openForm">
+  <i class="fas fa-paper-plane"></i>
+  Contact Me
+</a>
 
             <a href="#projects" class="btn btn-secondary">
               <i class="fas fa-briefcase"></i>
@@ -390,5 +390,21 @@
   </footer>
 
   <script src="script.js"></script>
+
+  <div class="form-modal" id="formModal">
+  <div class="form-overlay" id="closeForm"></div>
+
+  <div class="form-box">
+    <button class="form-close" id="closeFormBtn">&times;</button>
+
+    <h3>Send a Message</h3>
+
+    <form action="https://formspree.io/f/xpqynpdn" method="POST">
+      <input type="email" name="email" placeholder="Your email" required>
+      <textarea name="message" placeholder="Your message" required></textarea>
+      <button type="submit">Send Message</button>
+    </form>
+  </div>
+</div>
 </body>
 </html>

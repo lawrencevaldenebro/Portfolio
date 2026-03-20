@@ -408,23 +408,121 @@
 
     <div class="form-box">
       <button class="form-close" id="closeFormBtn" type="button" aria-label="Close">&times;</button>
-      <h3>Send a Message</h3>
 
-      <form action="https://formspree.io/f/xpqynpdn" method="POST">
+      <!-- ======================================================
+         DEMO SECTION
+         - Fake lead form for live automation simulation
+    ======================================================= -->
+      <h3>Watch a Lead Flow Through My System</h3>
+      <p class="demo-subtext">
+        Try a sample lead and see how my funnel, CRM automation, and AI follow-up process works.
+      </p>
+
+      <form id="demoLeadForm">
         <label>
           Name
-          <input type="text" name="name" required>
+          <input type="text" name="demo_name" placeholder="John Smith" required>
         </label>
 
         <label>
           Email
-          <input type="email" name="email" required>
+          <input type="email" name="demo_email" placeholder="john@email.com" required>
         </label>
 
         <label>
-          Message
-          <textarea name="message" required></textarea>
+          Phone
+          <input type="text" name="demo_phone" placeholder="+1 234 567 890" required>
         </label>
+
+        <label>
+          Service Needed
+          <input type="text" name="demo_service" placeholder="Website Funnel Build" required>
+        </label>
+
+        <button type="submit">Run Demo</button>
+      </form>
+
+      <!-- Live status text controlled by JavaScript -->
+      <div class="demo-status" id="demoStatus"></div>
+
+      <!-- Demo flow steps controlled by JavaScript -->
+      <div class="demo-flow" id="demoFlow">
+        <div class="demo-step">✅ Lead captured in CRM</div>
+        <div class="demo-step">📩 SMS sent instantly to lead</div>
+        <div class="demo-step">📧 Email nurture sequence triggered</div>
+        <div class="demo-step">🏷️ Tagged as High Intent Prospect</div>
+        <div class="demo-step">📊 Pipeline moved: New Lead → Contacted</div>
+        <div class="demo-step">🤖 AI/Automated follow-up system activated</div>
+      </div>
+
+      <!-- ======================================================
+         DIVIDER
+    ======================================================= -->
+      <div class="form-divider">
+        <span>or send a real inquiry</span>
+      </div>
+
+      <!-- ======================================================
+         REAL CONTACT FORM
+         - This one sends to Formspree
+    ======================================================= -->
+      <form action="https://formspree.io/f/xpqynpdn" method="POST" target="_blank">
+        <input type="hidden" name="_subject" value="New Portfolio Inquiry">
+        <input type="hidden" name="_captcha" value="false">
+        <input type="hidden" name="_template" value="table">
+
+        <label>
+          Name
+          <input type="text" name="name" placeholder="Your full name" required>
+        </label>
+
+        <label>
+          Email
+          <input type="email" name="email" placeholder="you@email.com" required>
+        </label>
+
+        <label>
+          Business / Brand
+          <input type="text" name="business" placeholder="Your company or brand name">
+        </label>
+        <label>
+          Country
+          <select name="country" id="countrySelect" required>
+            <option value="" selected disabled>Select your country</option>
+            <option value="United States" data-code="+1">United States (+1)</option>
+            <option value="Canada" data-code="+1">Canada (+1)</option>
+            <option value="United Kingdom" data-code="+44">United Kingdom (+44)</option>
+            <option value="Australia" data-code="+61">Australia (+61)</option>
+            <option value="New Zealand" data-code="+64">New Zealand (+64)</option>
+            <option value="Philippines" data-code="+63">Philippines (+63)</option>
+            <option value="Singapore" data-code="+65">Singapore (+65)</option>
+            <option value="United Arab Emirates" data-code="+971">UAE (+971)</option>
+            <option value="Saudi Arabia" data-code="+966">Saudi Arabia (+966)</option>
+            <option value="Germany" data-code="+49">Germany (+49)</option>
+            <option value="France" data-code="+33">France (+33)</option>
+            <option value="Netherlands" data-code="+31">Netherlands (+31)</option>
+            <option value="Spain" data-code="+34">Spain (+34)</option>
+            <option value="Italy" data-code="+39">Italy (+39)</option>
+            <option value="India" data-code="+91">India (+91)</option>
+            <option value="South Africa" data-code="+27">South Africa (+27)</option>
+            <option value="Other" data-code="">Other</option>
+          </select>
+        </label>
+
+        <label>
+          Phone / WhatsApp
+          <input type="tel" id="phoneInput" name="phone" placeholder="Enter your phone / WhatsApp number"
+            inputmode="tel" autocomplete="tel" required>
+        </label>
+
+        <input type="hidden" name="dial_code" id="dialCodeInput">
+        <label>
+          What do you need?
+          <textarea name="message"
+            placeholder="Tell me what you're trying to build (funnels, automation, ads, website, etc.)"
+            required></textarea>
+        </label>
+
         <button type="submit">Send Message</button>
       </form>
     </div>

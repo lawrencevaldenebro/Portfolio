@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Lawrence Valdenebro | Marketing Automation & Funnel Specialist</title>
+  <title>Lawrence | Marketing Automation & Funnel Specialist</title>
 
   <link rel="stylesheet" href="style.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -75,7 +75,7 @@
           </h1>
 
           <p class="hero-description">
-            I’m Lawrence D. Valdenebro, a Marketing Automation & Funnel Specialist
+            I’m Lawrence, a Marketing Automation & Funnel Specialist
             focused on GoHighLevel, AI-powered systems, lead generation workflows,
             websites, CRM setup, and technical implementation for growing brands.
           </p>
@@ -115,7 +115,7 @@
               Fast execution
             </div>
 
-            <img src="./images/formal.png" alt="Lawrence Valdenebro" class="hero-photo" />
+            <img src="./images/formal.png" alt="Lawrence portfolio profile" class="hero-photo" />
 
             <div class="hero-badge badge-bottom">
               <i class="fas fa-chart-line"></i>
@@ -355,30 +355,27 @@
           </div>
 
           <div class="contact-grid">
-            <a href="https://mail.google.com/mail/?view=cm&fs=1&to=lawrencevaldenebro@gmail.com&su=Project%20Inquiry&body=Hi%20Lawrence,%20I%20saw%20your%20portfolio..."
-              target="_blank"
-              onclick="setTimeout(() => { window.location.href = 'mailto:lawrencevaldenebro@gmail.com'; }, 500)"
-              class="contact-card glass reveal">
-              <div class="contact-icon"><i class="fas fa-envelope"></i></div>
+            <a href="#" id="openFormContact" class="contact-card glass reveal">
+              <div class="contact-icon"><i class="fas fa-paper-plane"></i></div>
               <div>
-                <h3>Email</h3>
-                <p>lawrencevaldenebro@gmail.com</p>
-              </div>
-            </a>
-
-            <a href="tel:+639922925659" class="contact-card glass reveal">
-              <div class="contact-icon"><i class="fas fa-phone"></i></div>
-              <div>
-                <h3>Phone</h3>
-                <p>+639922925659</p>
+                <h3>Project Inquiry</h3>
+                <p>Use the contact form to get in touch.</p>
               </div>
             </a>
 
             <div class="contact-card glass reveal">
-              <div class="contact-icon"><i class="fas fa-location-dot"></i></div>
+              <div class="contact-icon"><i class="fas fa-briefcase"></i></div>
               <div>
-                <h3>Location</h3>
-                <p>Quezon, Philippines</p>
+                <h3>Work Samples</h3>
+                <p>Browse selected project folders and completed tasks above.</p>
+              </div>
+            </div>
+
+            <div class="contact-card glass reveal">
+              <div class="contact-icon"><i class="fas fa-globe"></i></div>
+              <div>
+                <h3>Remote Availability</h3>
+                <p>Open to freelance and contract-based opportunities.</p>
               </div>
             </div>
           </div>
@@ -390,7 +387,7 @@
   <footer class="site-footer">
     <div class="container footer-inner glass">
       <div>
-        <h3>Lawrence D. Valdenebro</h3>
+        <h3>Lawrence</h3>
         <p>Marketing Automation & Funnel Specialist</p>
       </div>
 
@@ -402,7 +399,7 @@
         <a href="#contact">Contact</a>
       </div>
 
-      <p class="footer-copy">© 2026 Lawrence Valdenebro. All rights reserved.</p>
+      <p class="footer-copy">© 2026 Lawrence. All rights reserved.</p>
     </div>
   </footer>
 
@@ -414,10 +411,6 @@
     <div class="form-box">
       <button class="form-close" id="closeFormBtn" type="button" aria-label="Close">&times;</button>
 
-      <!-- ======================================================
-         REAL CONTACT FORM
-         - This one sends to Formspree
-    ======================================================= -->
       <h3>Let's Connect</h3>
       <p class="demo-subtext">
         Have a project in mind or want to improve your lead flow? Send me a message and let’s talk about how I can help
@@ -469,6 +462,7 @@
         </label>
 
         <input type="hidden" name="dial_code" id="dialCodeInput">
+
         <label>
           What do you need?
           <textarea name="message"
@@ -478,20 +472,16 @@
 
         <button type="submit">Send Message</button>
       </form>
-      <!-- ======================================================
-         DIVIDER
-    ======================================================= -->
+
       <div class="form-divider">
         <span>or try a live automation DEMO!</span>
       </div>
+
       <h3>Watch a Lead Flow Through My System</h3>
       <p class="demo-subtext">
         Try a sample lead and see how my funnel, CRM automation, and AI follow-up process works.
       </p>
-      <!-- ======================================================
-         DEMO SECTION
-         - Fake lead form for live automation simulation
-    ======================================================= -->
+
       <form id="demoLeadForm">
         <label>
           Name
@@ -516,10 +506,8 @@
         <button type="submit">Run Demo</button>
       </form>
 
-      <!-- Live status text controlled by JavaScript -->
       <div class="demo-status" id="demoStatus"></div>
 
-      <!-- Demo flow steps controlled by JavaScript -->
       <div class="demo-flow" id="demoFlow">
         <div class="demo-step">✅ Lead captured in CRM</div>
         <div class="demo-step">📩 SMS sent instantly to lead</div>
@@ -528,10 +516,8 @@
         <div class="demo-step">📊 Pipeline moved: New Lead → Contacted</div>
         <div class="demo-step">🤖 AI/Automated follow-up system activated</div>
       </div>
-
     </div>
   </div>
-
 </body>
 
 </html>

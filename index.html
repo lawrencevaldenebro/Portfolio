@@ -15,9 +15,12 @@
 </head>
 
 <body>
+  <div class="scroll-progress" id="scrollProgress"></div>
+
   <div class="page-bg">
     <div class="bg-orb orb-one"></div>
     <div class="bg-orb orb-two"></div>
+    <div class="bg-orb orb-three"></div>
     <div class="bg-grid"></div>
   </div>
 
@@ -29,12 +32,12 @@
       </a>
 
       <nav class="desktop-nav">
-        <a href="#home">Home</a>
         <a href="#about">About</a>
         <a href="#services">Services</a>
         <a href="#experience">Experience</a>
         <a href="#projects">Projects</a>
         <a href="#skills">Skills</a>
+        <a href="#game">Play</a>
         <a href="#contact">Contact</a>
       </nav>
 
@@ -54,6 +57,7 @@
       <a href="#experience">Experience</a>
       <a href="#projects">Projects</a>
       <a href="#skills">Skills</a>
+      <a href="#game">Play</a>
       <a href="#contact">Contact</a>
     </div>
   </header>
@@ -121,6 +125,13 @@
               <i class="fas fa-chart-line"></i>
               Marketing-focused
             </div>
+
+            <div class="hero-rocket" aria-hidden="true">
+              <i class="fas fa-rocket rocket-icon"></i>
+              <span class="smoke-puff puff-1"></span>
+              <span class="smoke-puff puff-2"></span>
+              <span class="smoke-puff puff-3"></span>
+            </div>
           </div>
         </div>
       </div>
@@ -129,14 +140,27 @@
     <!-- ABOUT -->
     <section class="section-block" id="about">
       <div class="container">
-        <div class="section-heading reveal">
-          <span class="section-kicker">ABOUT</span>
-          <h2>I build complete lead generation systems, not just pages.</h2>
-          <p>
-            My work combines funnels, websites, automations, CRM structure,
-            AI tools, lead qualification, and technical setup so businesses can
-            move from scattered tools to one cleaner growth system.
-          </p>
+        <div class="about-layout">
+          <div class="section-heading reveal">
+            <span class="section-kicker">ABOUT</span>
+            <h2>I build complete lead generation systems, not just pages.</h2>
+            <p>
+              My work combines funnels, websites, automations, CRM structure,
+              AI tools, lead qualification, and technical setup so businesses can
+              move from scattered tools to one cleaner growth system.
+            </p>
+
+            <div class="about-highlights">
+              <div class="about-chip"><i class="fas fa-bolt"></i> Fast turnaround</div>
+              <div class="about-chip"><i class="fas fa-shield-halved"></i> Reliable builds</div>
+              <div class="about-chip"><i class="fas fa-arrows-rotate"></i> End-to-end setup</div>
+            </div>
+          </div>
+
+          <figure class="about-visual glass reveal">
+            <img src="./images/automation-flow.svg" alt="Diagram showing leads flowing from landing pages and ads into a CRM, then through conditional if/then workflows to conversion" />
+            <figcaption>How a lead moves through a system I build</figcaption>
+          </figure>
         </div>
       </div>
     </section>
@@ -188,10 +212,13 @@
         <div class="experience-layout">
           <article class="experience-card glass reveal">
             <div class="experience-top">
-              <div>
-                <span class="job-tag">Current</span>
-                <h3>Marketing Automation & Funnel Specialist</h3>
-                <p class="job-company">Freelance / OnlineJobs.ph Clients</p>
+              <div class="experience-heading">
+                <div class="experience-icon"><i class="fas fa-laptop-code"></i></div>
+                <div>
+                  <span class="job-tag">Current</span>
+                  <h3>Marketing Automation & Funnel Specialist</h3>
+                  <p class="job-company">Freelance / OnlineJobs.ph Clients</p>
+                </div>
               </div>
               <span class="job-date">Dec 2025 – Present</span>
             </div>
@@ -206,10 +233,13 @@
 
           <article class="experience-card glass reveal">
             <div class="experience-top">
-              <div>
-                <span class="job-tag blue">Client Role</span>
-                <h3>Digital Marketing Manager</h3>
-                <p class="job-company">NYC Pain MD / Aesthetics21 LLC</p>
+              <div class="experience-heading">
+                <div class="experience-icon"><i class="fas fa-chart-line"></i></div>
+                <div>
+                  <span class="job-tag blue">Client Role</span>
+                  <h3>Digital Marketing Manager</h3>
+                  <p class="job-company">NYC Pain MD / Aesthetics21 LLC</p>
+                </div>
               </div>
               <span class="job-date">Aug 2025 – Nov 2025</span>
             </div>
@@ -224,10 +254,13 @@
 
           <article class="experience-card glass reveal">
             <div class="experience-top">
-              <div>
-                <span class="job-tag soft">Remote</span>
-                <h3>Virtual Assistant (Digital Marketing)</h3>
-                <p class="job-company">Outsourced Doers</p>
+              <div class="experience-heading">
+                <div class="experience-icon"><i class="fas fa-headset"></i></div>
+                <div>
+                  <span class="job-tag soft">Remote</span>
+                  <h3>Virtual Assistant (Digital Marketing)</h3>
+                  <p class="job-company">Outsourced Doers</p>
+                </div>
               </div>
               <span class="job-date">Sep 2024 – Jul 2025</span>
             </div>
@@ -242,10 +275,13 @@
 
           <article class="experience-card glass reveal">
             <div class="experience-top">
-              <div>
-                <span class="job-tag muted">Internship</span>
-                <h3>E-Commerce Intern</h3>
-                <p class="job-company">Jacinto & Lirio</p>
+              <div class="experience-heading">
+                <div class="experience-icon"><i class="fas fa-graduation-cap"></i></div>
+                <div>
+                  <span class="job-tag muted">Internship</span>
+                  <h3>E-Commerce Intern</h3>
+                  <p class="job-company">Jacinto & Lirio</p>
+                </div>
               </div>
               <span class="job-date">Mar 2024 – Jul 2024</span>
             </div>
@@ -322,21 +358,203 @@
           </div>
 
           <div class="skills-right">
-            <div class="skill-pill">GoHighLevel</div>
-            <div class="skill-pill">Funnel Creation/Web Development</div>
-            <div class="skill-pill">CRM Automations</div>
-            <div class="skill-pill">AI Chatbots</div>
-            <div class="skill-pill">Lead Gen Systems</div>
-            <div class="skill-pill">Email & SMS Automation</div>
-            <div class="skill-pill">Cloudflare</div>
-            <div class="skill-pill">SiteGround</div>
-            <div class="skill-pill">DNS Setup</div>
-            <div class="skill-pill">Microsoft Ads</div>
-            <div class="skill-pill">Canva</div>
-            <div class="skill-pill">Adobe Photoshop</div>
-            <div class="skill-pill">Zapier</div>
-            <div class="skill-pill">API Integrations</div>
+            <div class="skills-track" id="skillsTrack">
+              <div class="skill-pill"><i class="fas fa-diagram-project"></i>GoHighLevel</div>
+              <div class="skill-pill"><i class="fas fa-filter"></i>Funnel Creation/Web Development</div>
+              <div class="skill-pill"><i class="fas fa-gears"></i>CRM Automations</div>
+              <div class="skill-pill"><i class="fas fa-robot"></i>AI Chatbots</div>
+              <div class="skill-pill"><i class="fas fa-magnet"></i>Lead Gen Systems</div>
+              <div class="skill-pill"><i class="fas fa-comment-sms"></i>Email & SMS Automation</div>
+              <div class="skill-pill"><i class="fas fa-cloud"></i>Cloudflare</div>
+              <div class="skill-pill"><i class="fas fa-server"></i>SiteGround</div>
+              <div class="skill-pill"><i class="fas fa-network-wired"></i>DNS Setup</div>
+              <div class="skill-pill"><i class="fa-brands fa-microsoft"></i>Microsoft Ads</div>
+              <div class="skill-pill"><i class="fas fa-palette"></i>Canva</div>
+              <div class="skill-pill"><i class="fa-brands fa-adobe"></i>Adobe Photoshop</div>
+              <div class="skill-pill"><i class="fas fa-bolt"></i>Zapier</div>
+              <div class="skill-pill"><i class="fas fa-plug"></i>API Integrations</div>
+            </div>
           </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- GET TO KNOW ME -->
+    <section class="section-block" id="gettoknow">
+      <div class="container">
+        <div class="section-heading reveal">
+          <span class="section-kicker">GET TO KNOW ME</span>
+          <h2>Beyond the funnels and workflows.</h2>
+          <p>
+            Systems are my work — these are what I actually spend my downtime on.
+            Flip a card to see my picks.
+          </p>
+        </div>
+
+        <div class="flip-grid">
+          <article class="flip-card reveal" tabindex="0" role="button" aria-label="Reveal my top 3 movies">
+            <div class="flip-inner">
+              <div class="flip-face flip-front">
+                <div class="flip-icon"><i class="fas fa-film"></i></div>
+                <h3>Top Movies</h3>
+                <p class="flip-tagline">Three I'll rewatch any night of the week.</p>
+                <span class="flip-hint"><i class="fas fa-hand-pointer"></i> Flip me</span>
+              </div>
+
+              <div class="flip-face flip-back">
+                <h4><i class="fas fa-film"></i> Top Movies</h4>
+
+                <ol class="pick-grid">
+                  <li>
+                    <a href="https://www.imdb.com/title/tt0816692/" target="_blank" rel="noopener" class="pick-card">
+                      <span class="pick-art">
+                        <img src="./images/posters/movie-1.svg" alt="Interstellar">
+                        <span class="pick-rank">1</span>
+                      </span>
+                      <strong>Interstellar</strong>
+                      <em>Sci-fi epic · 2014</em>
+                      <span class="pick-go">IMDb <i class="fas fa-arrow-up-right-from-square"></i></span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="https://www.imdb.com/title/tt0468569/" target="_blank" rel="noopener" class="pick-card">
+                      <span class="pick-art">
+                        <img src="./images/posters/movie-2.svg" alt="The Dark Knight">
+                        <span class="pick-rank">2</span>
+                      </span>
+                      <strong>The Dark Knight</strong>
+                      <em>Crime thriller · 2008</em>
+                      <span class="pick-go">IMDb <i class="fas fa-arrow-up-right-from-square"></i></span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="https://www.imdb.com/title/tt0119217/" target="_blank" rel="noopener" class="pick-card">
+                      <span class="pick-art">
+                        <img src="./images/posters/movie-3.svg" alt="Good Will Hunting">
+                        <span class="pick-rank">3</span>
+                      </span>
+                      <strong>Good Will Hunting</strong>
+                      <em>Drama · 1997</em>
+                      <span class="pick-go">IMDb <i class="fas fa-arrow-up-right-from-square"></i></span>
+                    </a>
+                  </li>
+                </ol>
+              </div>
+            </div>
+          </article>
+
+          <article class="flip-card reveal" tabindex="0" role="button" aria-label="Reveal my top 3 games">
+            <div class="flip-inner">
+              <div class="flip-face flip-front">
+                <div class="flip-icon"><i class="fas fa-gamepad"></i></div>
+                <h3>Top Games</h3>
+                <p class="flip-tagline">Sharp combat, big worlds, better stories.</p>
+                <span class="flip-hint"><i class="fas fa-hand-pointer"></i> Flip me</span>
+              </div>
+
+              <div class="flip-face flip-back">
+                <h4><i class="fas fa-gamepad"></i> Top Games</h4>
+
+                <ol class="pick-grid">
+                  <li>
+                    <a href="https://store.steampowered.com/app/2215430/Ghost_of_Tsushima_DIRECTORS_CUT/"
+                      target="_blank" rel="noopener" class="pick-card steam">
+                      <span class="pick-art">
+                        <img src="./images/posters/game-1.svg" alt="Ghost of Tsushima">
+                        <span class="pick-rank">1</span>
+                      </span>
+                      <strong>Ghost of Tsushima</strong>
+                      <em>Open-world samurai · 2020</em>
+                      <span class="pick-go">Steam <i class="fab fa-steam"></i></span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="https://store.steampowered.com/app/814380/Sekiro_Shadows_Die_Twice__GOTY_Edition/"
+                      target="_blank" rel="noopener" class="pick-card steam">
+                      <span class="pick-art">
+                        <img src="./images/posters/game-2.svg" alt="Sekiro: Shadows Die Twice">
+                        <span class="pick-rank">2</span>
+                      </span>
+                      <strong>Sekiro</strong>
+                      <em>Shadows Die Twice · 2019</em>
+                      <span class="pick-go">Steam <i class="fab fa-steam"></i></span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="https://store.steampowered.com/app/242050/Assassins_Creed_IV_Black_Flag/"
+                      target="_blank" rel="noopener" class="pick-card steam">
+                      <span class="pick-art">
+                        <img src="./images/posters/game-3.svg" alt="Assassin's Creed IV Black Flag">
+                        <span class="pick-rank">3</span>
+                      </span>
+                      <strong>Assassin's Creed</strong>
+                      <em>Franchise pick: Black Flag</em>
+                      <span class="pick-go">Steam <i class="fab fa-steam"></i></span>
+                    </a>
+                  </li>
+                </ol>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- MINIGAME -->
+    <section class="section-block" id="game">
+      <div class="container">
+        <div class="section-heading reveal">
+          <span class="section-kicker">PLAY</span>
+          <h2>Lead Rush — catch the leads, dodge the spam.</h2>
+          <p>
+            A tiny game built the same way I build funnels: capture the good leads,
+            filter out the junk. Move with your mouse or the arrow keys.
+          </p>
+        </div>
+
+        <div class="game-shell glass reveal">
+          <div class="game-hud">
+            <div class="game-stat">
+              <span class="game-stat-label">Score</span>
+              <strong id="gameScore">0</strong>
+            </div>
+            <div class="game-stat">
+              <span class="game-stat-label">Best</span>
+              <strong id="gameBest">0</strong>
+            </div>
+            <div class="game-stat">
+              <span class="game-stat-label">Streak</span>
+              <strong id="gameStreak">0</strong>
+            </div>
+            <div class="game-stat">
+              <span class="game-stat-label">Lives</span>
+              <strong id="gameLives">♥♥♥</strong>
+            </div>
+          </div>
+
+          <div class="game-stage">
+            <canvas id="gameCanvas" width="900" height="420"
+              aria-label="Lead Rush minigame. Catch falling leads with your funnel."></canvas>
+
+            <div class="game-overlay active" id="gameOverlay">
+              <div class="game-overlay-inner">
+                <div class="game-overlay-icon"><i class="fas fa-filter"></i></div>
+                <h3 id="gameOverlayTitle">Lead Rush</h3>
+                <p id="gameOverlayText">
+                  Catch the blue leads in your funnel. Avoid the red spam.
+                  Three misses and the campaign's over.
+                </p>
+                <button class="btn btn-primary game-btn" id="gameStart" type="button">
+                  <i class="fas fa-play"></i> Start Game
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <p class="game-hint">
+            <i class="fas fa-keyboard"></i>
+            Move: mouse, touch, or ← → arrow keys · Pause: <kbd>P</kbd>
+          </p>
         </div>
       </div>
     </section>
@@ -346,12 +564,16 @@
       <div class="container">
         <div class="contact-shell">
           <div class="contact-intro glass reveal">
-            <span class="section-kicker">CONTACT</span>
-            <h2>Let’s build a cleaner system for your business.</h2>
-            <p>
-              Available for freelance work in GoHighLevel, funnels, CRM automation,
-              domains, technical setup, and digital marketing support.
-            </p>
+            <div class="contact-intro-copy">
+              <span class="section-kicker">CONTACT</span>
+              <h2>Let’s build a cleaner system for your business.</h2>
+              <p>
+                Available for freelance work in GoHighLevel, funnels, CRM automation,
+                domains, technical setup, and digital marketing support.
+              </p>
+            </div>
+            <img src="./images/funnel-viz.svg" class="contact-funnel"
+              alt="Conversion funnel showing traffic narrowing through leads and qualified prospects to closed customers" />
           </div>
 
           <div class="contact-grid">
@@ -415,6 +637,12 @@
       <p class="demo-subtext">
         Have a project in mind or want to improve your lead flow? Send me a message and let’s talk about how I can help
         you build better systems, funnels, and automation.
+      </p>
+      <p class="direct-email">
+        Prefer email? Reach me directly at
+        <a href="mailto:lawrencevaldenebro@gmail.com?subject=Portfolio%20Inquiry" class="direct-email-link">
+          <i class="fas fa-envelope"></i> lawrencevaldenebro@gmail.com
+        </a>
       </p>
       <form action="https://formspree.io/f/xpqynpdn" method="POST" target="_blank">
         <input type="hidden" name="_subject" value="New Portfolio Inquiry">

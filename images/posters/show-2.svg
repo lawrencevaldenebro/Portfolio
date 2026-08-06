@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 150" width="100" height="150" role="img" aria-label="Sherlock tile">
+  <defs>
+    <linearGradient id="shbg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#16323a"/>
+      <stop offset="100%" stop-color="#080f18"/>
+    </linearGradient>
+    <radialGradient id="shglow" cx="50%" cy="42%">
+      <stop offset="0%" stop-color="#7fe3d2" stop-opacity=".38"/>
+      <stop offset="100%" stop-color="#7fe3d2" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="100" height="150" rx="8" fill="url(#shbg)"/>
+  <rect width="100" height="150" rx="8" fill="url(#shglow)"/>
+
+  <!-- magnifier -->
+  <circle cx="46" cy="60" r="24" fill="none" stroke="#8fe6d8" stroke-width="4"/>
+  <circle cx="46" cy="60" r="16" fill="#8fe6d8" opacity=".07"/>
+  <path d="M64 78 L82 98" stroke="#8fe6d8" stroke-width="6" stroke-linecap="round"/>
+
+  <!-- silhouette hat brim inside lens -->
+  <path d="M34 62 h24 M38 62 a8 8 0 0 1 16 0" fill="none" stroke="#8fe6d8" stroke-width="2.6"
+        stroke-linecap="round"/>
+
+  <text x="50" y="128" text-anchor="middle" font-family="Inter, sans-serif" font-size="11"
+        font-weight="800" fill="#a9ded4" letter-spacing="2">SHERLOCK</text>
+  <rect x="30" y="135" width="40" height="2.5" rx="1.2" fill="#8fe6d8" opacity=".6"/>
+</svg>

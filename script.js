@@ -10,6 +10,13 @@
    5. CONTACT MODAL
    6. LIVE DEMO SIMULATION
    7. COUNTRY + PHONE FIELD LOGIC
+   8. SCROLL PROGRESS + HEADER SHRINK
+   9. 3D TILT ON CARDS
+   10. MAGNETIC BUTTONS
+   11. PARALLAX BACKGROUND ORBS
+   12. SKILLS MARQUEE
+   13. GET TO KNOW ME — FLIP CARDS
+   14. LEAD RUSH MINIGAME
 ========================================================= */
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -458,5 +465,662 @@ document.addEventListener("DOMContentLoaded", () => {
     phoneInput.addEventListener("input", sanitizePhoneInput);
 
     updatePhoneFieldByCountry();
+  }
+
+  /* =========================================================
+     8. SCROLL PROGRESS + HEADER SHRINK
+     - Fills the top progress bar as the page scrolls
+     - Shrinks the sticky header once scrolled past the hero
+  ========================================================= */
+  const scrollProgress = document.getElementById("scrollProgress");
+  const siteHeader = document.querySelector(".site-header");
+
+  function handleScrollMotion() {
+    const scrollTop = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+
+    if (scrollProgress) {
+      scrollProgress.style.width = `${progress}%`;
+    }
+
+    if (siteHeader) {
+      siteHeader.classList.toggle("scrolled", scrollTop > 40);
+    }
+  }
+
+  let scrollMotionTicking = false;
+  window.addEventListener("scroll", () => {
+    if (!scrollMotionTicking) {
+      requestAnimationFrame(() => {
+        handleScrollMotion();
+        scrollMotionTicking = false;
+      });
+      scrollMotionTicking = true;
+    }
+  });
+
+  handleScrollMotion();
+
+  /* =========================================================
+     9. 3D TILT ON CARDS
+     - Cursor-reactive tilt for project / experience / contact cards
+     - Skipped on touch-only devices
+  ========================================================= */
+  const tiltEls = document.querySelectorAll(".project-card, .experience-card, .contact-card");
+
+  if (tiltEls.length && window.matchMedia("(pointer: fine)").matches) {
+    tiltEls.forEach((card) => {
+      card.classList.add("spotlight");
+
+      const maxTilt = card.classList.contains("experience-card") ? 3 : 6;
+      const lift = card.classList.contains("project-card")
+        ? -8
+        : card.classList.contains("contact-card")
+        ? -6
+        : -3;
+
+      card.addEventListener("mousemove", (event) => {
+        const rect = card.getBoundingClientRect();
+        const x = event.clientX - rect.left;
+        const y = event.clientY - rect.top;
+
+        const rotateY = (x / rect.width - 0.5) * maxTilt * 2;
+        const rotateX = (y / rect.height - 0.5) * -maxTilt * 2;
+
+        card.style.transition = "transform 0.08s linear, border-color 0.3s ease, background 0.3s ease";
+        card.style.transform = `perspective(900px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(${lift}px)`;
+
+        card.style.setProperty("--mx", `${(x / rect.width) * 100}%`);
+        card.style.setProperty("--my", `${(y / rect.height) * 100}%`);
+      });
+
+      card.addEventListener("mouseleave", () => {
+        card.style.transition = "transform 0.5s cubic-bezier(.2,.8,.2,1), border-color 0.3s ease, background 0.3s ease";
+        card.style.transform = "";
+      });
+    });
+  }
+
+  /* =========================================================
+     10. MAGNETIC BUTTONS
+     - Primary CTAs subtly follow the cursor on hover
+  ========================================================= */
+  const magneticEls = document.querySelectorAll(".btn-primary, .nav-cta");
+
+  if (magneticEls.length && window.matchMedia("(pointer: fine)").matches) {
+    magneticEls.forEach((btn) => {
+      btn.addEventListener("mousemove", (event) => {
+        const rect = btn.getBoundingClientRect();
+        const x = event.clientX - rect.left - rect.width / 2;
+        const y = event.clientY - rect.top - rect.height / 2;
+
+        btn.style.transition = "transform 0.1s ease";
+        btn.style.transform = `translate(${x * 0.25}px, ${y * 0.25}px)`;
+      });
+
+      btn.addEventListener("mouseleave", () => {
+        btn.style.transition = "transform 0.4s cubic-bezier(.2,.8,.2,1)";
+        btn.style.transform = "translate(0, 0)";
+      });
+    });
+  }
+
+  /* =========================================================
+     11. PARALLAX BACKGROUND ORBS
+     - Whole background layer drifts slightly with the cursor
+  ========================================================= */
+  const pageBg = document.querySelector(".page-bg");
+
+  if (pageBg && window.matchMedia("(pointer: fine)").matches) {
+    window.addEventListener("mousemove", (event) => {
+      const px = (event.clientX / window.innerWidth - 0.5) * 30;
+      const py = (event.clientY / window.innerHeight - 0.5) * 30;
+      pageBg.style.transform = `translate(${px}px, ${py}px)`;
+    });
+  }
+
+  /* =========================================================
+     12. SKILLS MARQUEE
+     - Duplicates the skill pills so the CSS marquee loop is seamless
+  ========================================================= */
+  const skillsTrack = document.getElementById("skillsTrack");
+
+  if (skillsTrack) {
+    const originalPills = Array.from(skillsTrack.children);
+    originalPills.forEach((pill) => {
+      const clone = pill.cloneNode(true);
+      clone.setAttribute("aria-hidden", "true");
+      skillsTrack.appendChild(clone);
+    });
+  }
+
+  /* =========================================================
+     13. GET TO KNOW ME — FLIP CARDS
+     - Hover flips on desktop (pure CSS)
+     - Tap / Enter / Space flips on touch + keyboard
+  ========================================================= */
+  const flipCards = document.querySelectorAll(".flip-card");
+
+  flipCards.forEach((card) => {
+    card.addEventListener("click", (event) => {
+      // Let links (IMDb / Steam) open normally instead of flipping the card.
+      if (event.target.closest("a")) return;
+      card.classList.toggle("flipped");
+    });
+
+    card.addEventListener("keydown", (event) => {
+      if (event.target.closest("a")) return;
+
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        card.classList.toggle("flipped");
+      }
+    });
+  });
+
+  /* =========================================================
+     14. LEAD RUSH MINIGAME
+     ---------------------------------------------------------
+     Catch falling "leads" in the funnel, avoid "spam".
+     - Mouse / touch / arrow-key controls
+     - 3 lives, rising difficulty, streak multiplier
+     - Best score persisted in localStorage (guarded)
+  ========================================================= */
+  const canvas = document.getElementById("gameCanvas");
+
+  if (canvas && canvas.getContext) {
+    const ctx = canvas.getContext("2d");
+    const W = canvas.width;
+    const H = canvas.height;
+
+    const scoreEl = document.getElementById("gameScore");
+    const bestEl = document.getElementById("gameBest");
+    const streakEl = document.getElementById("gameStreak");
+    const livesEl = document.getElementById("gameLives");
+    const overlay = document.getElementById("gameOverlay");
+    const overlayTitle = document.getElementById("gameOverlayTitle");
+    const overlayText = document.getElementById("gameOverlayText");
+    const startBtn = document.getElementById("gameStart");
+
+    const FUNNEL_W = 108;
+    const FUNNEL_H = 62;
+    const FUNNEL_Y = H - FUNNEL_H - 16;
+
+    let running = false;
+    let paused = false;
+    let rafId = null;
+    let lastTime = 0;
+    let spawnTimer = 0;
+    let elapsed = 0;
+
+    let score = 0;
+    let streak = 0;
+    let lives = 3;
+    let best = 0;
+
+    try {
+      best = parseInt(localStorage.getItem("leadRushBest") || "0", 10) || 0;
+    } catch (err) {
+      best = 0;
+    }
+
+    let funnelX = W / 2;
+    let targetX = W / 2;
+    let keyLeft = false;
+    let keyRight = false;
+
+    let items = [];
+    let particles = [];
+    let floatTexts = [];
+
+    function saveBest() {
+      try {
+        localStorage.setItem("leadRushBest", String(best));
+      } catch (err) {
+        /* storage unavailable — best simply won't persist */
+      }
+    }
+
+    function updateHud() {
+      if (scoreEl) scoreEl.textContent = score;
+      if (bestEl) bestEl.textContent = best;
+      if (streakEl) streakEl.textContent = streak;
+      if (livesEl) livesEl.textContent = lives > 0 ? "♥".repeat(lives) : "—";
+    }
+
+    function showOverlay(title, text, btnLabel) {
+      if (!overlay) return;
+      if (overlayTitle) overlayTitle.textContent = title;
+      if (overlayText) overlayText.textContent = text;
+      if (startBtn) startBtn.innerHTML = `<i class="fas fa-play"></i> ${btnLabel}`;
+      overlay.classList.add("active");
+    }
+
+    function hideOverlay() {
+      overlay?.classList.remove("active");
+    }
+
+    function spawnItem() {
+      // Spam ratio grows slowly with time, capped so it stays fair.
+      const spamChance = Math.min(0.16 + elapsed / 90000, 0.34);
+      const isSpam = Math.random() < spamChance;
+      const isBonus = !isSpam && Math.random() < 0.09;
+
+      items.push({
+        x: 30 + Math.random() * (W - 60),
+        y: -24,
+        r: isBonus ? 15 : 12,
+        vy: 110 + Math.random() * 60 + elapsed / 900,
+        drift: (Math.random() - 0.5) * 40,
+        type: isSpam ? "spam" : isBonus ? "bonus" : "lead"
+      });
+    }
+
+    function burst(x, y, color, count) {
+      for (let i = 0; i < count; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const speed = 40 + Math.random() * 140;
+        particles.push({
+          x,
+          y,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed - 40,
+          life: 1,
+          color
+        });
+      }
+    }
+
+    function addFloatText(x, y, text, color) {
+      floatTexts.push({ x, y, text, color, life: 1 });
+    }
+
+    function resetGame() {
+      score = 0;
+      streak = 0;
+      lives = 3;
+      elapsed = 0;
+      spawnTimer = 0;
+      items = [];
+      particles = [];
+      floatTexts = [];
+      funnelX = W / 2;
+      targetX = W / 2;
+      updateHud();
+    }
+
+    function endGame() {
+      running = false;
+      paused = false;
+
+      if (score > best) {
+        best = score;
+        saveBest();
+        updateHud();
+        showOverlay(
+          "New personal best!",
+          `You captured ${score} points worth of leads. That's your best run yet.`,
+          "Play Again"
+        );
+      } else {
+        showOverlay(
+          "Campaign over",
+          `Final score: ${score}. Best: ${best}. Tighten the funnel and try again.`,
+          "Play Again"
+        );
+      }
+    }
+
+    function loseLife(x, y) {
+      lives--;
+      streak = 0;
+      burst(x, y, "255,110,140", 16);
+      addFloatText(x, y, "−1 ♥", "#ff7a92");
+      updateHud();
+
+      if (lives <= 0) {
+        endGame();
+      }
+    }
+
+    /* ---------- drawing ---------- */
+    function drawFunnel() {
+      const x = funnelX;
+      const y = FUNNEL_Y;
+      const halfTop = FUNNEL_W / 2;
+      const halfBottom = 22;
+
+      const grad = ctx.createLinearGradient(x - halfTop, y, x + halfTop, y + FUNNEL_H);
+      grad.addColorStop(0, "rgba(76,201,240,0.9)");
+      grad.addColorStop(1, "rgba(123,97,255,0.85)");
+
+      ctx.save();
+      ctx.shadowColor = "rgba(90,160,255,0.55)";
+      ctx.shadowBlur = 18;
+
+      ctx.beginPath();
+      ctx.moveTo(x - halfTop, y);
+      ctx.lineTo(x + halfTop, y);
+      ctx.lineTo(x + halfBottom, y + FUNNEL_H * 0.62);
+      ctx.lineTo(x + halfBottom, y + FUNNEL_H);
+      ctx.lineTo(x - halfBottom, y + FUNNEL_H);
+      ctx.lineTo(x - halfBottom, y + FUNNEL_H * 0.62);
+      ctx.closePath();
+
+      ctx.fillStyle = grad;
+      ctx.fill();
+      ctx.restore();
+
+      ctx.strokeStyle = "rgba(220,240,255,0.55)";
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+
+      // catch-zone shimmer along the funnel mouth
+      ctx.beginPath();
+      ctx.moveTo(x - halfTop, y);
+      ctx.lineTo(x + halfTop, y);
+      ctx.strokeStyle = "rgba(255,255,255,0.85)";
+      ctx.lineWidth = 3;
+      ctx.stroke();
+    }
+
+    function drawItem(item) {
+      ctx.save();
+
+      if (item.type === "spam") {
+        ctx.shadowColor = "rgba(255,90,120,0.7)";
+        ctx.shadowBlur = 14;
+        ctx.fillStyle = "#ff5f7e";
+        ctx.beginPath();
+        ctx.arc(item.x, item.y, item.r, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.shadowBlur = 0;
+        ctx.strokeStyle = "rgba(255,255,255,0.9)";
+        ctx.lineWidth = 2.4;
+        ctx.beginPath();
+        ctx.moveTo(item.x - 5, item.y - 5);
+        ctx.lineTo(item.x + 5, item.y + 5);
+        ctx.moveTo(item.x + 5, item.y - 5);
+        ctx.lineTo(item.x - 5, item.y + 5);
+        ctx.stroke();
+      } else if (item.type === "bonus") {
+        ctx.shadowColor = "rgba(0,201,167,0.8)";
+        ctx.shadowBlur = 18;
+        ctx.fillStyle = "#26e0bb";
+        ctx.beginPath();
+        ctx.arc(item.x, item.y, item.r, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.shadowBlur = 0;
+        ctx.fillStyle = "#06304a";
+        ctx.font = "bold 13px Inter, sans-serif";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText("★", item.x, item.y + 1);
+      } else {
+        ctx.shadowColor = "rgba(90,180,255,0.75)";
+        ctx.shadowBlur = 14;
+        const g = ctx.createLinearGradient(item.x, item.y - item.r, item.x, item.y + item.r);
+        g.addColorStop(0, "#8fe6ff");
+        g.addColorStop(1, "#3a86ff");
+        ctx.fillStyle = g;
+        ctx.beginPath();
+        ctx.arc(item.x, item.y, item.r, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.shadowBlur = 0;
+        ctx.fillStyle = "rgba(255,255,255,0.92)";
+        ctx.beginPath();
+        ctx.arc(item.x, item.y - 3, 3.4, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(item.x, item.y + 7, 5.6, Math.PI, 0);
+        ctx.fill();
+      }
+
+      ctx.restore();
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, W, H);
+
+      // subtle moving grid for depth
+      ctx.save();
+      ctx.strokeStyle = "rgba(130,180,255,0.05)";
+      ctx.lineWidth = 1;
+      const offset = (elapsed / 26) % 44;
+      for (let gx = 0; gx <= W; gx += 44) {
+        ctx.beginPath();
+        ctx.moveTo(gx, 0);
+        ctx.lineTo(gx, H);
+        ctx.stroke();
+      }
+      for (let gy = -44 + offset; gy <= H; gy += 44) {
+        ctx.beginPath();
+        ctx.moveTo(0, gy);
+        ctx.lineTo(W, gy);
+        ctx.stroke();
+      }
+      ctx.restore();
+
+      items.forEach(drawItem);
+
+      particles.forEach((p) => {
+        ctx.fillStyle = `rgba(${p.color},${Math.max(p.life, 0)})`;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 3 * p.life + 0.5, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      floatTexts.forEach((f) => {
+        ctx.save();
+        ctx.globalAlpha = Math.max(f.life, 0);
+        ctx.fillStyle = f.color;
+        ctx.font = "bold 17px Inter, sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText(f.text, f.x, f.y);
+        ctx.restore();
+      });
+
+      drawFunnel();
+
+      if (paused) {
+        ctx.fillStyle = "rgba(5,14,26,0.7)";
+        ctx.fillRect(0, 0, W, H);
+        ctx.fillStyle = "#dceaff";
+        ctx.font = "bold 26px Inter, sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText("Paused — press P to resume", W / 2, H / 2);
+      }
+    }
+
+    /* ---------- simulation ---------- */
+    function update(dt) {
+      elapsed += dt * 1000;
+
+      if (keyLeft) targetX -= 520 * dt;
+      if (keyRight) targetX += 520 * dt;
+      targetX = Math.max(FUNNEL_W / 2, Math.min(W - FUNNEL_W / 2, targetX));
+      funnelX += (targetX - funnelX) * Math.min(1, dt * 14);
+
+      spawnTimer -= dt * 1000;
+      const spawnEvery = Math.max(340, 900 - elapsed / 60);
+      if (spawnTimer <= 0) {
+        spawnItem();
+        spawnTimer = spawnEvery;
+      }
+
+      const mouthLeft = funnelX - FUNNEL_W / 2;
+      const mouthRight = funnelX + FUNNEL_W / 2;
+
+      items = items.filter((item) => {
+        item.y += item.vy * dt;
+        item.x += item.drift * dt;
+
+        if (item.x < item.r) {
+          item.x = item.r;
+          item.drift *= -1;
+        }
+        if (item.x > W - item.r) {
+          item.x = W - item.r;
+          item.drift *= -1;
+        }
+
+        const inMouth =
+          item.y + item.r >= FUNNEL_Y &&
+          item.y - item.r <= FUNNEL_Y + 22 &&
+          item.x >= mouthLeft &&
+          item.x <= mouthRight;
+
+        if (inMouth) {
+          if (item.type === "spam") {
+            loseLife(item.x, FUNNEL_Y);
+          } else {
+            streak++;
+            const mult = 1 + Math.floor(streak / 5);
+            const base = item.type === "bonus" ? 50 : 10;
+            const gained = base * mult;
+            score += gained;
+
+            burst(
+              item.x,
+              FUNNEL_Y,
+              item.type === "bonus" ? "38,224,187" : "140,220,255",
+              item.type === "bonus" ? 22 : 12
+            );
+            addFloatText(
+              item.x,
+              FUNNEL_Y - 10,
+              `+${gained}${mult > 1 ? ` ×${mult}` : ""}`,
+              item.type === "bonus" ? "#26e0bb" : "#8fe6ff"
+            );
+
+            if (score > best) {
+              best = score;
+              saveBest();
+            }
+            updateHud();
+          }
+          return false;
+        }
+
+        // Missing a good lead costs a life; letting spam fall through is fine.
+        if (item.y - item.r > H) {
+          if (item.type !== "spam") {
+            loseLife(item.x, H - 20);
+          }
+          return false;
+        }
+
+        return true;
+      });
+
+      particles = particles.filter((p) => {
+        p.x += p.vx * dt;
+        p.y += p.vy * dt;
+        p.vy += 340 * dt;
+        p.life -= dt * 1.6;
+        return p.life > 0;
+      });
+
+      floatTexts = floatTexts.filter((f) => {
+        f.y -= 34 * dt;
+        f.life -= dt * 1.1;
+        return f.life > 0;
+      });
+    }
+
+    function loop(timestamp) {
+      if (!running) return;
+
+      const dt = Math.min((timestamp - lastTime) / 1000, 0.05);
+      lastTime = timestamp;
+
+      if (!paused) update(dt);
+      draw();
+
+      rafId = requestAnimationFrame(loop);
+    }
+
+    function startGame() {
+      resetGame();
+      hideOverlay();
+      running = true;
+      paused = false;
+      lastTime = performance.now();
+      cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(loop);
+    }
+
+    /* ---------- controls ---------- */
+    function pointerToCanvasX(clientX) {
+      const rect = canvas.getBoundingClientRect();
+      return ((clientX - rect.left) / rect.width) * W;
+    }
+
+    canvas.addEventListener("mousemove", (event) => {
+      targetX = pointerToCanvasX(event.clientX);
+    });
+
+    canvas.addEventListener(
+      "touchmove",
+      (event) => {
+        if (!event.touches.length) return;
+        event.preventDefault();
+        targetX = pointerToCanvasX(event.touches[0].clientX);
+      },
+      { passive: false }
+    );
+
+    canvas.addEventListener(
+      "touchstart",
+      (event) => {
+        if (!event.touches.length) return;
+        targetX = pointerToCanvasX(event.touches[0].clientX);
+      },
+      { passive: true }
+    );
+
+    document.addEventListener("keydown", (event) => {
+      if (!running) return;
+
+      if (event.key === "ArrowLeft") {
+        keyLeft = true;
+        event.preventDefault();
+      }
+      if (event.key === "ArrowRight") {
+        keyRight = true;
+        event.preventDefault();
+      }
+      if (event.key === "p" || event.key === "P") {
+        paused = !paused;
+      }
+    });
+
+    document.addEventListener("keyup", (event) => {
+      if (event.key === "ArrowLeft") keyLeft = false;
+      if (event.key === "ArrowRight") keyRight = false;
+    });
+
+    startBtn?.addEventListener("click", startGame);
+
+    // Pause automatically when the section scrolls out of view.
+    const gameSection = document.getElementById("game");
+    if (gameSection && "IntersectionObserver" in window) {
+      const gameObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting && running) paused = true;
+          });
+        },
+        { threshold: 0.25 }
+      );
+      gameObserver.observe(gameSection);
+    }
+
+    updateHud();
+    draw();
   }
 });

@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 150" width="100" height="150" role="img" aria-label="Rick and Morty tile">
+  <defs>
+    <linearGradient id="rmbg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0b2418"/>
+      <stop offset="100%" stop-color="#050f14"/>
+    </linearGradient>
+    <radialGradient id="rmportal" cx="50%" cy="50%">
+      <stop offset="0%" stop-color="#d8ff8a"/>
+      <stop offset="45%" stop-color="#5ddc4a"/>
+      <stop offset="100%" stop-color="#0d5c2a"/>
+    </radialGradient>
+    <radialGradient id="rmglow" cx="50%" cy="45%">
+      <stop offset="0%" stop-color="#7dff6a" stop-opacity=".45"/>
+      <stop offset="100%" stop-color="#7dff6a" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="100" height="150" rx="8" fill="url(#rmbg)"/>
+  <rect width="100" height="150" rx="8" fill="url(#rmglow)"/>
+
+  <!-- portal -->
+  <ellipse cx="50" cy="64" rx="32" ry="30" fill="url(#rmportal)"/>
+  <ellipse cx="50" cy="64" rx="32" ry="30" fill="none" stroke="#c9ff9a" stroke-width="2" opacity=".8"/>
+  <path d="M50 44 a20 20 0 1 1 -14 34" fill="none" stroke="#eaffd0" stroke-width="2.4"
+        stroke-linecap="round" opacity=".75"/>
+  <path d="M50 54 a10 10 0 1 0 8 16" fill="none" stroke="#eaffd0" stroke-width="2"
+        stroke-linecap="round" opacity=".55"/>
+
+  <text x="50" y="126" text-anchor="middle" font-family="Inter, sans-serif" font-size="11"
+        font-weight="900" fill="#b6f79a" letter-spacing="1">RICK &amp; MORTY</text>
+  <rect x="30" y="133" width="40" height="2.5" rx="1.2" fill="#5ddc4a" opacity=".7"/>
+</svg>

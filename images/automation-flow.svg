@@ -14,7 +14,7 @@
       <stop offset="100%" stop-color="#7b61ff" stop-opacity="0.6"/>
     </linearGradient>
     <radialGradient id="afGlow">
-      <stop offset="0%" stop-color="#4cc9f0" stop-opacity="0.32"/>
+      <stop offset="0%" stop-color="#4cc9f0" stop-opacity="0.3"/>
       <stop offset="100%" stop-color="#4cc9f0" stop-opacity="0"/>
     </radialGradient>
     <style>
@@ -27,80 +27,91 @@
       .bob3 { animation: bob 4s ease-in-out infinite; animation-delay: -2.2s; }
       .bob4 { animation: bob 4s ease-in-out infinite; animation-delay: -3.1s; }
       @keyframes bob { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-6px) } }
-      .lbl { font: 600 12px 'Inter', sans-serif; fill: #cfe4ff; }
-      .sub { font: 500 10px 'Inter', sans-serif; fill: #7fa3d4; }
+      .lbl  { font: 700 11.5px 'Inter', sans-serif; fill: #dceaff; }
+      .sub  { font: 500 8.8px 'Inter', sans-serif; fill: #86a8d8; }
+      .tiny { font: 600 8.5px 'Inter', sans-serif; fill: #9fc4ea; }
     </style>
   </defs>
 
-  <ellipse cx="310" cy="175" rx="290" ry="115" fill="url(#afGlow)" class="pulse"/>
+  <ellipse cx="310" cy="175" rx="295" ry="118" fill="url(#afGlow)" class="pulse"/>
 
   <!-- connectors -->
   <g stroke="url(#afLine)" stroke-width="2.5" fill="none" stroke-linecap="round">
-    <path class="flow" d="M148 118 C 176 118, 184 148, 206 158"/>
-    <path class="flow" d="M148 232 C 176 232, 184 202, 206 192"/>
-    <path class="flow" d="M330 175 H368"/>
-    <path class="flow" d="M510 175 H534"/>
+    <path class="flow" d="M160 117 C 186 117, 192 148, 212 160"/>
+    <path class="flow" d="M160 231 C 186 231, 192 202, 212 190"/>
+    <path class="flow" d="M340 174 H368"/>
+    <path class="flow" d="M544 174 H558"/>
   </g>
 
   <!-- sources -->
   <g class="bob">
-    <rect x="30" y="92" width="118" height="52" rx="14" fill="url(#afNode)" stroke="url(#afStroke)" stroke-width="1.4"/>
-    <circle cx="56" cy="118" r="9" fill="none" stroke="#4cc9f0" stroke-width="2"/>
-    <path d="M52 118 l3 3 l6 -7" stroke="#4cc9f0" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-    <text x="74" y="115" class="lbl">Landing Page</text>
-    <text x="74" y="129" class="sub">form capture</text>
+    <rect x="18" y="88" width="142" height="58" rx="15" fill="url(#afNode)" stroke="url(#afStroke)" stroke-width="1.4"/>
+    <circle cx="44" cy="117" r="10" fill="none" stroke="#4cc9f0" stroke-width="2"/>
+    <path d="M39.5 117 l3.2 3.2 l6.3 -7.2" stroke="#4cc9f0" stroke-width="2" fill="none"
+          stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="66" y="114" class="lbl">Landing Page</text>
+    <text x="66" y="128" class="sub">forms · booking</text>
   </g>
 
   <g class="bob2">
-    <rect x="30" y="206" width="118" height="52" rx="14" fill="url(#afNode)" stroke="url(#afStroke)" stroke-width="1.4"/>
-    <rect x="48" y="224" width="16" height="13" rx="3" fill="none" stroke="#7b61ff" stroke-width="2"/>
-    <path d="M48 227 l8 5 l8 -5" stroke="#7b61ff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-    <text x="74" y="229" class="lbl">Ads / Email</text>
-    <text x="74" y="243" class="sub">inbound leads</text>
+    <rect x="18" y="202" width="142" height="58" rx="15" fill="url(#afNode)" stroke="url(#afStroke)" stroke-width="1.4"/>
+    <rect x="35" y="224" width="18" height="14" rx="3" fill="none" stroke="#7b61ff" stroke-width="2"/>
+    <path d="M35 227 l9 6 l9 -6" stroke="#7b61ff" stroke-width="2" fill="none"
+          stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="66" y="228" class="lbl">Ads / Email</text>
+    <text x="66" y="242" class="sub">inbound leads</text>
   </g>
 
   <!-- CRM hub -->
   <g class="bob3">
-    <rect x="206" y="145" width="124" height="60" rx="16" fill="url(#afNode)" stroke="url(#afStroke)" stroke-width="1.6"/>
-    <circle cx="234" cy="175" r="10" fill="none" stroke="#4cc9f0" stroke-width="2"/>
-    <circle cx="234" cy="175" r="3.5" fill="#4cc9f0"/>
-    <text x="254" y="171" class="lbl">CRM</text>
-    <text x="254" y="185" class="sub">tag + route</text>
+    <rect x="212" y="142" width="128" height="64" rx="16" fill="url(#afNode)" stroke="url(#afStroke)" stroke-width="1.6"/>
+    <circle cx="238" cy="174" r="10" fill="none" stroke="#4cc9f0" stroke-width="2"/>
+    <circle cx="238" cy="174" r="3.5" fill="#4cc9f0"/>
+    <text x="260" y="171" class="lbl">CRM</text>
+    <text x="260" y="185" class="sub">tag + route</text>
   </g>
 
-  <!-- conditional workflow -->
+  <!-- workflow: more than if/then -->
   <g class="bob4">
-    <rect x="368" y="145" width="142" height="60" rx="16" fill="url(#afNode)" stroke="url(#afStroke)" stroke-width="1.8"/>
+    <rect x="368" y="132" width="176" height="84" rx="18" fill="url(#afNode)" stroke="url(#afStroke)" stroke-width="1.8"/>
+
+    <!-- multi-branch icon -->
     <g stroke="#7b61ff" stroke-width="2" fill="none" stroke-linecap="round">
-      <path d="M386 175 h10"/>
-      <path d="M396 175 C 404 175, 404 163, 412 163"/>
-      <path d="M396 175 C 404 175, 404 187, 412 187"/>
+      <path d="M386 174 h9"/>
+      <path d="M395 174 C 402 174, 402 159, 409 159"/>
+      <path d="M395 174 H409"/>
+      <path d="M395 174 C 402 174, 402 189, 409 189"/>
     </g>
-    <circle cx="386" cy="175" r="2.6" fill="#7b61ff"/>
-    <circle cx="413" cy="163" r="2.6" fill="#4cc9f0"/>
-    <circle cx="413" cy="187" r="2.6" fill="#4cc9f0"/>
-    <text x="424" y="171" class="lbl">Workflow</text>
-    <text x="424" y="185" class="sub">if / then rules</text>
+    <circle cx="386" cy="174" r="2.6" fill="#7b61ff"/>
+    <circle cx="410" cy="159" r="2.4" fill="#4cc9f0"/>
+    <circle cx="410" cy="174" r="2.4" fill="#4cc9f0"/>
+    <circle cx="410" cy="189" r="2.4" fill="#4cc9f0"/>
+
+    <text x="424" y="158" class="lbl">Workflow</text>
+    <text x="424" y="173" class="sub">triggers · conditions</text>
+    <text x="424" y="186" class="sub">lead scoring · tagging</text>
+    <text x="424" y="199" class="sub">email &amp; SMS nurture</text>
   </g>
 
   <!-- outcome -->
   <g class="bob">
-    <rect x="534" y="148" width="66" height="54" rx="16" fill="url(#afNode)" stroke="url(#afStroke)" stroke-width="1.8"/>
-    <path d="M550 178 l8 -9 l7 7 l10 -13" stroke="#4cc9f0" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-    <text x="567" y="194" text-anchor="middle" class="sub">converted</text>
+    <rect x="558" y="146" width="52" height="58" rx="15" fill="url(#afNode)" stroke="url(#afStroke)" stroke-width="1.8"/>
+    <path d="M570 176 l6 -7 l5.5 5.5 l8 -11" stroke="#4cc9f0" stroke-width="2.4" fill="none"
+          stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="584" y="194" text-anchor="middle" class="tiny">converted</text>
   </g>
 
   <!-- travelling packets -->
   <circle r="3.5" fill="#8ee3ff">
-    <animateMotion dur="3.2s" repeatCount="indefinite" path="M148 118 C 176 118, 184 148, 206 158"/>
+    <animateMotion dur="3.2s" repeatCount="indefinite" path="M160 117 C 186 117, 192 148, 212 160"/>
   </circle>
   <circle r="3.5" fill="#a78bff">
-    <animateMotion dur="3.2s" begin="1.1s" repeatCount="indefinite" path="M148 232 C 176 232, 184 202, 206 192"/>
+    <animateMotion dur="3.2s" begin="1.1s" repeatCount="indefinite" path="M160 231 C 186 231, 192 202, 212 190"/>
   </circle>
   <circle r="3.5" fill="#8ee3ff">
-    <animateMotion dur="2.2s" begin="0.6s" repeatCount="indefinite" path="M330 175 H368"/>
+    <animateMotion dur="2.2s" begin="0.6s" repeatCount="indefinite" path="M340 174 H368"/>
   </circle>
   <circle r="4" fill="#4cc9f0">
-    <animateMotion dur="1.8s" begin="1.4s" repeatCount="indefinite" path="M510 175 H534"/>
+    <animateMotion dur="1.6s" begin="1.4s" repeatCount="indefinite" path="M544 174 H558"/>
   </circle>
 </svg>

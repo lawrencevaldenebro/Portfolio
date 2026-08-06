@@ -2037,6 +2037,49 @@ img {
   box-shadow: 0 14px 30px rgba(30, 120, 255, 0.28);
 }
 
+/* Contact form submit status (Formspree AJAX) */
+.form-status {
+  display: none;
+  margin-top: 16px;
+  padding: 13px 16px;
+  border-radius: 16px;
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.form-status.active {
+  display: block;
+  animation: riseIn 0.35s ease both;
+}
+
+.form-status i {
+  margin-right: 7px;
+}
+
+.form-status a {
+  color: inherit;
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+.form-status.pending {
+  background: rgba(79, 140, 255, 0.1);
+  border: 1px solid rgba(130, 180, 255, 0.24);
+  color: #cfe2ff;
+}
+
+.form-status.success {
+  background: rgba(30, 215, 96, 0.12);
+  border: 1px solid rgba(30, 215, 96, 0.4);
+  color: #a8f0c4;
+}
+
+.form-status.error {
+  background: rgba(255, 95, 126, 0.11);
+  border: 1px solid rgba(255, 95, 126, 0.4);
+  color: #ffc2ce;
+}
+
 /* Divider between demo form and real inquiry form */
 .form-divider {
   position: relative;

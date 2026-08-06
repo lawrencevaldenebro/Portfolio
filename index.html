@@ -644,10 +644,8 @@
           <i class="fas fa-envelope"></i> lawrencevaldenebro@gmail.com
         </a>
       </p>
-      <form action="https://formspree.io/f/xpqynpdn" method="POST" target="_blank">
+      <form id="contactForm" action="https://formspree.io/f/xpqynpdn" method="POST">
         <input type="hidden" name="_subject" value="New Portfolio Inquiry">
-        <input type="hidden" name="_captcha" value="false">
-        <input type="hidden" name="_template" value="table">
 
         <label>
           Name
@@ -698,8 +696,10 @@
             required></textarea>
         </label>
 
-        <button type="submit">Send Message</button>
+        <button type="submit" id="contactSubmit">Send Message</button>
       </form>
+
+      <div class="form-status" id="contactStatus" role="status" aria-live="polite"></div>
 
       <div class="form-divider">
         <span>or try a live automation DEMO!</span>

@@ -17,6 +17,7 @@
    12. SKILLS MARQUEE
    13. GET TO KNOW ME — FLIP CARDS
    14. LEAD RUSH MINIGAME
+   15. CONTACT FORM SUBMIT (Formspree AJAX)
 ========================================================= */
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -618,6 +619,86 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   });
+
+  /* =========================================================
+     15. CONTACT FORM SUBMIT (Formspree AJAX)
+     ---------------------------------------------------------
+     Submits in-page instead of redirecting to Formspree.
+     Requesting JSON back means Formspree returns a real error
+     message, which we surface instead of failing silently.
+  ========================================================= */
+  const contactForm = document.getElementById("contactForm");
+  const contactStatus = document.getElementById("contactStatus");
+  const contactSubmit = document.getElementById("contactSubmit");
+
+  function setContactStatus(type, html) {
+    if (!contactStatus) return;
+    contactStatus.className = `form-status active ${type}`;
+    contactStatus.innerHTML = html;
+  }
+
+  if (contactForm) {
+    contactForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      const data = new FormData(contactForm);
+      const originalLabel = contactSubmit ? contactSubmit.textContent : "";
+
+      if (contactSubmit) {
+        contactSubmit.disabled = true;
+        contactSubmit.textContent = "Sending...";
+      }
+      setContactStatus("pending", '<i class="fas fa-circle-notch fa-spin"></i> Sending your message...');
+
+      try {
+        const response = await fetch(contactForm.action, {
+          method: "POST",
+          body: data,
+          headers: { Accept: "application/json" }
+        });
+
+        if (response.ok) {
+          contactForm.reset();
+          setContactStatus(
+            "success",
+            '<i class="fas fa-circle-check"></i> Message sent. I\'ll get back to you shortly.'
+          );
+        } else {
+          // Formspree returns JSON explaining exactly what went wrong.
+          let reason = `Server responded ${response.status}.`;
+          try {
+            const payload = await response.json();
+            if (Array.isArray(payload.errors) && payload.errors.length) {
+              reason = payload.errors.map((e) => e.message).join(" ");
+            } else if (payload.error) {
+              reason = payload.error;
+            }
+          } catch (parseErr) {
+            /* non-JSON response — keep the status-code message */
+          }
+
+          setContactStatus(
+            "error",
+            `<i class="fas fa-triangle-exclamation"></i> Couldn't send: ${reason}
+             <br>You can email me directly at
+             <a href="mailto:lawrencevaldenebro@gmail.com">lawrencevaldenebro@gmail.com</a>.`
+          );
+        }
+      } catch (networkErr) {
+        setContactStatus(
+          "error",
+          `<i class="fas fa-triangle-exclamation"></i> Network error — the message didn't send.
+           <br>Please email me directly at
+           <a href="mailto:lawrencevaldenebro@gmail.com">lawrencevaldenebro@gmail.com</a>.`
+        );
+      } finally {
+        if (contactSubmit) {
+          contactSubmit.disabled = false;
+          contactSubmit.textContent = originalLabel || "Send Message";
+        }
+      }
+    });
+  }
 
   /* =========================================================
      14. LEAD RUSH MINIGAME

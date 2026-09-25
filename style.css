@@ -1093,6 +1093,61 @@ img {
   border-color: rgba(0, 201, 167, 0.42);
 }
 
+/* Card cover photos (Pexels) — breaks up the text-heavy cards */
+.project-card {
+  overflow: hidden;
+}
+
+.card-media {
+  position: relative;
+  margin: -26px -26px 0;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  border-radius: 25px 25px 0 0;
+  background: var(--bg-2);
+}
+
+.card-media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: saturate(0.85) contrast(1.05);
+  transition: transform 0.6s ease;
+}
+
+/* Tint + fade so photos melt into the navy card body */
+.card-media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(6, 17, 31, 0) 40%, rgba(9, 20, 36, 0.92) 100%),
+    linear-gradient(135deg, rgba(58, 134, 255, 0.16), rgba(123, 97, 255, 0.08));
+  pointer-events: none;
+}
+
+.project-card:hover .card-media img {
+  transform: scale(1.06);
+}
+
+/* Icon badge sits on the photo's bottom edge */
+.projects-grid .project-card .card-media + .project-icon {
+  position: relative;
+  z-index: 1;
+  margin-top: -29px;
+  background-color: #0b1b31;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.4);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card-media img,
+  .project-card:hover .card-media img {
+    transition: none;
+    transform: none;
+  }
+}
+
 /* Experience icons cycle accents too */
 .experience-layout .experience-card:nth-child(4n + 1) .experience-icon {
   background: linear-gradient(135deg, rgba(76, 201, 240, 0.26), rgba(76, 201, 240, 0.06));

@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 330" width="420" height="330" role="img" aria-label="Conversion funnel illustration">
+  <defs>
+    <linearGradient id="fL1" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#4cc9f0" stop-opacity="0.85"/>
+      <stop offset="100%" stop-color="#3a86ff" stop-opacity="0.55"/>
+    </linearGradient>
+    <linearGradient id="fL2" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#3a86ff" stop-opacity="0.85"/>
+      <stop offset="100%" stop-color="#5b7cff" stop-opacity="0.55"/>
+    </linearGradient>
+    <linearGradient id="fL3" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#6a5cff" stop-opacity="0.85"/>
+      <stop offset="100%" stop-color="#7b61ff" stop-opacity="0.55"/>
+    </linearGradient>
+    <linearGradient id="fL4" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#00c9a7" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#4cc9f0" stop-opacity="0.6"/>
+    </linearGradient>
+    <radialGradient id="fGlow">
+      <stop offset="0%" stop-color="#3a86ff" stop-opacity="0.30"/>
+      <stop offset="100%" stop-color="#3a86ff" stop-opacity="0"/>
+    </radialGradient>
+    <style>
+      .drop { animation: drop 3s ease-in infinite; }
+      @keyframes drop {
+        0%   { transform: translateY(-24px); opacity: 0 }
+        12%  { opacity: 1 }
+        80%  { opacity: 1 }
+        100% { transform: translateY(250px); opacity: 0 }
+      }
+      .d2 { animation-delay: -.9s } .d3 { animation-delay: -1.7s }
+      .d4 { animation-delay: -2.4s } .d5 { animation-delay: -.45s }
+      .lyr { animation: sheen 4s ease-in-out infinite; }
+      @keyframes sheen { 0%,100% { opacity:.9 } 50% { opacity:1 } }
+      .l2 { animation-delay: -1s } .l3 { animation-delay: -2s } .l4 { animation-delay: -3s }
+      .cap { font: 800 14px 'Inter', sans-serif; fill: #ffffff; letter-spacing: .08em; }
+    </style>
+  </defs>
+
+  <ellipse cx="210" cy="165" rx="200" ry="150" fill="url(#fGlow)"/>
+
+  <!-- falling leads -->
+  <g>
+    <circle class="drop"    cx="150" cy="30" r="4.5" fill="#8ee3ff"/>
+    <circle class="drop d2" cx="196" cy="30" r="4"   fill="#a9c6ff"/>
+    <circle class="drop d3" cx="238" cy="30" r="4.5" fill="#8ee3ff"/>
+    <circle class="drop d4" cx="174" cy="30" r="3.5" fill="#b7a6ff"/>
+    <circle class="drop d5" cx="218" cy="30" r="4"   fill="#8ee3ff"/>
+  </g>
+
+  <!-- funnel layers -->
+  <g stroke="rgba(160,205,255,.28)" stroke-width="1.2">
+    <path class="lyr"    d="M40 62  H380 L332 118 H88 Z"  fill="url(#fL1)"/>
+    <path class="lyr l2" d="M92 128 H328 L296 184 H124 Z" fill="url(#fL2)"/>
+    <path class="lyr l3" d="M128 194 H292 L262 250 H158 Z" fill="url(#fL3)"/>
+    <path class="lyr l4" d="M162 260 H258 L242 306 H178 Z" fill="url(#fL4)"/>
+  </g>
+
+  <text x="210" y="96"  text-anchor="middle" class="cap">TRAFFIC</text>
+  <text x="210" y="162" text-anchor="middle" class="cap">LEADS</text>
+  <text x="210" y="228" text-anchor="middle" class="cap">QUALIFIED</text>
+  <text x="210" y="290" text-anchor="middle" class="cap">CLOSED</text>
+</svg>

@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 150" width="100" height="150" role="img" aria-label="Poster placeholder">
+  <defs>
+    <linearGradient id="pph" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#16345f"/>
+      <stop offset="100%" stop-color="#0b1c33"/>
+    </linearGradient>
+  </defs>
+  <rect width="100" height="150" rx="8" fill="url(#pph)" stroke="rgba(130,180,255,.22)"/>
+  <g stroke="rgba(160,205,255,.45)" stroke-width="3" fill="none" stroke-linecap="round">
+    <rect x="30" y="52" width="40" height="34" rx="5"/>
+    <circle cx="50" cy="69" r="7"/>
+  </g>
+  <text x="50" y="108" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" font-weight="700"
+    fill="rgba(190,220,255,.55)">ADD ART</text>
+</svg>

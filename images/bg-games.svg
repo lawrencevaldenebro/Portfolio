@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" width="400" height="300" preserveAspectRatio="xMidYMid slice" role="presentation">
+  <defs>
+    <filter id="gmBlur" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="8"/>
+    </filter>
+    <filter id="gmSoft" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="2"/>
+    </filter>
+    <linearGradient id="gmPad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#7ff0d8" stop-opacity=".9"/>
+      <stop offset="100%" stop-color="#00997f" stop-opacity=".45"/>
+    </linearGradient>
+  </defs>
+
+  <!-- blurred controller silhouettes -->
+  <g filter="url(#gmBlur)" opacity=".5">
+    <path d="M60 96 q40 -22 92 0 q26 16 12 44 q-12 24 -34 8 q-24 -16 -48 0 q-22 16 -34 -8 q-14 -28 12 -44 Z"
+          fill="url(#gmPad)"/>
+    <path d="M248 178 q38 -20 86 0 q24 15 11 41 q-11 22 -32 7 q-22 -15 -44 0 q-21 15 -32 -7 q-13 -26 11 -41 Z"
+          fill="#00c9a7" opacity=".7"/>
+  </g>
+
+  <!-- pixel blocks -->
+  <g filter="url(#gmSoft)" opacity=".4">
+    <rect x="300" y="30"  width="24" height="24" rx="4" fill="#7ff0d8"/>
+    <rect x="330" y="54"  width="18" height="18" rx="3" fill="#4cc9f0" opacity=".8"/>
+    <rect x="354" y="24"  width="14" height="14" rx="3" fill="#00c9a7" opacity=".7"/>
+    <rect x="24"  y="216" width="22" height="22" rx="4" fill="#7ff0d8" opacity=".8"/>
+    <rect x="52"  y="244" width="16" height="16" rx="3" fill="#4cc9f0" opacity=".65"/>
+    <rect x="200" y="252" width="20" height="20" rx="4" fill="#00c9a7" opacity=".6"/>
+    <rect x="150" y="34"  width="16" height="16" rx="3" fill="#7ff0d8" opacity=".55"/>
+  </g>
+
+  <!-- d-pad + face buttons, crisp -->
+  <g opacity=".3" fill="none" stroke="#a9f5e4" stroke-width="2.5">
+    <path d="M96 168 h30 M111 153 v30"/>
+    <circle cx="286" cy="112" r="7"/><circle cx="308" cy="94" r="7"/>
+    <circle cx="308" cy="130" r="7"/><circle cx="330" cy="112" r="7"/>
+  </g>
+
+  <!-- faint grid -->
+  <g stroke="#8ff0dd" stroke-width="1" opacity=".06">
+    <path d="M0 50 H400 M0 100 H400 M0 150 H400 M0 200 H400 M0 250 H400"/>
+    <path d="M50 0 V300 M100 0 V300 M150 0 V300 M200 0 V300 M250 0 V300 M300 0 V300 M350 0 V300"/>
+  </g>
+</svg>

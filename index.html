@@ -19,6 +19,12 @@
 
   <!-- Animated flowing-lines background -->
   <script src="./bg-flow.js" defer></script>
+
+  <!-- Scroll animations: GSAP + ScrollTrigger, Lenis smooth scroll -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js" defer></script>
+  <script src="./scroll-fx.js" defer></script>
 </head>
 
 <body>
@@ -49,7 +55,7 @@
         <a href="#contact">Contact</a>
       </nav>
 
-      <a href="#" class="btn btn-primary" id="openForm">
+      <a href="#" class="btn btn-primary" data-open-form>
         Let’s Talk
       </a>
 
@@ -93,7 +99,7 @@
           </p>
 
           <div class="hero-actions">
-            <a href="#" class="btn btn-primary" id="openForm">
+            <a href="#" class="btn btn-primary" data-open-form>
               <i class="fas fa-paper-plane"></i>
               Contact Me
             </a>
@@ -150,6 +156,30 @@
       </div>
     </section>
 
+    <!-- STATS + CLIENTS -->
+    <section class="stats-band" aria-label="Highlights">
+      <div class="container">
+        <div class="stats-grid">
+          <div class="stat reveal"><strong data-count="6">6</strong><span>Roles held</span></div>
+          <div class="stat reveal"><strong data-count="5" data-suffix="+">5+</strong><span>Years of design work</span></div>
+          <div class="stat reveal"><strong data-count="14">14</strong><span>Services offered</span></div>
+          <div class="stat reveal"><strong data-count="4" data-suffix="+">4+</strong><span>Notable clients</span></div>
+        </div>
+      </div>
+
+      <div class="clients-marquee" aria-label="Notable clients">
+        <div class="clients-track" id="clientsTrack">
+          <span>Texas Physician Associate LLC</span>
+          <span>NexGen Innovations</span>
+          <span>NYC Pain MD</span>
+          <span>Aesthetics21 LLC</span>
+          <span>Outsourced Doers</span>
+          <span>Jacinto &amp; Lirio</span>
+          <span>OnlineJobs.ph Clients</span>
+        </div>
+      </div>
+    </section>
+
     <!-- ABOUT -->
     <section class="section-block" id="about">
       <div class="container">
@@ -178,7 +208,7 @@
             </div>
           </div>
 
-          <figure class="about-visual glass reveal">
+          <figure class="about-visual glass reveal" data-reveal="right">
             <img src="./images/automation-flow.svg" alt="Diagram showing leads flowing from landing pages and ads into a CRM, then through conditional if/then workflows to conversion" />
             <figcaption>How a lead moves through a system I build</figcaption>
           </figure>
@@ -189,39 +219,215 @@
     <!-- SERVICES -->
     <section class="section-block" id="services">
       <div class="container">
-        <div class="section-heading reveal">
-          <span class="section-kicker">SERVICES</span>
-          <h2>What I can do for your business.</h2>
+        <div class="services-head">
+          <div class="section-heading reveal">
+            <span class="section-kicker">SERVICES</span>
+            <h2>Everything between the click and the booked call.</h2>
+            <p>
+              Hire me for one piece or the whole system. Every service below comes from
+              real client work: funnels, CRM, AI, ads, and the technical setup that holds it together.
+            </p>
+          </div>
+
+          <div class="services-filter reveal" role="group" aria-label="Filter services">
+            <button type="button" class="filter-btn is-active" data-filter="all">All</button>
+            <button type="button" class="filter-btn" data-filter="build">Build</button>
+            <button type="button" class="filter-btn" data-filter="automate">Automate</button>
+            <button type="button" class="filter-btn" data-filter="ai">AI</button>
+            <button type="button" class="filter-btn" data-filter="grow">Grow</button>
+            <button type="button" class="filter-btn" data-filter="support">Support</button>
+          </div>
         </div>
 
-        <div class="projects-grid">
-          <div class="project-card glass reveal">
-            <div class="card-media"><img src="https://images.pexels.com/photos/196644/pexels-photo-196644.jpeg?auto=compress&cs=tinysrgb&w=800&h=500&fit=crop" alt="Hand-drawn landing page wireframe sketch on a notepad" width="800" height="500" loading="lazy" decoding="async" /></div>
-            <div class="project-icon"><i class="fas fa-filter"></i></div>
-            <h3>Funnels & Landing Pages</h3>
-            <p>Lead capture pages, booking funnels, quizzes, and survey-based flows built for conversions.</p>
-          </div>
+        <div class="services-grid" id="servicesGrid">
+          <article class="service-card service-featured glass reveal" data-cat="build automate ai grow">
+            <div class="featured-copy">
+              <span class="service-badge"><i class="fas fa-star"></i> Flagship service</span>
+              <h3>End-to-End Lead Generation Systems</h3>
+              <p>
+                The full build, wired together and tested: ads bring the traffic, funnels capture it,
+                AI qualifies it, the calendar books it, and automations follow up until the lead converts.
+              </p>
+              <a href="#" class="btn btn-primary" data-open-form><i class="fas fa-paper-plane"></i> Build my system</a>
+            </div>
+            <ol class="flow-chain" aria-label="Lead system flow">
+              <li><i class="fas fa-bullhorn"></i><span>Ads</span></li>
+              <li><i class="fas fa-filter"></i><span>Funnel</span></li>
+              <li><i class="fas fa-robot"></i><span>AI qualify</span></li>
+              <li><i class="fas fa-calendar-check"></i><span>Booked</span></li>
+              <li><i class="fas fa-comment-sms"></i><span>Follow-up</span></li>
+            </ol>
+          </article>
 
-          <div class="project-card glass reveal">
-            <div class="card-media"><img src="https://images.pexels.com/photos/12969403/pexels-photo-12969403.jpeg?auto=compress&cs=tinysrgb&w=800&h=500&fit=crop" alt="Laptop showing a live analytics dashboard" width="800" height="500" loading="lazy" decoding="async" /></div>
-            <div class="project-icon"><i class="fas fa-gears"></i></div>
-            <h3>CRM Automation</h3>
-            <p>GoHighLevel workflows, tagging systems, nurture sequences, and smart trigger logic.</p>
-          </div>
+          <article class="service-card glass reveal" data-cat="build">
+            <div class="service-top"><div class="service-icon"><i class="fas fa-filter"></i></div><span class="service-num">01</span></div>
+            <h3>Funnels &amp; Landing Pages</h3>
+            <p>Opt-in, booking, and sales funnels in GoHighLevel, built to load fast and convert.</p>
+            <ul class="service-tags"><li>GoHighLevel</li><li>Booking funnels</li><li>Thank-you flows</li></ul>
+          </article>
 
-          <div class="project-card glass reveal">
-            <div class="card-media"><img src="https://images.pexels.com/photos/8386440/pexels-photo-8386440.jpeg?auto=compress&cs=tinysrgb&w=800&h=500&fit=crop" alt="Robotic hand reaching into a glowing blue AI network" width="800" height="500" loading="lazy" decoding="async" /></div>
-            <div class="project-icon"><i class="fas fa-robot"></i></div>
-            <h3>AI Chatbots & Systems</h3>
-            <p>AI-assisted follow-up, qualification flows, and automation systems for faster response handling.</p>
-          </div>
+          <article class="service-card glass reveal" data-cat="build ai">
+            <div class="service-top"><div class="service-icon"><i class="fas fa-code"></i></div><span class="service-num">02</span></div>
+            <h3>AI-Built Websites</h3>
+            <p>Custom, mobile-first websites built with AI-assisted, code-level development on Replit or GoHighLevel.</p>
+            <ul class="service-tags"><li>Replit</li><li>Custom code</li><li>Mobile-first</li></ul>
+          </article>
 
-          <div class="project-card glass reveal">
-            <div class="card-media"><img src="https://images.pexels.com/photos/1148820/pexels-photo-1148820.jpeg?auto=compress&cs=tinysrgb&w=800&h=500&fit=crop" alt="Rack of servers with glowing network lights" width="800" height="500" loading="lazy" decoding="async" /></div>
-            <div class="project-icon"><i class="fas fa-globe"></i></div>
-            <h3>Tech & Domain Setup</h3>
-            <p>Cloudflare, SiteGround, DNS records, custom domains, hosting setup, and Microsoft Ads support.</p>
+          <article class="service-card glass reveal" data-cat="build automate">
+            <div class="service-top"><div class="service-icon"><i class="fas fa-list-check"></i></div><span class="service-num">03</span></div>
+            <h3>Quizzes, Surveys &amp; Lead Scoring</h3>
+            <p>Interactive quizzes and surveys with score-based logic that segment leads and trigger the right follow-up.</p>
+            <ul class="service-tags"><li>Scoring logic</li><li>Segmentation</li><li>Workflow triggers</li></ul>
+          </article>
+
+          <article class="service-card glass reveal" data-cat="automate">
+            <div class="service-top"><div class="service-icon"><i class="fas fa-diagram-project"></i></div><span class="service-num">04</span></div>
+            <h3>GoHighLevel CRM Setup</h3>
+            <p>Pipelines, custom fields, calendars, and tags structured so your team actually uses the CRM.</p>
+            <ul class="service-tags"><li>Pipelines</li><li>Calendars</li><li>Custom fields</li></ul>
+          </article>
+
+          <article class="service-card glass reveal" data-cat="automate">
+            <div class="service-top"><div class="service-icon"><i class="fas fa-gears"></i></div><span class="service-num">05</span></div>
+            <h3>Workflow Automation</h3>
+            <p>Triggers, conditions, and pipeline moves that handle follow-up so nobody has to remember to.</p>
+            <ul class="service-tags"><li>Triggers &amp; conditions</li><li>Pipeline moves</li><li>Nurture sequences</li></ul>
+          </article>
+
+          <article class="service-card glass reveal" data-cat="automate grow">
+            <div class="service-top"><div class="service-icon"><i class="fas fa-envelope-open-text"></i></div><span class="service-num">06</span></div>
+            <h3>Email &amp; SMS Campaigns</h3>
+            <p>Broadcasts and nurture sequences in GoHighLevel and ActiveCampaign that keep leads warm.</p>
+            <ul class="service-tags"><li>GoHighLevel</li><li>ActiveCampaign</li><li>Nurture</li></ul>
+          </article>
+
+          <article class="service-card glass reveal" data-cat="automate support">
+            <div class="service-top"><div class="service-icon"><i class="fas fa-comment-sms"></i></div><span class="service-num">07</span></div>
+            <h3>A2P 10DLC Registration</h3>
+            <p>Brand and campaign registration so your business texts reach US phones instead of getting filtered.</p>
+            <ul class="service-tags"><li>Brand registration</li><li>Campaign approval</li><li>SMS compliance</li></ul>
+          </article>
+
+          <article class="service-card glass reveal" data-cat="automate">
+            <div class="service-top"><div class="service-icon"><i class="fas fa-plug"></i></div><span class="service-num">08</span></div>
+            <h3>Zapier &amp; API Integrations</h3>
+            <p>Forms, CRMs, calendars, and apps connected through Zapier, webhooks, and APIs so data moves on its own.</p>
+            <ul class="service-tags"><li>Zapier</li><li>Webhooks</li><li>APIs</li></ul>
+          </article>
+
+          <article class="service-card glass reveal" data-cat="ai automate">
+            <div class="service-top"><div class="service-icon"><i class="fas fa-robot"></i></div><span class="service-num">09</span></div>
+            <h3>AI Chatbots &amp; Qualification Agents</h3>
+            <p>AI agents that answer questions, qualify leads, and book calls around the clock.</p>
+            <ul class="service-tags"><li>Conversation AI</li><li>Qualification</li><li>Auto-booking</li></ul>
+          </article>
+
+          <article class="service-card glass reveal" data-cat="grow">
+            <div class="service-top"><div class="service-icon"><i class="fas fa-bullhorn"></i></div><span class="service-num">10</span></div>
+            <h3>Meta &amp; Microsoft Ads Setup</h3>
+            <p>Ad account setup and lead-gen campaigns on Facebook, Instagram, and Microsoft Ads, wired straight into your CRM.</p>
+            <ul class="service-tags"><li>Meta Ads</li><li>Microsoft Ads</li><li>Lead gen</li></ul>
+          </article>
+
+          <article class="service-card glass reveal" data-cat="grow">
+            <div class="service-top"><div class="service-icon"><i class="fas fa-pen-ruler"></i></div><span class="service-num">11</span></div>
+            <h3>Graphic Design &amp; Ad Creatives</h3>
+            <p>Brand assets, social graphics, and ad creatives in Canva and Photoshop, backed by 5+ years of design work.</p>
+            <ul class="service-tags"><li>Canva</li><li>Photoshop</li><li>Branding</li></ul>
+          </article>
+
+          <article class="service-card glass reveal" data-cat="grow support">
+            <div class="service-top"><div class="service-icon"><i class="fas fa-store"></i></div><span class="service-num">12</span></div>
+            <h3>Social Media &amp; eCommerce Support</h3>
+            <p>Content scheduling, Shopify product listings, inventory, and the admin work that keeps a store running.</p>
+            <ul class="service-tags"><li>Shopify</li><li>Scheduling</li><li>Listings</li></ul>
+          </article>
+
+          <article class="service-card glass reveal" data-cat="support">
+            <div class="service-top"><div class="service-icon"><i class="fas fa-globe"></i></div><span class="service-num">13</span></div>
+            <h3>Domains, DNS &amp; Hosting</h3>
+            <p>Cloudflare and SiteGround setup, custom domains, and DNS records, so sites and funnels resolve and load.</p>
+            <ul class="service-tags"><li>Cloudflare</li><li>SiteGround</li><li>DNS</li></ul>
+          </article>
+
+          <article class="service-card glass reveal" data-cat="support">
+            <div class="service-top"><div class="service-icon"><i class="fas fa-screwdriver-wrench"></i></div><span class="service-num">14</span></div>
+            <h3>Troubleshooting &amp; System Audits</h3>
+            <p>Broken funnel, failed workflow, domain that won't connect? I find the cause and fix it.</p>
+            <ul class="service-tags"><li>Funnels</li><li>CRM</li><li>Integrations</li></ul>
+          </article>
+
+          <a href="#" class="service-card service-cta reveal" data-cat="build automate ai grow support" data-open-form>
+            <i class="fas fa-plus"></i>
+            <h3>Need something not listed?</h3>
+            <p>Tell me what you're trying to build.</p>
+            <span>Let's talk <i class="fas fa-arrow-right"></i></span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- SYSTEM (pinned horizontal scroll on desktop) -->
+    <section class="system-section" id="system">
+      <div class="system-pin">
+        <div class="container system-head">
+          <div class="section-heading reveal">
+            <span class="section-kicker">HOW IT WORKS</span>
+            <h2>One lead, five stages, zero manual follow-up.</h2>
           </div>
+          <div class="system-progress" aria-hidden="true"><span id="systemProgress"></span></div>
+        </div>
+
+        <div class="system-track" id="systemTrack">
+          <article class="system-panel glass">
+            <div class="system-media"><img src="https://images.pexels.com/photos/3861957/pexels-photo-3861957.jpeg?auto=compress&cs=tinysrgb&w=900&h=560&fit=crop" alt="Laptop displaying a growth chart" loading="lazy" decoding="async" /></div>
+            <div class="system-body">
+              <span class="system-step">01</span>
+              <h3>Traffic</h3>
+              <p>Meta and Microsoft Ads campaigns send the right people to the funnel, with tracking in place from day one.</p>
+              <ul class="service-tags"><li>Meta Ads</li><li>Microsoft Ads</li></ul>
+            </div>
+          </article>
+
+          <article class="system-panel glass">
+            <div class="system-media"><img src="https://images.pexels.com/photos/196644/pexels-photo-196644.jpeg?auto=compress&cs=tinysrgb&w=900&h=560&fit=crop" alt="Landing page wireframe sketch" loading="lazy" decoding="async" /></div>
+            <div class="system-body">
+              <span class="system-step">02</span>
+              <h3>Capture</h3>
+              <p>Landing pages, quizzes, and surveys capture the lead and score their intent at the same time.</p>
+              <ul class="service-tags"><li>Funnels</li><li>Quizzes</li><li>Scoring</li></ul>
+            </div>
+          </article>
+
+          <article class="system-panel glass">
+            <div class="system-media"><img src="https://images.pexels.com/photos/8386440/pexels-photo-8386440.jpeg?auto=compress&cs=tinysrgb&w=900&h=560&fit=crop" alt="Robotic hand reaching into a glowing AI network" loading="lazy" decoding="async" /></div>
+            <div class="system-body">
+              <span class="system-step">03</span>
+              <h3>Qualify</h3>
+              <p>An AI chatbot answers questions, asks the qualifying ones, and tags each lead so the hot ones stand out.</p>
+              <ul class="service-tags"><li>AI agent</li><li>Tags</li><li>Lead scoring</li></ul>
+            </div>
+          </article>
+
+          <article class="system-panel glass">
+            <div class="system-media"><img src="https://images.pexels.com/photos/12969403/pexels-photo-12969403.jpeg?auto=compress&cs=tinysrgb&w=900&h=560&fit=crop" alt="Laptop showing a live dashboard" loading="lazy" decoding="async" /></div>
+            <div class="system-body">
+              <span class="system-step">04</span>
+              <h3>Book</h3>
+              <p>Qualified leads book straight onto the calendar, the pipeline stage moves, and your team gets notified.</p>
+              <ul class="service-tags"><li>Calendars</li><li>Pipelines</li></ul>
+            </div>
+          </article>
+
+          <article class="system-panel glass">
+            <div class="system-media"><img src="https://images.pexels.com/photos/267389/pexels-photo-267389.jpeg?auto=compress&cs=tinysrgb&w=900&h=560&fit=crop" alt="Messaging app icons on a smartphone" loading="lazy" decoding="async" /></div>
+            <div class="system-body">
+              <span class="system-step">05</span>
+              <h3>Follow up</h3>
+              <p>A2P-registered SMS and email nurture keep reminding, re-engaging, and converting, all on autopilot.</p>
+              <ul class="service-tags"><li>SMS</li><li>Email</li><li>A2P 10DLC</li></ul>
+            </div>
+          </article>
         </div>
       </div>
     </section>
@@ -249,13 +455,13 @@
             </div>
 
             <ul class="feature-list">
-              <li>Built AI-powered funnels and websites using GoHighLevel and Replit</li>
-              <li>Created surveys, quizzes, and lead-scoring workflows</li>
-              <li>Implemented AI agents and chatbot systems</li>
-              <li>Set up and managed Meta (Facebook & Instagram) ad campaigns for lead generation</li>
-              <li>Delivered CRM automation, ad campaigns, and website/funnel builds for property management and local service clients</li>
-              <li>Handled domains, DNS, hosting, and technical troubleshooting</li>
-              <li>Designed and built custom sites and interactive web experiences using AI-assisted, code-level development</li>
+              <li>Built AI-powered funnels and websites using Replit and GoHighLevel</li>
+              <li>Created quizzes, surveys, and score-based workflow triggers</li>
+              <li>Developed advanced automations: triggers, conditions, pipelines, and nurture sequences</li>
+              <li>Implemented AI agents and chatbots for lead qualification</li>
+              <li>Configured domains, DNS, and hosting using Cloudflare and SiteGround</li>
+              <li>Set up Meta and Microsoft Ads accounts; built end-to-end lead gen systems (capture → booking → follow-up)</li>
+              <li>Troubleshot funnels, CRM systems, domains, and integrations for clients including Texas Physician Associate LLC and NexGen Innovations</li>
             </ul>
           </article>
 
@@ -273,10 +479,10 @@
             </div>
 
             <ul class="feature-list">
-              <li>Managed funnels, automations, pipelines, and campaigns</li>
-              <li>Built and optimized email and SMS follow-up systems</li>
-              <li>Troubleshot CRM, domain, and integration issues</li>
-              <li>Supported backend digital marketing operations</li>
+              <li>Managed GoHighLevel funnels, automations, and pipelines</li>
+              <li>Built and optimized email and SMS campaigns</li>
+              <li>Troubleshot technical issues across domains, integrations, and CRM</li>
+              <li>Handled client communication and follow-ups</li>
             </ul>
           </article>
 
@@ -294,10 +500,10 @@
             </div>
 
             <ul class="feature-list">
-              <li>Handled email marketing and GoHighLevel tasks</li>
-              <li>Managed CRM contacts and social scheduling</li>
-              <li>Supported eCommerce posting and admin work</li>
-              <li>Created marketing assets in Canva</li>
+              <li>Managed email marketing using ActiveCampaign and GoHighLevel</li>
+              <li>Handled social media scheduling and content posting</li>
+              <li>Organized CRM data and managed contacts</li>
+              <li>Assisted with eCommerce product listings and admin tasks</li>
             </ul>
           </article>
 
@@ -316,8 +522,28 @@
 
             <ul class="feature-list">
               <li>Managed Shopify product listings and inventory</li>
-              <li>Assisted with email marketing and support tasks</li>
-              <li>Helped improve product visuals and content</li>
+              <li>Assisted with email marketing and customer support</li>
+              <li>Optimized product descriptions and visuals</li>
+            </ul>
+          </article>
+
+          <article class="experience-card glass reveal">
+            <div class="experience-top">
+              <div class="experience-heading">
+                <div class="experience-icon"><i class="fas fa-pen-ruler"></i></div>
+                <div>
+                  <span class="job-tag">Ongoing</span>
+                  <h3>Freelance Graphic Designer</h3>
+                  <p class="job-company">Self-Employed</p>
+                </div>
+              </div>
+              <span class="job-date">2021 – Present</span>
+            </div>
+
+            <ul class="feature-list">
+              <li>Created branding assets, social media graphics, and marketing materials</li>
+              <li>Worked with clients to align visuals with brand identity</li>
+              <li>Delivered high-quality designs using Canva and Photoshop</li>
             </ul>
           </article>
         </div>
@@ -405,6 +631,11 @@
               <div class="skill-pill"><i class="fas fa-robot"></i>AI Chatbots</div>
               <div class="skill-pill"><i class="fas fa-magnet"></i>Lead Gen Systems</div>
               <div class="skill-pill"><i class="fas fa-comment-sms"></i>Email & SMS Automation</div>
+              <div class="skill-pill"><i class="fas fa-shield-halved"></i>A2P 10DLC Registration</div>
+              <div class="skill-pill"><i class="fas fa-envelope-open-text"></i>ActiveCampaign</div>
+              <div class="skill-pill"><i class="fas fa-terminal"></i>Replit</div>
+              <div class="skill-pill"><i class="fa-brands fa-shopify"></i>Shopify</div>
+              <div class="skill-pill"><i class="fa-brands fa-google"></i>Google Workspace</div>
               <div class="skill-pill"><i class="fas fa-cloud"></i>Cloudflare</div>
               <div class="skill-pill"><i class="fas fa-server"></i>SiteGround</div>
               <div class="skill-pill"><i class="fas fa-network-wired"></i>DNS Setup</div>
@@ -620,7 +851,7 @@
           </div>
 
           <div class="contact-grid">
-            <a href="#" class="contact-card glass reveal" id="openFormContact">
+            <a href="#" class="contact-card glass reveal" data-open-form>
               <div class="contact-icon"><i class="fas fa-paper-plane"></i></div>
               <div>
                 <h3>Project Inquiry</h3>
@@ -673,7 +904,7 @@
   <div class="form-modal" id="formModal">
     <div class="form-overlay" id="closeForm"></div>
 
-    <div class="form-box">
+    <div class="form-box" data-lenis-prevent>
       <button class="form-close" id="closeFormBtn" type="button" aria-label="Close">&times;</button>
 
       <h3>Let's Connect</h3>

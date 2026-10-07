@@ -226,7 +226,7 @@ document.addEventListener("DOMContentLoaded", () => {
      - Locks body scroll
      - Closes on overlay / close button / ESC
   ========================================================= */
-  const openBtn = document.getElementById("openForm");
+  const openBtns = document.querySelectorAll("[data-open-form]");
   const modal = document.getElementById("formModal");
   const closeOverlay = document.getElementById("closeForm");
   const closeBtn = document.getElementById("closeFormBtn");
@@ -244,10 +244,12 @@ document.addEventListener("DOMContentLoaded", () => {
     resetDemo();
   }
 
-  if (openBtn && modal && closeOverlay && closeBtn) {
-    openBtn.addEventListener("click", (event) => {
-      event.preventDefault();
-      openModal();
+  if (openBtns.length && modal && closeOverlay && closeBtn) {
+    openBtns.forEach((btn) => {
+      btn.addEventListener("click", (event) => {
+        event.preventDefault();
+        openModal();
+      });
     });
 
     closeOverlay.addEventListener("click", closeModal);
@@ -508,14 +510,14 @@ document.addEventListener("DOMContentLoaded", () => {
      - Cursor-reactive tilt for project / experience / contact cards
      - Skipped on touch-only devices
   ========================================================= */
-  const tiltEls = document.querySelectorAll(".project-card, .experience-card, .contact-card");
+  const tiltEls = document.querySelectorAll(".project-card, .experience-card, .contact-card, .service-card:not(.service-featured)");
 
   if (tiltEls.length && window.matchMedia("(pointer: fine)").matches) {
     tiltEls.forEach((card) => {
       card.classList.add("spotlight");
 
       const maxTilt = card.classList.contains("experience-card") ? 3 : 6;
-      const lift = card.classList.contains("project-card")
+      const lift = card.classList.contains("project-card") || card.classList.contains("service-card")
         ? -8
         : card.classList.contains("contact-card")
         ? -6

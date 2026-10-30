@@ -21,7 +21,7 @@ document.addEventListener("DOMContentLoaded", () => {
      - Wraps each word in a mask so it can slide up into view
      - Plays when the parent .reveal gets .show
   ========================================================= */
-  const splitTargets = document.querySelectorAll(".section-heading h2, .skills-left h2, .contact-intro h2");
+  const splitTargets = document.querySelectorAll(".section-heading h2:not(.gtk-title), .skills-left h2, .contact-intro h2");
 
   splitTargets.forEach((heading) => {
     const text = heading.textContent.trim().replace(/\s+/g, " ");
@@ -57,35 +57,35 @@ document.addEventListener("DOMContentLoaded", () => {
   window.addEventListener("resize", restagger);
 
   /* =========================================================
-     2b. KINETIC HERO WORD
+     2b. KINETIC WORDS (hero headline, Get to Know heading)
      - Cycles data-words; letters flip out, the next word's
        letters flip in one after another
   ========================================================= */
-  const kineticWord = document.getElementById("kineticWord");
+  if (!reduceMotion) {
+    document.querySelectorAll(".kinetic-word[data-words]").forEach((el) => {
+      const words = (el.dataset.words || "").split("|").filter(Boolean);
+      let wordIndex = 0;
 
-  if (kineticWord && !reduceMotion) {
-    const words = (kineticWord.dataset.words || "").split("|").filter(Boolean);
-    let wordIndex = 0;
+      function setWord(word, state) {
+        el.innerHTML = Array.from(word)
+          .map((ch, i) => `<span class="kc ${state}" style="--c:${i}">${ch === " " ? "&nbsp;" : ch}</span>`)
+          .join("");
+      }
 
-    function setWord(word, state) {
-      kineticWord.innerHTML = Array.from(word)
-        .map((ch, i) => `<span class="kc ${state}" style="--c:${i}">${ch === " " ? "&nbsp;" : ch}</span>`)
-        .join("");
-    }
+      setWord(words[0], "in");
 
-    setWord(words[0], "in");
+      setInterval(() => {
+        // Flip current letters out
+        el.querySelectorAll(".kc").forEach((c) => c.classList.replace("in", "out"));
 
-    setInterval(() => {
-      // Flip current letters out
-      kineticWord.querySelectorAll(".kc").forEach((c) => c.classList.replace("in", "out"));
-
-      setTimeout(() => {
-        wordIndex = (wordIndex + 1) % words.length;
-        setWord(words[wordIndex], "pre");
-        void kineticWord.offsetWidth; // let "pre" paint before animating in
-        kineticWord.querySelectorAll(".kc").forEach((c) => c.classList.replace("pre", "in"));
-      }, 520);
-    }, 2800);
+        setTimeout(() => {
+          wordIndex = (wordIndex + 1) % words.length;
+          setWord(words[wordIndex], "pre");
+          void el.offsetWidth; // let "pre" paint before animating in
+          el.querySelectorAll(".kc").forEach((c) => c.classList.replace("pre", "in"));
+        }, 520);
+      }, 2800);
+    });
   }
 
   /* =========================================================

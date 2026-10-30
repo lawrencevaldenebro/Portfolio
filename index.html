@@ -37,6 +37,7 @@
   <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js" defer></script>
   <script src="./scroll-fx.js" defer></script>
   <script src="./work.js" defer></script>
+  <script src="./gtk.js" defer></script>
 </head>
 
 <body>
@@ -499,10 +500,69 @@
       <div class="container">
         <div class="section-heading reveal">
           <span class="section-kicker">GET TO KNOW ME</span>
-          <h2>Beyond the funnels and workflows.</h2>
+          <h2 class="gtk-title" aria-label="Funnels by day, movies, games and stories by night.">
+            <span aria-hidden="true">Funnels by day,</span>
+            <span aria-hidden="true"><span class="kinetic-word" data-words="movies|games|stories">movies</span> by night.</span>
+          </h2>
           <p>
-            Flip a card to see my picks.
+            Hit play, spin the prism, flip a card.
           </p>
+        </div>
+
+        <div class="gtk-stage">
+          <!-- Morphing shape: circle → sparkle → squircle → blob -->
+          <svg class="gtk-morph" viewBox="0 0 400 400" aria-hidden="true">
+            <defs>
+              <linearGradient id="gtkMorphGrad" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#4cc9f0" />
+                <stop offset="50%" stop-color="#3a86ff" />
+                <stop offset="100%" stop-color="#7b61ff" />
+              </linearGradient>
+            </defs>
+            <path class="gtk-morph-fill" fill="url(#gtkMorphGrad)">
+              <animate attributeName="d" dur="12s" repeatCount="indefinite" calcMode="spline"
+                keySplines="0.65 0 0.35 1; 0.65 0 0.35 1; 0.65 0 0.35 1; 0.65 0 0.35 1"
+                values="M200,50 C283,50 350,117 350,200 C350,283 283,350 200,350 C117,350 50,283 50,200 C50,117 117,50 200,50 Z;
+                        M200,30 C240,140 260,160 370,200 C260,240 240,260 200,370 C160,260 140,240 30,200 C140,160 160,140 200,30 Z;
+                        M200,50 C330,50 350,70 350,200 C350,330 330,350 200,350 C70,350 50,330 50,200 C50,70 70,50 200,50 Z;
+                        M210,40 C300,60 370,120 340,210 C315,290 270,360 180,340 C95,320 40,270 60,180 C80,100 130,25 210,40 Z;
+                        M200,50 C283,50 350,117 350,200 C350,283 283,350 200,350 C117,350 50,283 50,200 C50,117 117,50 200,50 Z" />
+            </path>
+            <path class="gtk-morph-line" fill="none" stroke="url(#gtkMorphGrad)" stroke-width="1.5">
+              <animate attributeName="d" dur="12s" begin="-3s" repeatCount="indefinite" calcMode="spline"
+                keySplines="0.65 0 0.35 1; 0.65 0 0.35 1; 0.65 0 0.35 1; 0.65 0 0.35 1"
+                values="M200,50 C283,50 350,117 350,200 C350,283 283,350 200,350 C117,350 50,283 50,200 C50,117 117,50 200,50 Z;
+                        M200,30 C240,140 260,160 370,200 C260,240 240,260 200,370 C160,260 140,240 30,200 C140,160 160,140 200,30 Z;
+                        M200,50 C330,50 350,70 350,200 C350,330 330,350 200,350 C70,350 50,330 50,200 C50,70 70,50 200,50 Z;
+                        M210,40 C300,60 370,120 340,210 C315,290 270,360 180,340 C95,320 40,270 60,180 C80,100 130,25 210,40 Z;
+                        M200,50 C283,50 350,117 350,200 C350,283 283,350 200,350 C117,350 50,283 50,200 C50,117 117,50 200,50 Z" />
+            </path>
+          </svg>
+
+          <figure class="gtk-reel reveal" id="gtkReel">
+            <div class="gtk-reel-frame">
+              <video src="./videos/get-to-know.mp4" poster="./videos/get-to-know-poster.jpg"
+                muted loop playsinline preload="metadata"
+                aria-label="Short motion graphic: funnels by day, movies and games by night"></video>
+              <button type="button" class="gtk-reel-toggle" aria-label="Pause video"><i class="fas fa-pause"></i></button>
+            </div>
+            <figcaption><span class="gtk-dot"></span> 15s reel, made in code with Remotion</figcaption>
+          </figure>
+
+          <div class="gtk-prism-wrap reveal">
+            <div class="gtk-prism-scene" id="gtkPrism" role="img"
+              aria-label="Rotating 3D prism of my favourite movies and games. Drag to spin.">
+              <div class="gtk-prism">
+                <div class="gtk-face" style="--f:0"><img src="./images/posters/movie-1.svg" alt=""></div>
+                <div class="gtk-face" style="--f:1"><img src="./images/posters/game-1.svg" alt=""></div>
+                <div class="gtk-face" style="--f:2"><img src="./images/posters/movie-2.svg" alt=""></div>
+                <div class="gtk-face" style="--f:3"><img src="./images/posters/game-2.svg" alt=""></div>
+                <div class="gtk-face" style="--f:4"><img src="./images/posters/movie-3.svg" alt=""></div>
+                <div class="gtk-face" style="--f:5"><img src="./images/posters/game-3.svg" alt=""></div>
+              </div>
+            </div>
+            <p class="gtk-hint"><i class="fas fa-arrows-left-right"></i> Drag to spin</p>
+          </div>
         </div>
 
         <div class="flip-grid">

@@ -3593,3 +3593,241 @@ html.has-lenis {
     transform: none;
   }
 }
+
+/* =========================================================
+   18. GET TO KNOW ME
+   - Kinetic heading, Remotion reel, morph shape, 3D prism
+========================================================= */
+.gtk-title > span {
+  display: block;
+}
+
+.gtk-title .kinetic-word {
+  display: inline-block;
+}
+
+.gtk-stage {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+  align-items: center;
+  gap: 40px;
+  margin-bottom: 56px;
+}
+
+/* ---------- Morph shape (sits behind the prism) ---------- */
+.gtk-morph {
+  position: absolute;
+  right: 2%;
+  top: 50%;
+  width: min(440px, 40%);
+  transform: translateY(-50%);
+  z-index: 0;
+  pointer-events: none;
+  overflow: visible;
+  animation: gtkSpin 40s linear infinite;
+}
+
+.gtk-morph-fill {
+  opacity: 0.16;
+}
+
+.gtk-morph-line {
+  opacity: 0.55;
+}
+
+@keyframes gtkSpin {
+  to { transform: translateY(-50%) rotate(360deg); }
+}
+
+/* ---------- Reel ---------- */
+.gtk-reel {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  perspective: 1200px;
+}
+
+.gtk-reel-frame {
+  position: relative;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-strong), 0 0 60px rgba(58, 134, 255, 0.18);
+  transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  transition: transform 0.5s var(--ease-out-expo);
+  will-change: transform;
+}
+
+/* Light glare that follows the pointer */
+.gtk-reel-frame::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at var(--gx, 50%) var(--gy, 0%), rgba(255, 255, 255, 0.12), transparent 45%);
+  pointer-events: none;
+}
+
+.gtk-reel video {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  cursor: pointer;
+}
+
+.gtk-reel-toggle {
+  position: absolute;
+  right: 14px;
+  bottom: 14px;
+  z-index: 2;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(6, 17, 31, 0.6);
+  backdrop-filter: blur(8px);
+  color: var(--text);
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.gtk-reel:hover .gtk-reel-toggle,
+.gtk-reel-toggle:focus-visible,
+.gtk-reel.is-paused .gtk-reel-toggle {
+  opacity: 1;
+}
+
+.gtk-reel-toggle:hover {
+  transform: scale(1.08);
+}
+
+.gtk-reel figcaption {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 14px;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.gtk-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent-cyan);
+  box-shadow: 0 0 0 0 rgba(76, 201, 240, 0.6);
+  animation: gtkPulse 1.8s ease-out infinite;
+}
+
+.gtk-reel.is-paused .gtk-dot {
+  animation: none;
+  background: var(--muted);
+}
+
+@keyframes gtkPulse {
+  to { box-shadow: 0 0 0 10px rgba(76, 201, 240, 0); }
+}
+
+/* ---------- 3D prism: six poster faces around a hexagon ---------- */
+.gtk-prism-wrap {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.gtk-prism-scene {
+  --face-w: 150px;
+  --face-h: 225px;
+  --apothem: 130px; /* face-w × √3 / 2 */
+  width: var(--face-w);
+  height: calc(var(--face-h) + 90px);
+  display: grid;
+  place-items: center;
+  perspective: 1000px;
+  cursor: grab;
+  touch-action: pan-y;
+  user-select: none;
+  outline: none;
+}
+
+.gtk-prism-scene.is-dragging {
+  cursor: grabbing;
+}
+
+.gtk-prism-scene:focus-visible .gtk-face {
+  border-color: var(--accent-cyan);
+}
+
+.gtk-prism {
+  position: relative;
+  width: var(--face-w);
+  height: var(--face-h);
+  transform-style: preserve-3d;
+}
+
+.gtk-face {
+  position: absolute;
+  inset: 0;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid rgba(130, 180, 255, 0.22);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
+  transform: rotateY(calc(var(--f) * 60deg)) translateZ(var(--apothem));
+}
+
+.gtk-face img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  -webkit-user-drag: none;
+}
+
+.gtk-hint {
+  margin-top: 6px;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.gtk-hint i {
+  margin-right: 6px;
+  color: var(--accent-cyan);
+}
+
+@media (max-width: 860px) {
+  .gtk-stage {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+
+  .gtk-morph {
+    top: auto;
+    bottom: -20px;
+    right: 50%;
+    width: 340px;
+    transform: translateX(50%);
+    animation: none;
+  }
+
+  .gtk-prism-scene {
+    --face-w: 120px;
+    --face-h: 180px;
+    --apothem: 104px;
+  }
+
+  .gtk-reel-toggle {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gtk-morph,
+  .gtk-dot {
+    animation: none;
+  }
+}

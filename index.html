@@ -25,6 +25,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js" defer></script>
   <script src="./scroll-fx.js" defer></script>
+  <script src="./work.js" defer></script>
 </head>
 
 <body>
@@ -49,7 +50,7 @@
         <a href="#about">About</a>
         <a href="#services">Services</a>
         <a href="#experience">Experience</a>
-        <a href="#projects">Projects</a>
+        <a href="#projects">Work</a>
         <a href="#skills">Skills</a>
         <a href="#game">Play</a>
         <a href="#contact">Contact</a>
@@ -69,7 +70,7 @@
       <a href="#about">About</a>
       <a href="#services">Services</a>
       <a href="#experience">Experience</a>
-      <a href="#projects">Projects</a>
+      <a href="#projects">Work</a>
       <a href="#skills">Skills</a>
       <a href="#game">Play</a>
       <a href="#contact">Contact</a>
@@ -86,10 +87,11 @@
             Marketing Automation • Funnels • AI Systems
           </div>
 
-          <h1>
-            <span class="gradient-text">Funnels & Websites,</span><br>CRM automations,<br><span class="gradient-text">AI
-              integrations</span><br>
-            built to help businesses convert better.
+          <h1 class="kinetic-h1" aria-label="I build funnels, CRM automations, AI chatbots, and websites that convert.">
+            <span aria-hidden="true">I build</span>
+            <span class="kinetic-word" id="kineticWord" aria-hidden="true"
+              data-words="funnels|CRM automations|AI chatbots|websites|lead systems">funnels</span>
+            <span aria-hidden="true">that convert.</span>
           </h1>
 
           <p class="hero-description">
@@ -113,24 +115,40 @@
               Download Resume
             </a>
           </div>
-
-          <div class="hero-mini-stats">
-            <div class="mini-stat glass-lite">
-              <strong>GoHighLevel</strong>
-              <span>funnels, pipelines, workflows</span>
-            </div>
-            <div class="mini-stat glass-lite">
-              <strong>AI Systems</strong>
-              <span>chatbots, scoring, qualification</span>
-            </div>
-            <div class="mini-stat glass-lite">
-              <strong>Tech Setup</strong>
-              <span>domains, DNS, hosting, ads</span>
-            </div>
-          </div>
         </div>
 
         <div class="hero-visual reveal">
+          <!-- Morphing gradient blob behind the photo -->
+          <svg class="hero-blob" viewBox="0 0 500 500" aria-hidden="true">
+            <defs>
+              <linearGradient id="blobGrad" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#4cc9f0" />
+                <stop offset="55%" stop-color="#3a86ff" />
+                <stop offset="100%" stop-color="#7b61ff" />
+              </linearGradient>
+            </defs>
+            <path fill="url(#blobGrad)">
+              <animate attributeName="d" dur="11s" repeatCount="indefinite" calcMode="spline"
+                keySplines="0.45 0 0.55 1; 0.45 0 0.55 1; 0.45 0 0.55 1"
+                values="M250,60 C360,55 450,140 440,250 C430,360 350,440 245,435 C140,430 55,350 60,245 C65,140 140,65 250,60 Z;
+                        M260,45 C380,80 460,170 425,275 C390,380 330,450 225,425 C120,400 40,320 75,215 C110,110 150,20 260,45 Z;
+                        M240,75 C340,40 470,120 455,240 C440,360 370,420 260,445 C150,470 50,370 50,260 C50,150 140,110 240,75 Z;
+                        M250,60 C360,55 450,140 440,250 C430,360 350,440 245,435 C140,430 55,350 60,245 C65,140 140,65 250,60 Z" />
+            </path>
+          </svg>
+
+          <!-- 3D orbit of tool icons -->
+          <div class="hero-orbit" aria-hidden="true">
+            <div class="orbit-ring">
+              <span style="--a:0deg"><i class="fas fa-diagram-project"></i></span>
+              <span style="--a:60deg"><i class="fas fa-robot"></i></span>
+              <span style="--a:120deg"><i class="fas fa-filter"></i></span>
+              <span style="--a:180deg"><i class="fas fa-comment-sms"></i></span>
+              <span style="--a:240deg"><i class="fab fa-meta"></i></span>
+              <span style="--a:300deg"><i class="fas fa-code"></i></span>
+            </div>
+          </div>
+
           <div class="hero-image-card">
             <div class="hero-badge badge-top">
               <i class="fas fa-bolt"></i>
@@ -403,62 +421,55 @@
       </div>
     </section>
 
-    <!-- PROJECTS -->
+    <!-- WORK (3D showcase + filterable gallery; data + logic in work.js) -->
     <section class="section-block" id="projects">
       <div class="container">
         <div class="section-heading reveal">
-          <span class="section-kicker">PROJECTS</span>
+          <span class="section-kicker">WORK</span>
           <h2>Selected work.</h2>
         </div>
 
-        <div class="projects-grid">
-          <a class="project-card glass reveal"
-            href="https://drive.google.com/drive/folders/1RfINq17vSVeiT2ZllKmIyr_I7RYuai_J?usp=drive_link"
-            target="_blank">
-            <div class="card-media"><img src="https://images.pexels.com/photos/3861957/pexels-photo-3861957.jpeg?auto=compress&cs=tinysrgb&w=800&h=500&fit=crop" alt="Laptop displaying a growth chart in a modern office" width="800" height="500" loading="lazy" decoding="async" /></div>
-            <div class="project-icon"><i class="fas fa-layer-group"></i></div>
-            <h3>GoHighLevel</h3>
-            <p>Funnels, workflows, pipelines, CRM systems, and automations.</p>
-            <span>Open Folder <i class="fas fa-arrow-right"></i></span>
-          </a>
+        <div class="work-showcase reveal">
+          <svg class="work-morph" viewBox="0 0 600 400" aria-hidden="true">
+            <defs>
+              <linearGradient id="morphGrad" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#4cc9f0" />
+                <stop offset="50%" stop-color="#3a86ff" />
+                <stop offset="100%" stop-color="#7b61ff" />
+              </linearGradient>
+            </defs>
+            <path fill="url(#morphGrad)">
+              <animate attributeName="d" dur="14s" repeatCount="indefinite" calcMode="spline"
+                keySplines="0.45 0 0.55 1; 0.45 0 0.55 1; 0.45 0 0.55 1"
+                values="M300,60 C420,50 540,120 530,210 C520,300 420,350 300,340 C180,330 70,290 70,200 C70,110 180,70 300,60 Z;
+                        M300,40 C450,70 560,160 510,240 C460,320 380,370 280,350 C160,325 50,260 90,170 C130,80 190,30 300,40 Z;
+                        M320,70 C430,40 520,140 540,220 C560,300 440,360 310,345 C200,332 60,300 60,210 C60,120 220,95 320,70 Z;
+                        M300,60 C420,50 540,120 530,210 C520,300 420,350 300,340 C180,330 70,290 70,200 C70,110 180,70 300,60 Z" />
+            </path>
+          </svg>
 
-          <a class="project-card glass reveal"
-            href="https://drive.google.com/drive/folders/1YvkvlpK3Zqj49iybnXSjqmGGKJBIwbnn?usp=drive_link"
-            target="_blank">
-            <div class="card-media"><img src="https://images.pexels.com/photos/4348404/pexels-photo-4348404.jpeg?auto=compress&cs=tinysrgb&w=800&h=500&fit=crop" alt="Designer working on a laptop surrounded by visual inspiration" width="800" height="500" loading="lazy" decoding="async" /></div>
-            <div class="project-icon"><i class="fas fa-pen-ruler"></i></div>
-            <h3>Graphic Design</h3>
-            <p>Branding visuals, marketing graphics, layouts, and ad creatives.</p>
-            <span>Open Folder <i class="fas fa-arrow-right"></i></span>
-          </a>
+          <div class="cf-stage" id="cfStage" aria-roledescription="carousel"></div>
 
-          <a class="project-card glass reveal"
-            href="https://drive.google.com/drive/folders/1O1Ozkiy5qn6K1Hz8acEF07GbO9kSh-Oy?usp=drive_link"
-            target="_blank">
-            <div class="card-media"><img src="https://images.pexels.com/photos/31718971/pexels-photo-31718971.jpeg?auto=compress&cs=tinysrgb&w=800&h=500&fit=crop" alt="Video editing software timeline on a monitor" width="800" height="500" loading="lazy" decoding="async" /></div>
-            <div class="project-icon"><i class="fas fa-film"></i></div>
-            <h3>Video Editing</h3>
-            <p>Edited content, presentation-style assets, and support materials.</p>
-            <span>Open Folder <i class="fas fa-arrow-right"></i></span>
-          </a>
+          <div class="cf-controls">
+            <button type="button" class="cf-arrow" id="cfPrev" aria-label="Previous"><i class="fas fa-arrow-left"></i></button>
+            <p class="cf-caption" id="cfCaption" aria-live="polite"></p>
+            <button type="button" class="cf-arrow" id="cfNext" aria-label="Next"><i class="fas fa-arrow-right"></i></button>
+          </div>
+          <div class="cf-dots" id="cfDots"></div>
+        </div>
 
-          <a class="project-card glass reveal"
-            href="https://drive.google.com/drive/folders/1Pbk6khu04pOdy9XIOLdCxnTnf5zYhMP6?usp=drive_link"
-            target="_blank">
-            <div class="card-media"><img src="https://images.pexels.com/photos/267389/pexels-photo-267389.jpeg?auto=compress&cs=tinysrgb&w=800&h=500&fit=crop" alt="Social media app icons on a smartphone screen" width="800" height="500" loading="lazy" decoding="async" /></div>
-            <div class="project-icon"><i class="fas fa-code"></i></div>
-            <h3>Web & Digital Marketing</h3>
-            <p>Landing pages, websites, client-facing digital builds, and technical setup.</p>
-            <span>Open Folder <i class="fas fa-arrow-right"></i></span>
-          </a>
+        <div class="work-tabs reveal" role="tablist" aria-label="Filter work">
+          <button type="button" class="work-tab" role="tab" aria-selected="true" data-filter="all">All <em></em></button>
+          <button type="button" class="work-tab" role="tab" aria-selected="false" data-filter="ghl">GoHighLevel <em></em></button>
+          <button type="button" class="work-tab" role="tab" aria-selected="false" data-filter="web">Websites <em></em></button>
+          <button type="button" class="work-tab" role="tab" aria-selected="false" data-filter="design">Design <em></em></button>
+          <button type="button" class="work-tab" role="tab" aria-selected="false" data-filter="video">Video <em></em></button>
+        </div>
 
-          <a class="project-card glass reveal" href="#home">
-            <div class="card-media"><img src="https://images.pexels.com/photos/577585/pexels-photo-577585.jpeg?auto=compress&cs=tinysrgb&w=800&h=500&fit=crop" alt="Code editor open on a laptop screen" width="800" height="500" loading="lazy" decoding="async" /></div>
-            <div class="project-icon"><i class="fas fa-wand-magic-sparkles"></i></div>
-            <h3>This Portfolio Site</h3>
-            <p>Custom UI, an animated intro, an interactive mini-game, and automated contact flows &mdash; built end-to-end through AI-assisted, code-level development.</p>
-            <span>You're On It <i class="fas fa-arrow-up"></i></span>
-          </a>
+        <div class="work-grid" id="workGrid"></div>
+
+        <div class="work-more-wrap">
+          <button type="button" class="btn btn-secondary" id="workMore"><i class="fas fa-plus"></i> <span>Show more</span></button>
         </div>
       </div>
     </section>
@@ -736,7 +747,7 @@
         <a href="#home">Home</a>
         <a href="#services">Services</a>
         <a href="#experience">Experience</a>
-        <a href="#projects">Projects</a>
+        <a href="#projects">Work</a>
         <a href="#contact">Contact</a>
       </div>
 
@@ -864,6 +875,22 @@
         <div class="demo-step">🤖 AI/Automated follow-up system activated</div>
       </div>
     </div>
+  </div>
+
+  <!-- Work lightbox (filled by work.js) -->
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Work viewer" aria-hidden="true" data-lenis-prevent>
+    <div class="lb-backdrop"></div>
+    <button type="button" class="lb-close" aria-label="Close"><i class="fas fa-xmark"></i></button>
+    <button type="button" class="lb-arrow lb-prev" aria-label="Previous"><i class="fas fa-arrow-left"></i></button>
+    <figure class="lb-figure">
+      <div class="lb-stage" id="lbStage"></div>
+      <figcaption class="lb-caption">
+        <span class="lb-type" id="lbType"></span>
+        <strong id="lbTitle"></strong>
+        <span class="lb-count" id="lbCount"></span>
+      </figcaption>
+    </figure>
+    <button type="button" class="lb-arrow lb-next" aria-label="Next"><i class="fas fa-arrow-right"></i></button>
   </div>
 
 </body>

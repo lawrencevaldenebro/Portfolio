@@ -57,6 +57,38 @@ document.addEventListener("DOMContentLoaded", () => {
   window.addEventListener("resize", restagger);
 
   /* =========================================================
+     2b. KINETIC HERO WORD
+     - Cycles data-words; letters flip out, the next word's
+       letters flip in one after another
+  ========================================================= */
+  const kineticWord = document.getElementById("kineticWord");
+
+  if (kineticWord && !reduceMotion) {
+    const words = (kineticWord.dataset.words || "").split("|").filter(Boolean);
+    let wordIndex = 0;
+
+    function setWord(word, state) {
+      kineticWord.innerHTML = Array.from(word)
+        .map((ch, i) => `<span class="kc ${state}" style="--c:${i}">${ch === " " ? "&nbsp;" : ch}</span>`)
+        .join("");
+    }
+
+    setWord(words[0], "in");
+
+    setInterval(() => {
+      // Flip current letters out
+      kineticWord.querySelectorAll(".kc").forEach((c) => c.classList.replace("in", "out"));
+
+      setTimeout(() => {
+        wordIndex = (wordIndex + 1) % words.length;
+        setWord(words[wordIndex], "pre");
+        void kineticWord.offsetWidth; // let "pre" paint before animating in
+        kineticWord.querySelectorAll(".kc").forEach((c) => c.classList.replace("pre", "in"));
+      }, 520);
+    }, 2800);
+  }
+
+  /* =========================================================
      3. LENIS SMOOTH SCROLL
      - Desktop only (touch devices keep native momentum)
      - Pauses while the intro or contact modal is open

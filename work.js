@@ -55,13 +55,26 @@ document.addEventListener("DOMContentLoaded", () => {
     { src: "ad-property-wide-c", type: "ad", title: "Wide-format property ad", w: 1200, h: 628 }
   ];
 
-  const TYPE_LABEL = { ad: "Ad creative", social: "Social post", web: "Website", ghl: "GoHighLevel" };
-  const TYPE_ICON = { ad: "fa-bullhorn", social: "fa-hashtag", web: "fa-code", ghl: "fa-diagram-project" };
+  const TYPE_LABEL = { ad: "Ad creative", social: "Social post", web: "Website", ghl: "GoHighLevel", reel: "Motion graphics" };
+  const TYPE_ICON = { ad: "fa-bullhorn", social: "fa-hashtag", web: "fa-code", ghl: "fa-diagram-project", reel: "fa-film" };
+
+  // Remotion-rendered showreel (source: Downloads/portfolio-remotion). `hold` keeps it
+  // in front of the carousel for its full length before rotating on.
+  const REEL = {
+    src: "showreel",
+    type: "reel",
+    title: "Showreel",
+    video: "./videos/showreel.mp4",
+    poster: "./videos/showreel-poster.jpg",
+    hold: 18000,
+    w: 1280,
+    h: 800
+  };
 
   // Highlights for the 3D showcase (landscape pieces suit the 16:10 cards)
-  const SHOWCASE = ["ad-property-wide-a", "web-trade-hero", "ad-property-wide-b", "ghl-ai-receptionist",
+  const SHOWCASE = [REEL, ...["ad-property-wide-a", "web-trade-hero", "ad-property-wide-b", "ghl-ai-receptionist",
     "ad-property-wide-c", "web-saas-pricing", "ghl-roi-calculator", "web-trade-gallery"]
-    .map((src) => WORK.find((w) => w.src === src));
+    .map((src) => WORK.find((w) => w.src === src))];
 
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -70,7 +83,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll("svg.work-morph").forEach((svg) => svg.pauseAnimations?.());
   }
 
-  const imgUrl = (item) => `${IMG}${item.src}.jpg`;
+  const imgUrl = (item) => item.poster || `${IMG}${item.src}.jpg`;
 
   /* =========================================================
      4. LIGHTBOX (defined first — coverflow + gallery open it)
@@ -89,9 +102,13 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!item || !lbStage) return;
 
     lbStage.classList.remove("is-in");
-    lbStage.innerHTML = item.drive
-      ? `<div class="lb-video"><iframe src="https://drive.google.com/file/d/${item.drive}/preview" allow="autoplay; fullscreen" allowfullscreen title="${item.title}"></iframe></div>`
-      : `<img src="${imgUrl(item)}" alt="${item.title}" width="${item.w}" height="${item.h}" />`;
+    if (item.video) {
+      lbStage.innerHTML = `<video class="lb-reel" src="${item.video}" poster="${item.poster}" controls autoplay playsinline loop></video>`;
+    } else if (item.drive) {
+      lbStage.innerHTML = `<div class="lb-video"><iframe src="https://drive.google.com/file/d/${item.drive}/preview" allow="autoplay; fullscreen" allowfullscreen title="${item.title}"></iframe></div>`;
+    } else {
+      lbStage.innerHTML = `<img src="${imgUrl(item)}" alt="${item.title}" width="${item.w}" height="${item.h}" />`;
+    }
 
     // Force reflow so the swap animation replays.
     void lbStage.offsetWidth;
@@ -112,6 +129,7 @@ document.addEventListener("DOMContentLoaded", () => {
     lb.setAttribute("aria-hidden", "false");
     document.body.classList.add("modal-open");
     lb.querySelector(".lb-close")?.focus();
+    document.dispatchEvent(new Event("lightboxchange"));
   }
 
   function closeLightbox() {
@@ -121,6 +139,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.body.classList.remove("modal-open");
     lbStage.innerHTML = ""; // stops any playing video
     lbLastFocus?.focus();
+    document.dispatchEvent(new Event("lightboxchange"));
   }
 
   function stepLightbox(dir) {
@@ -168,12 +187,30 @@ document.addEventListener("DOMContentLoaded", () => {
     let inView = false;
 
     cfStage.innerHTML = SHOWCASE.map((item, i) => `
-      <button type="button" class="cf-card" data-i="${i}" aria-label="${item.title}">
-        <img src="${imgUrl(item)}" alt="" loading="lazy" decoding="async" />
+      <button type="button" class="cf-card${item.video ? " is-reel" : ""}" data-i="${i}" aria-label="${item.title}">
+        ${item.video
+          ? `<video src="${item.video}" poster="${item.poster}" muted loop playsinline preload="metadata" aria-hidden="true"></video>`
+          : `<img src="${imgUrl(item)}" alt="" loading="lazy" decoding="async" />`}
         <span class="cf-shine" aria-hidden="true"></span>
       </button>`).join("");
 
     const cards = Array.from(cfStage.querySelectorAll(".cf-card"));
+
+    // Only the front card's video plays, and only while the carousel is on screen.
+    function syncVideos() {
+      const lightboxOpen = lb?.classList.contains("active");
+      cards.forEach((card, i) => {
+        const video = card.querySelector("video");
+        if (!video) return;
+        if (i === active && inView && !reduceMotion && !lightboxOpen) {
+          video.play().catch(() => {}); // autoplay can be refused; the poster stays up
+        } else {
+          video.pause();
+        }
+      });
+    }
+
+    document.addEventListener("lightboxchange", () => syncVideos());
 
     if (cfDots) {
       cfDots.innerHTML = SHOWCASE.map((_, i) => `<button type="button" aria-label="Show item ${i + 1}" data-i="${i}"></button>`).join("");
@@ -213,19 +250,32 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function go(i) {
-      active = (i + cards.length) % cards.length;
+      const next = (i + cards.length) % cards.length;
+      // Restart the reel each time it comes back to the front
+      if (next !== active) {
+        const video = cards[next].querySelector("video");
+        if (video) video.currentTime = 0;
+      }
+      active = next;
       layout();
+      syncVideos();
+      if (timer) schedule();
     }
 
     function stop() {
-      clearInterval(timer);
+      clearTimeout(timer);
       timer = null;
+    }
+
+    // Each card stays in front for its own `hold` (the reel plays through once).
+    function schedule() {
+      clearTimeout(timer);
+      timer = setTimeout(() => go(active + 1), SHOWCASE[active].hold || 3800);
     }
 
     function play() {
       if (reduceMotion || !inView) return;
-      stop();
-      timer = setInterval(() => go(active + 1), 3800);
+      schedule();
     }
 
     let dragged = false;
@@ -272,6 +322,7 @@ document.addEventListener("DOMContentLoaded", () => {
       new IntersectionObserver((entries) => {
         inView = entries[0].isIntersecting;
         inView ? play() : stop();
+        syncVideos();
       }, { threshold: 0.3 }).observe(cfStage);
     }
 

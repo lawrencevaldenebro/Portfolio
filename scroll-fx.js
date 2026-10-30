@@ -205,6 +205,34 @@ document.addEventListener("DOMContentLoaded", () => {
     );
   }
 
+  /* ---------- How it works: line draws + nodes pop, tied to scroll ---------- */
+  const infographic = document.querySelector(".infographic");
+
+  if (infographic) {
+    // Hands control from the one-shot CSS reveal to the scrubbed timeline.
+    infographic.classList.add("is-scrubbed");
+
+    const flow = gsap.timeline({
+      scrollTrigger: {
+        trigger: infographic,
+        start: "top 85%",
+        end: "bottom 50%",
+        scrub: 0.6
+      }
+    });
+
+    flow.fromTo(infographic, { "--line": 0 }, { "--line": 1, ease: "none", duration: 1 }, 0);
+
+    infographic.querySelectorAll(".info-node").forEach((node, i) => {
+      flow.fromTo(
+        node,
+        { opacity: 0, y: 40, scale: 0.7 },
+        { opacity: 1, y: 0, scale: 1, duration: 0.25, ease: "back.out(1.7)" },
+        i * 0.19
+      );
+    });
+  }
+
   // Lazy images and web fonts change heights after load.
   window.addEventListener("load", () => ScrollTrigger.refresh());
 });

@@ -6,71 +6,68 @@
    3. GALLERY (filter tabs + masonry grid + "show more")
    4. LIGHTBOX (image / Drive video viewer with prev/next)
    ---------------------------------------------------------
-   Images live in images/work/. Videos stream from Google
-   Drive's preview player, so the repo stays light.
+   Images live in images/work/. An item with a `drive` id
+   plays in Google Drive's preview player instead.
 ========================================================= */
 
 document.addEventListener("DOMContentLoaded", () => {
   /* =========================================================
      1. DATA
-     - type: "ghl" | "web" | "design" | "video"
+     - type: "ad" | "social" | "web" | "ghl"
      - w/h: image size, used to reserve space before load
-     - drive: Drive file id (videos only)
+     - drive: optional Drive file id (videos)
   ========================================================= */
   const IMG = "./images/work/";
 
   const WORK = [
+    { src: "ad-property-1", type: "ad", title: "Property management ad", w: 1000, h: 1250 },
+    { src: "ad-cleaning-1", type: "ad", title: "Commercial cleaning ad", w: 1000, h: 1250 },
+    { src: "social-1", type: "social", title: "\"Did you know\" post", w: 900, h: 1125 },
     { src: "web-trade-hero", type: "web", title: "Trade company website", w: 1600, h: 687 },
+    { src: "ad-property-2", type: "ad", title: "Owner health-check ad", w: 1000, h: 1250 },
+    { src: "ad-cleaning-2", type: "ad", title: "Signed checklist ad", w: 1000, h: 1250 },
+    { src: "social-2", type: "social", title: "Meet-the-team post", w: 900, h: 1125 },
     { src: "ghl-ai-receptionist", type: "ghl", title: "AI receptionist offer page", w: 1143, h: 1089 },
-    { src: "design-personal-banner", type: "design", title: "Personal brand banner", w: 1400, h: 789 },
-    { src: "ghl-workflow-map", type: "ghl", title: "Multi-branch automation", w: 1400, h: 923 },
-    { src: "video-5", type: "video", title: "Anime edit", w: 600, h: 1067, drive: "1inkRR-iHq9pLjl-pWnwamc1UIIVq3ZVh" },
+    { src: "ad-property-sq-a", type: "ad", title: "Multifamily owner ad", w: 1000, h: 1000 },
+    { src: "ad-property-3", type: "ad", title: "Transparent pricing ad", w: 1000, h: 1250 },
+    { src: "social-3", type: "social", title: "Stat-driven post", w: 900, h: 1125 },
+    { src: "ad-cleaning-3", type: "ad", title: "Flexible schedule ad", w: 1000, h: 1250 },
     { src: "web-saas-pricing", type: "web", title: "SaaS pricing page", w: 1600, h: 721 },
-    { src: "design-margarita-day", type: "design", title: "Holiday recipe post", w: 1000, h: 1000 },
+    { src: "ad-property-4", type: "ad", title: "Renovation to lease-up ad", w: 1000, h: 1250 },
+    { src: "social-4", type: "social", title: "Fact card post", w: 900, h: 1125 },
+    { src: "ad-cleaning-4", type: "ad", title: "Post-construction ad", w: 1000, h: 1250 },
     { src: "ghl-roi-calculator", type: "ghl", title: "Interactive ROI calculator", w: 1400, h: 848 },
-    { src: "design-anime-poster", type: "design", title: "Illustrated poster", w: 900, h: 1600 },
+    { src: "ad-property-sq-b", type: "ad", title: "Underperforming property ad", w: 1000, h: 1000 },
+    { src: "social-5", type: "social", title: "How-we-work post", w: 900, h: 1125 },
+    { src: "ad-property-5", type: "ad", title: "Local market ad", w: 1000, h: 1250 },
     { src: "web-trade-gallery", type: "web", title: "Image gallery slider", w: 1600, h: 919 },
-    { src: "video-2", type: "video", title: "Finance explainer reel", w: 600, h: 1067, drive: "1wzGJY93-g2oTNdlCjuELvPB4Y-6jLVW_" },
-    { src: "ghl-nurture-builder", type: "ghl", title: "Nurture sequence builder", w: 1600, h: 821 },
-    { src: "design-course-module-1", type: "design", title: "Course module tile", w: 1000, h: 1000 },
-    { src: "design-collage-poster", type: "design", title: "Collage poster", w: 900, h: 1273 },
+    { src: "ad-cleaning-5", type: "ad", title: "Office manager ad", w: 1000, h: 1250 },
+    { src: "social-6", type: "social", title: "Free walkthrough post", w: 900, h: 1125 },
+    { src: "ad-property-sq-c", type: "ad", title: "Local presence ad", w: 1000, h: 1000 },
+    { src: "ghl-workflow-map", type: "ghl", title: "Multi-branch automation", w: 1400, h: 923 },
+    { src: "social-7", type: "social", title: "Seasonal stat post", w: 900, h: 1125 },
     { src: "web-trade-services", type: "web", title: "Services section", w: 1600, h: 754 },
-    { src: "video-8", type: "video", title: "Motion graphic", w: 600, h: 1067, drive: "1ASriVQRzErqtbNnPShVPCPB3MxyZJyV5" },
-    { src: "ghl-sms-stats", type: "ghl", title: "SMS reactivation results", w: 1600, h: 485 },
-    { src: "design-bridal-tips", type: "design", title: "Wedding tips post", w: 1000, h: 1000 },
-    { src: "design-neuropathy", type: "design", title: "E-book cover", w: 1000, h: 1414 },
-    { src: "video-3", type: "video", title: "Hair care ad", w: 600, h: 1067, drive: "1Yn7aJue7HuNVX56HQvOB3bkjYTx4RjsS" },
-    { src: "design-course-module-2", type: "design", title: "Course module tile", w: 1000, h: 1000 },
+    { src: "social-8", type: "social", title: "Holiday post", w: 900, h: 1125 },
     { src: "web-trade-why", type: "web", title: "Why-us section", w: 1600, h: 868 },
-    { src: "design-realestate-tips", type: "design", title: "Real estate tips post", w: 1000, h: 1000 },
-    { src: "ghl-workflows", type: "ghl", title: "Workflow library", w: 1600, h: 575 },
-    { src: "design-personal-banner-2", type: "design", title: "Personal brand banner", w: 1400, h: 789 },
-    { src: "video-6", type: "video", title: "Skincare ad", w: 600, h: 1067, drive: "1YnEwIuG7fuJ2oC3uGM9QJtAZxkc_QKvT" },
-    { src: "design-cooking-tips", type: "design", title: "Cooking tips post", w: 1000, h: 1000 },
-    { src: "design-appraisal-tips", type: "design", title: "Home appraisal post", w: 1000, h: 1000 },
-    { src: "video-1", type: "video", title: "Celebrity reel edit", w: 600, h: 1067, drive: "1GYYC-HfjrJBMNh_tctvgnGLsLMgKFxr-" },
-    { src: "design-course-module-3", type: "design", title: "Course module tile", w: 1000, h: 1000 },
-    { src: "design-timing-tips", type: "design", title: "Market timing post", w: 1000, h: 1000 },
-    { src: "design-wellness-tips", type: "design", title: "Wellness tips post", w: 1000, h: 1000 },
-    { src: "video-4", type: "video", title: "Talking-head reel", w: 600, h: 1067, drive: "1PMerA1luVtFRcF6VwTgxmjTY7Hb9XwKA" },
-    { src: "design-therapy-cover", type: "design", title: "Brochure cover", w: 900, h: 1273 },
-    { src: "video-7", type: "video", title: "Wellness ad", w: 600, h: 1067, drive: "1ZD7v-gvURyXORycz1LhnwCA5nSbSfgvE" },
-    { src: "design-matcha-banner", type: "design", title: "Product banner", w: 1600, h: 320 }
+    { src: "social-9", type: "social", title: "Checklist post", w: 900, h: 1125 },
+    { src: "ad-property-wide-a", type: "ad", title: "Wide-format property ad", w: 1200, h: 628 },
+    { src: "ad-property-wide-b", type: "ad", title: "Wide-format property ad", w: 1200, h: 628 },
+    { src: "ad-property-wide-c", type: "ad", title: "Wide-format property ad", w: 1200, h: 628 }
   ];
 
-  const TYPE_LABEL = { ghl: "GoHighLevel", web: "Website", design: "Design", video: "Video" };
-  const TYPE_ICON = { ghl: "fa-diagram-project", web: "fa-code", design: "fa-pen-ruler", video: "fa-play" };
+  const TYPE_LABEL = { ad: "Ad creative", social: "Social post", web: "Website", ghl: "GoHighLevel" };
+  const TYPE_ICON = { ad: "fa-bullhorn", social: "fa-hashtag", web: "fa-code", ghl: "fa-diagram-project" };
 
-  // Highlights for the 3D showcase (indexes into WORK)
-  const SHOWCASE = ["web-trade-hero", "ghl-ai-receptionist", "design-personal-banner", "ghl-workflow-map",
-    "web-saas-pricing", "ghl-roi-calculator", "web-trade-gallery", "ghl-nurture-builder"]
+  // Highlights for the 3D showcase (landscape pieces suit the 16:10 cards)
+  const SHOWCASE = ["ad-property-wide-a", "web-trade-hero", "ad-property-wide-b", "ghl-ai-receptionist",
+    "ad-property-wide-c", "web-saas-pricing", "ghl-roi-calculator", "web-trade-gallery"]
     .map((src) => WORK.find((w) => w.src === src));
 
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   // SMIL morphs can't be stopped from CSS — pause them for reduced motion.
   if (reduceMotion) {
-    document.querySelectorAll("svg.hero-blob, svg.work-morph").forEach((svg) => svg.pauseAnimations?.());
+    document.querySelectorAll("svg.work-morph").forEach((svg) => svg.pauseAnimations?.());
   }
 
   const imgUrl = (item) => `${IMG}${item.src}.jpg`;

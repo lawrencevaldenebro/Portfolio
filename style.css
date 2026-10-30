@@ -2731,6 +2731,17 @@ html.has-lenis {
   transform: scaleX(1);
 }
 
+/* With GSAP: the line follows the scroll position via --line */
+.infographic.is-scrubbed::after,
+.infographic.is-scrubbed.show::after {
+  transform: scaleX(var(--line, 0));
+  transition: none;
+}
+
+.infographic.is-scrubbed .info-node {
+  transition: none;
+}
+
 /* The list itself shouldn't slide — only its nodes animate */
 .infographic.reveal {
   transform: none;
@@ -2880,6 +2891,11 @@ html.has-lenis {
     transform: scaleY(1);
   }
 
+  .infographic.is-scrubbed::after,
+  .infographic.is-scrubbed.show::after {
+    transform: scaleY(var(--line, 0));
+  }
+
   .info-node {
     display: grid;
     grid-template-columns: var(--node) 1fr;
@@ -2943,7 +2959,7 @@ html.has-lenis {
 
 /* =========================================================
    17. HERO MOTION + WORK GALLERY
-   - Kinetic headline, morphing blob, 3D icon orbit
+   - Kinetic headline
    - Coverflow showcase, filter tabs, masonry grid, lightbox
 ========================================================= */
 
@@ -2990,83 +3006,6 @@ html.has-lenis {
   transform: translateY(-45%) rotateX(90deg);
   transition: opacity 0.3s ease, transform 0.45s ease-in;
   transition-delay: calc(var(--c, 0) * 18ms);
-}
-
-/* ---------- Hero visual: blob + orbit ---------- */
-.hero-visual {
-  position: relative;
-  padding-bottom: 70px;
-}
-
-.hero-image-card {
-  z-index: 2;
-}
-
-.hero-blob {
-  position: absolute;
-  left: 50%;
-  top: 46%;
-  width: 118%;
-  max-width: 560px;
-  transform: translate(-50%, -50%);
-  filter: blur(46px);
-  opacity: 0.5;
-  z-index: 0;
-  pointer-events: none;
-}
-
-.hero-orbit {
-  position: absolute;
-  left: 50%;
-  bottom: 52px;
-  width: 0;
-  height: 0;
-  perspective: 900px;
-  z-index: 1;
-  pointer-events: none;
-}
-
-.orbit-ring {
-  --r: 260px;
-  position: absolute;
-  transform-style: preserve-3d;
-  transform: rotateX(74deg);
-  animation: orbitSpin 22s linear infinite;
-}
-
-.orbit-ring span {
-  position: absolute;
-  width: 46px;
-  height: 46px;
-  margin: -23px 0 0 -23px;
-  transform-style: preserve-3d;
-  transform: rotateZ(var(--a)) translateX(var(--r)) rotateZ(calc(var(--a) * -1));
-}
-
-.orbit-ring i {
-  width: 46px;
-  height: 46px;
-  display: grid;
-  place-items: center;
-  border-radius: 14px;
-  background: linear-gradient(135deg, rgba(12, 27, 48, 0.95), rgba(7, 16, 29, 0.95));
-  border: 1px solid rgba(130, 180, 255, 0.35);
-  color: #8fe6ff;
-  font-size: 1.05rem;
-  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.45), 0 0 18px rgba(76, 201, 240, 0.25);
-  transform: rotateX(-74deg); /* faces the viewer even when the spin is off */
-  animation: orbitCounter 22s linear infinite;
-}
-
-@keyframes orbitSpin {
-  from { transform: rotateX(74deg) rotateZ(0deg); }
-  to { transform: rotateX(74deg) rotateZ(360deg); }
-}
-
-/* Undo the ring's spin + tilt so each icon faces the viewer */
-@keyframes orbitCounter {
-  from { transform: rotateZ(0deg) rotateX(-74deg); }
-  to { transform: rotateZ(-360deg) rotateX(-74deg); }
 }
 
 /* ---------- Work: coverflow showcase ---------- */
@@ -3540,34 +3479,12 @@ html.has-lenis {
 
 /* ---------- Responsive ---------- */
 @media (max-width: 860px) {
-  .hero-visual {
-    padding-bottom: 60px;
-  }
-
-  .orbit-ring {
-    --r: 190px;
-  }
-
   .cf-card {
     width: 78%;
   }
 }
 
 @media (max-width: 560px) {
-  .orbit-ring {
-    --r: 150px;
-  }
-
-  .orbit-ring span,
-  .orbit-ring i {
-    width: 38px;
-    height: 38px;
-  }
-
-  .orbit-ring span {
-    margin: -19px 0 0 -19px;
-  }
-
   .work-grid {
     columns: 2;
     column-gap: 10px;
@@ -3627,8 +3544,6 @@ html.has-lenis {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .orbit-ring,
-  .orbit-ring i,
   .cf-card.is-active .cf-shine,
   .tile-play::after {
     animation: none;

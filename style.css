@@ -3704,33 +3704,6 @@ html.has-lenis {
   transform: scale(1.08);
 }
 
-.gtk-reel figcaption {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-top: 14px;
-  color: var(--muted);
-  font-size: 0.9rem;
-}
-
-.gtk-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--accent-cyan);
-  box-shadow: 0 0 0 0 rgba(76, 201, 240, 0.6);
-  animation: gtkPulse 1.8s ease-out infinite;
-}
-
-.gtk-reel.is-paused .gtk-dot {
-  animation: none;
-  background: var(--muted);
-}
-
-@keyframes gtkPulse {
-  to { box-shadow: 0 0 0 10px rgba(76, 201, 240, 0); }
-}
-
 /* ---------- 3D prism: six poster faces around a hexagon ---------- */
 .gtk-prism-wrap {
   position: relative;
@@ -3826,8 +3799,7 @@ html.has-lenis {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .gtk-morph,
-  .gtk-dot {
+  .gtk-morph {
     animation: none;
   }
 }

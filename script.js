@@ -599,30 +599,6 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   /* =========================================================
-     13. GET TO KNOW ME — FLIP CARDS
-     - Hover flips on desktop (pure CSS)
-     - Tap / Enter / Space flips on touch + keyboard
-  ========================================================= */
-  const flipCards = document.querySelectorAll(".flip-card");
-
-  flipCards.forEach((card) => {
-    card.addEventListener("click", (event) => {
-      // Let links (IMDb / Steam) open normally instead of flipping the card.
-      if (event.target.closest("a")) return;
-      card.classList.toggle("flipped");
-    });
-
-    card.addEventListener("keydown", (event) => {
-      if (event.target.closest("a")) return;
-
-      if (event.key === "Enter" || event.key === " ") {
-        event.preventDefault();
-        card.classList.toggle("flipped");
-      }
-    });
-  });
-
-  /* =========================================================
      15. CONTACT FORM SUBMIT (Formspree AJAX)
      ---------------------------------------------------------
      Submits in-page instead of redirecting to Formspree.

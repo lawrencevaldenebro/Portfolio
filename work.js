@@ -58,7 +58,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const TYPE_LABEL = { ad: "Ad creative", social: "Social post", web: "Website", ghl: "GoHighLevel", reel: "Motion graphics" };
   const TYPE_ICON = { ad: "fa-bullhorn", social: "fa-hashtag", web: "fa-code", ghl: "fa-diagram-project", reel: "fa-film" };
 
-  // Remotion-rendered showreel (source: Downloads/portfolio-remotion). `hold` keeps it
+  // Motion showreel. `hold` keeps it
   // in front of the carousel for its full length before rotating on.
   const REEL = {
     src: "showreel",

@@ -1,24 +1,27 @@
-# Samurai slash intro — install
+# Lawrence — Portfolio
 
-Copy these three files into the root of `lawrencevaldenebro/Portfolio` (next to `style.css`):
+Personal portfolio for Lawrence, Marketing Automation & Funnel Specialist.
 
-- `samurai-intro.css`
-- `samurai-intro.js`
-- `index.html` (already patched — it is your file plus two lines in `<head>`)
+Static HTML/CSS/JS with no build step. Pushing to `main` deploys to Vercel automatically.
 
-If you'd rather patch your own `index.html` by hand, add these after the Font Awesome link:
+## Structure
 
-```html
-<link rel="stylesheet" href="./samurai-intro.css" />
-<script src="./samurai-intro.js" defer></script>
-```
+| File | Purpose |
+|---|---|
+| `index.html` | All page sections |
+| `style.css` | Styles (numbered sections) |
+| `script.js` | Navigation, contact form, Lead Rush game |
+| `scroll-fx.js` | GSAP/ScrollTrigger scenes, Lenis smooth scroll, kinetic headings |
+| `work.js` | Work data, 3D carousel, gallery filters, lightbox |
+| `bg-flow.js` | Animated background lines |
+| `samurai-intro.js/.css` | Intro animation (once per session) |
+| `images/work/` | Portfolio pieces |
+| `videos/` | Showreel |
 
-Commit and push — Vercel redeploys automatically.
+## Libraries (CDN)
 
-## Behaviour
+GSAP + ScrollTrigger, Lenis, Font Awesome. Everything respects `prefers-reduced-motion`.
 
-- Plays once per browser session (`sessionStorage` key `si-intro-played`).
-- Click anywhere, press Esc/Space/Enter, or hit Skip to end it early.
-- Skipped entirely for visitors with reduced-motion enabled.
-- Replay from the console: `SamuraiIntro.play({ force: true })`.
-- Total runtime 3.4s.
+## Local preview
+
+Open `index.html` in a browser, or serve the folder (e.g. `npx serve .`).

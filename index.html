@@ -35,7 +35,7 @@
   <link rel="stylesheet" href="style.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;700;800;900&display=swap"
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"
     rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
 
@@ -44,7 +44,6 @@
   <script src="./samurai-intro.js" defer></script>
 
   <!-- Animated flowing-lines background -->
-  <script src="./bg-flow.js" defer></script>
 
   <!-- Scroll animations: GSAP + ScrollTrigger, Lenis smooth scroll -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
@@ -67,13 +66,6 @@
 <body>
   <div class="scroll-progress" id="scrollProgress"></div>
 
-  <div class="page-bg">
-    <div class="bg-orb orb-one"></div>
-    <div class="bg-orb orb-two"></div>
-    <div class="bg-orb orb-three"></div>
-    <div class="bg-grid"></div>
-    <canvas id="bg-flow-canvas" aria-hidden="true"></canvas>
-  </div>
 
   <header class="site-header">
     <div class="container nav-wrap glass">
@@ -92,11 +84,11 @@
         <a href="#contact">Contact</a>
       </nav>
 
-      <a href="#" class="btn btn-primary" data-open-form>
-        Let’s Talk
+      <a href="#contact-form" class="btn btn-primary" data-open-form>
+        Start a project
       </a>
 
-      <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
+      <button class="menu-toggle" id="menuToggle" type="button" aria-label="Open menu" data-tooltip="Open menu" aria-expanded="false">
         <span></span><span></span><span></span>
       </button>
     </div>
@@ -136,19 +128,19 @@
           </p>
 
           <div class="hero-actions">
-            <a href="#" class="btn btn-primary" data-open-form>
+            <a href="#contact-form" class="btn btn-primary" data-open-form>
               <i class="fas fa-paper-plane"></i>
-              Contact Me
+              Contact me
             </a>
 
             <a href="#projects" class="btn btn-secondary">
               <i class="fas fa-briefcase"></i>
-              See My Work
+              See my work
             </a>
 
             <a href="./Lawrence-Valdenebro-Resume.pdf" class="btn btn-secondary" download="Lawrence-Valdenebro-Resume.pdf">
               <i class="fas fa-download"></i>
-              Download Resume
+              Download resume
             </a>
           </div>
         </div>
@@ -176,14 +168,6 @@
               <div class="about-photo-frame">
                 <img src="./images/formal.webp" width="900" height="900" loading="lazy"
                   alt="Lawrence portfolio profile" class="about-photo" />
-              </div>
-              <div class="hero-badge badge-top">
-                <i class="fas fa-bolt"></i>
-                Fast execution
-              </div>
-              <div class="hero-badge badge-bottom">
-                <i class="fas fa-chart-line"></i>
-                Marketing-focused
               </div>
             </div>
           </figure>
@@ -479,9 +463,9 @@
           <div class="cf-stage" id="cfStage" aria-roledescription="carousel"></div>
 
           <div class="cf-controls">
-            <button type="button" class="cf-arrow" id="cfPrev" aria-label="Previous"><i class="fas fa-arrow-left"></i></button>
+            <button type="button" class="cf-arrow" id="cfPrev" aria-label="Show previous" data-tooltip="Show previous"><i class="fas fa-arrow-left"></i></button>
             <p class="cf-caption" id="cfCaption" aria-live="polite"></p>
-            <button type="button" class="cf-arrow" id="cfNext" aria-label="Next"><i class="fas fa-arrow-right"></i></button>
+            <button type="button" class="cf-arrow" id="cfNext" aria-label="Show next" data-tooltip="Show next"><i class="fas fa-arrow-right"></i></button>
           </div>
           <div class="cf-dots" id="cfDots"></div>
         </div>
@@ -649,7 +633,7 @@
                   Three misses and the campaign's over.
                 </p>
                 <button class="btn btn-primary game-btn" id="gameStart" type="button">
-                  <i class="fas fa-play"></i> Start Game
+                  <i class="fas fa-play"></i> Start game
                 </button>
               </div>
             </div>
@@ -677,30 +661,126 @@
               alt="Conversion funnel showing traffic narrowing through leads and qualified prospects to closed customers" />
           </div>
 
-          <div class="contact-grid">
-            <a href="#" class="contact-card glass reveal" data-open-form>
-              <div class="contact-icon"><i class="fas fa-paper-plane"></i></div>
-              <div>
-                <h3>Project Inquiry</h3>
-                <p>Use the contact form to get in touch.</p>
-              </div>
-              <i class="fas fa-arrow-right contact-arrow" aria-hidden="true"></i>
-            </a>
+          <div class="contact-layout">
+            <div class="contact-form-card glass reveal" id="contact-form">
+              <h3>Send a message</h3>
+              <p class="contact-sub">
+                Tell me what you want to build. Prefer email? Write to
+                <a href="mailto:lawrencevaldenebro@gmail.com?subject=Portfolio%20Inquiry" class="direct-email-link">lawrencevaldenebro@gmail.com</a>.
+              </p>
+              <form id="contactForm" class="contact-form" action="https://formspree.io/f/xpqynpdn" method="POST" novalidate>
+                <input type="hidden" name="_subject" value="New Portfolio Inquiry">
 
-            <a href="#projects" class="contact-card glass reveal">
-              <div class="contact-icon"><i class="fas fa-briefcase"></i></div>
-              <div>
-                <h3>Work Samples</h3>
-                <p>Browse selected project folders and completed tasks above.</p>
-              </div>
-              <i class="fas fa-arrow-right contact-arrow" aria-hidden="true"></i>
-            </a>
+                <label>
+                  Name
+                  <input type="text" name="name" placeholder="Jane Smith" autocomplete="name" required>
+                </label>
 
-            <div class="contact-card glass reveal">
-              <div class="contact-icon"><i class="fas fa-globe"></i></div>
-              <div>
-                <h3>Remote Availability</h3>
-                <p>Open to freelance and contract-based opportunities.</p>
+                <label>
+                  Email
+                  <input type="email" name="email" placeholder="name@company.com" autocomplete="email" required>
+                </label>
+
+                <label>
+                  Country
+                  <select name="country" id="countrySelect" required>
+                    <option value="" selected disabled>Choose a country</option>
+                    <option value="United States" data-code="+1">United States (+1)</option>
+                    <option value="Canada" data-code="+1">Canada (+1)</option>
+                    <option value="United Kingdom" data-code="+44">United Kingdom (+44)</option>
+                    <option value="Australia" data-code="+61">Australia (+61)</option>
+                    <option value="New Zealand" data-code="+64">New Zealand (+64)</option>
+                    <option value="Philippines" data-code="+63">Philippines (+63)</option>
+                    <option value="Singapore" data-code="+65">Singapore (+65)</option>
+                    <option value="United Arab Emirates" data-code="+971">UAE (+971)</option>
+                    <option value="Saudi Arabia" data-code="+966">Saudi Arabia (+966)</option>
+                    <option value="Germany" data-code="+49">Germany (+49)</option>
+                    <option value="France" data-code="+33">France (+33)</option>
+                    <option value="Netherlands" data-code="+31">Netherlands (+31)</option>
+                    <option value="Spain" data-code="+34">Spain (+34)</option>
+                    <option value="Italy" data-code="+39">Italy (+39)</option>
+                    <option value="India" data-code="+91">India (+91)</option>
+                    <option value="South Africa" data-code="+27">South Africa (+27)</option>
+                    <option value="Other" data-code="">Other</option>
+                  </select>
+                </label>
+
+                <label>
+                  Phone / WhatsApp
+                  <input type="tel" id="phoneInput" name="phone" data-name="phone or WhatsApp number" placeholder="2015550123"
+                    inputmode="tel" autocomplete="tel" required>
+                </label>
+
+                <input type="hidden" name="dial_code" id="dialCodeInput">
+
+                <label>
+                  What do you need?
+                  <textarea name="message" data-name="project details" aria-describedby="messageHelp" required></textarea>
+                  <span class="field-help" id="messageHelp">Funnels, automation, ads, a website: whatever you want to build.</span>
+                </label>
+
+                <button type="submit" id="contactSubmit">Send message</button>
+              </form>
+
+              <div class="form-status" id="contactStatus" role="status" aria-live="polite"></div>
+              <div class="form-status" id="contactStatus" role="status" aria-live="polite"></div>
+            </div>
+
+            <div class="contact-side">
+              <a href="#projects" class="contact-card glass reveal">
+                <div class="contact-icon"><i class="fas fa-briefcase"></i></div>
+                <div>
+                  <h3>Work samples</h3>
+                  <p>Browse ads, websites and automations above.</p>
+                </div>
+                <i class="fas fa-arrow-right contact-arrow" aria-hidden="true"></i>
+              </a>
+
+              <div class="contact-card glass reveal">
+                <div class="contact-icon"><i class="fas fa-globe"></i></div>
+                <div>
+                  <h3>Remote availability</h3>
+                  <p>Open to freelance and contract-based opportunities.</p>
+                </div>
+              </div>
+
+              <div class="demo-card glass reveal">
+                <h3>Watch a lead flow through my system</h3>
+                <p class="contact-sub">Try a sample lead and see the funnel, CRM and AI follow-up run.</p>
+                <form id="demoLeadForm" novalidate>
+                  <label>
+                    Name
+                    <input type="text" name="demo_name" placeholder="John Smith" required>
+                  </label>
+
+                  <label>
+                    Email
+                    <input type="email" name="demo_email" placeholder="john@email.com" required>
+                  </label>
+
+                  <label>
+                    Phone
+                    <input type="text" name="demo_phone" placeholder="+1 234 567 890" required>
+                  </label>
+
+                  <label>
+                    Service needed
+                    <input type="text" name="demo_service" data-name="service" placeholder="Website funnel build" required>
+                  </label>
+
+                  <button type="submit">Run demo</button>
+                </form>
+
+                <div class="demo-status" id="demoStatus"></div>
+
+                <div class="demo-flow" id="demoFlow">
+                  <div class="demo-step"><i class="fas fa-check"></i> Lead captured in CRM</div>
+                  <div class="demo-step"><i class="fas fa-check"></i> SMS sent instantly to the lead</div>
+                  <div class="demo-step"><i class="fas fa-check"></i> Email nurture sequence triggered</div>
+                  <div class="demo-step"><i class="fas fa-check"></i> Tagged as a high-intent prospect</div>
+                  <div class="demo-step"><i class="fas fa-check"></i> Pipeline moved: New lead → Contacted</div>
+                  <div class="demo-step"><i class="fas fa-check"></i> AI follow-up activated</div>
+                </div>
               </div>
             </div>
           </div>
@@ -729,137 +809,17 @@
 
       <p class="footer-copy">© 2026 Lawrence. All rights reserved.</p>
 
-      <a href="#home" class="footer-top" aria-label="Back to top"><i class="fas fa-arrow-up"></i></a>
+      <a href="#home" class="footer-top" aria-label="Scroll to top" data-tooltip="Scroll to top"><i class="fas fa-arrow-up"></i></a>
     </div>
   </footer>
 
   <script src="script.js"></script>
 
-  <div class="form-modal" id="formModal">
-    <div class="form-overlay" id="closeForm"></div>
-
-    <div class="form-box" data-lenis-prevent>
-      <button class="form-close" id="closeFormBtn" type="button" aria-label="Close">&times;</button>
-
-      <h3>Let's Connect</h3>
-      <p class="demo-subtext">
-        Have a project in mind or want to improve your lead flow? Send me a message and let’s talk about how I can help
-        you build better systems, funnels, and automation.
-      </p>
-      <p class="direct-email">
-        Prefer email? Reach me directly at
-        <a href="mailto:lawrencevaldenebro@gmail.com?subject=Portfolio%20Inquiry" class="direct-email-link">
-          <i class="fas fa-envelope"></i> lawrencevaldenebro@gmail.com
-        </a>
-      </p>
-      <form id="contactForm" action="https://formspree.io/f/xpqynpdn" method="POST">
-        <input type="hidden" name="_subject" value="New Portfolio Inquiry">
-
-        <label>
-          Name
-          <input type="text" name="name" placeholder="Your full name" required>
-        </label>
-
-        <label>
-          Email
-          <input type="email" name="email" placeholder="you@email.com" required>
-        </label>
-
-        <label>
-          Country
-          <select name="country" id="countrySelect" required>
-            <option value="" selected disabled>Select your country</option>
-            <option value="United States" data-code="+1">United States (+1)</option>
-            <option value="Canada" data-code="+1">Canada (+1)</option>
-            <option value="United Kingdom" data-code="+44">United Kingdom (+44)</option>
-            <option value="Australia" data-code="+61">Australia (+61)</option>
-            <option value="New Zealand" data-code="+64">New Zealand (+64)</option>
-            <option value="Philippines" data-code="+63">Philippines (+63)</option>
-            <option value="Singapore" data-code="+65">Singapore (+65)</option>
-            <option value="United Arab Emirates" data-code="+971">UAE (+971)</option>
-            <option value="Saudi Arabia" data-code="+966">Saudi Arabia (+966)</option>
-            <option value="Germany" data-code="+49">Germany (+49)</option>
-            <option value="France" data-code="+33">France (+33)</option>
-            <option value="Netherlands" data-code="+31">Netherlands (+31)</option>
-            <option value="Spain" data-code="+34">Spain (+34)</option>
-            <option value="Italy" data-code="+39">Italy (+39)</option>
-            <option value="India" data-code="+91">India (+91)</option>
-            <option value="South Africa" data-code="+27">South Africa (+27)</option>
-            <option value="Other" data-code="">Other</option>
-          </select>
-        </label>
-
-        <label>
-          Phone / WhatsApp
-          <input type="tel" id="phoneInput" name="phone" placeholder="Enter your phone / WhatsApp number"
-            inputmode="tel" autocomplete="tel" required>
-        </label>
-
-        <input type="hidden" name="dial_code" id="dialCodeInput">
-
-        <label>
-          What do you need?
-          <textarea name="message"
-            placeholder="Tell me what you're trying to build (funnels, automation, ads, website, etc.)"
-            required></textarea>
-        </label>
-
-        <button type="submit" id="contactSubmit">Send Message</button>
-      </form>
-
-      <div class="form-status" id="contactStatus" role="status" aria-live="polite"></div>
-
-      <div class="form-divider">
-        <span>or try a live automation DEMO!</span>
-      </div>
-
-      <h3>Watch a Lead Flow Through My System</h3>
-      <p class="demo-subtext">
-        Try a sample lead and see how my funnel, CRM automation, and AI follow-up process works.
-      </p>
-
-      <form id="demoLeadForm">
-        <label>
-          Name
-          <input type="text" name="demo_name" placeholder="John Smith" required>
-        </label>
-
-        <label>
-          Email
-          <input type="email" name="demo_email" placeholder="john@email.com" required>
-        </label>
-
-        <label>
-          Phone
-          <input type="text" name="demo_phone" placeholder="+1 234 567 890" required>
-        </label>
-
-        <label>
-          Service Needed
-          <input type="text" name="demo_service" placeholder="Website Funnel Build" required>
-        </label>
-
-        <button type="submit">Run Demo</button>
-      </form>
-
-      <div class="demo-status" id="demoStatus"></div>
-
-      <div class="demo-flow" id="demoFlow">
-        <div class="demo-step">✅ Lead captured in CRM</div>
-        <div class="demo-step">📩 SMS sent instantly to lead</div>
-        <div class="demo-step">📧 Email nurture sequence triggered</div>
-        <div class="demo-step">🏷️ Tagged as High Intent Prospect</div>
-        <div class="demo-step">📊 Pipeline moved: New Lead → Contacted</div>
-        <div class="demo-step">🤖 AI/Automated follow-up system activated</div>
-      </div>
-    </div>
-  </div>
-
   <!-- Work lightbox (filled by work.js) -->
   <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Work viewer" aria-hidden="true" data-lenis-prevent>
     <div class="lb-backdrop"></div>
-    <button type="button" class="lb-close" aria-label="Close"><i class="fas fa-xmark"></i></button>
-    <button type="button" class="lb-arrow lb-prev" aria-label="Previous"><i class="fas fa-arrow-left"></i></button>
+    <button type="button" class="lb-close" aria-label="Close viewer" data-tooltip="Close viewer"><i class="fas fa-xmark"></i></button>
+    <button type="button" class="lb-arrow lb-prev" aria-label="Show previous" data-tooltip="Show previous"><i class="fas fa-arrow-left"></i></button>
     <figure class="lb-figure">
       <div class="lb-stage" id="lbStage"></div>
       <figcaption class="lb-caption">
@@ -868,7 +828,7 @@
         <span class="lb-count" id="lbCount"></span>
       </figcaption>
     </figure>
-    <button type="button" class="lb-arrow lb-next" aria-label="Next"><i class="fas fa-arrow-right"></i></button>
+    <button type="button" class="lb-arrow lb-next" aria-label="Show next" data-tooltip="Show next"><i class="fas fa-arrow-right"></i></button>
   </div>
 
 </body>

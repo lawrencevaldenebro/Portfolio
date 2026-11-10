@@ -196,8 +196,8 @@ document.addEventListener("DOMContentLoaded", () => {
       const r = el.getBoundingClientRect();
       const x = (e.clientX - r.left) / r.width - 0.5;
       const y = (e.clientY - r.top) / r.height - 0.5;
-      el.style.setProperty("--ry", `${x * 12}deg`);
-      el.style.setProperty("--rx", `${-y * 10}deg`);
+      el.style.setProperty("--ry", `${x * 6}deg`);
+      el.style.setProperty("--rx", `${-y * 5}deg`);
       el.style.setProperty("--px", x.toFixed(3)); // -0.5 → 0.5, for image parallax
       el.style.setProperty("--py", y.toFixed(3));
       el.style.setProperty("--gx", `${(x + 0.5) * 100}%`);
@@ -212,9 +212,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   /* =========================================================
      3c. SKILLS ICON SPHERE
-     - Icons sit on a Fibonacci sphere that slowly turns;
-       drag/flick to spin it (momentum eases back to the idle
-       turn), depth sets size and fade
+     - Icons sit on a Fibonacci sphere; drag/flick to spin it,
+       momentum fades to a stop; depth sets size and fade
   ========================================================= */
   const sphere = document.getElementById("skillsSphere");
 
@@ -229,10 +228,8 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     let rotX = -0.3;
     let rotY = 0;
-    const IDLE_X = 0.0012;
-    const IDLE_Y = 0.004;
-    let velX = IDLE_X;
-    let velY = IDLE_Y;
+    let velX = 0;
+    let velY = 0;
     let raf = null;
     let drag = null;
 
@@ -260,20 +257,20 @@ document.addEventListener("DOMContentLoaded", () => {
         velX *= 0.85;
         velY *= 0.85;
       } else {
-        velX += (IDLE_X - velX) * 0.02;
-        velY += (IDLE_Y - velY) * 0.02;
+        velX *= 0.95;
+        velY *= 0.95;
       }
       rotX += velX;
       rotY += velY;
       place();
-      raf = requestAnimationFrame(tick);
+      // Stop the loop once it has come to rest
+      raf = drag || Math.abs(velX) + Math.abs(velY) > 0.0002 ? requestAnimationFrame(tick) : null;
     }
 
     place();
 
     if (!reduceMotion) {
       new IntersectionObserver(([entry]) => {
-        if (entry.isIntersecting && !raf) raf = requestAnimationFrame(tick);
         if (!entry.isIntersecting && raf) {
           cancelAnimationFrame(raf);
           raf = null;
@@ -288,6 +285,7 @@ document.addEventListener("DOMContentLoaded", () => {
           /* pointer already released */
         }
         sphere.classList.add("is-dragging");
+        if (!raf) raf = requestAnimationFrame(tick);
       });
 
       sphere.addEventListener("pointermove", (e) => {
@@ -427,7 +425,7 @@ document.addEventListener("DOMContentLoaded", () => {
       flow.fromTo(
         node,
         { opacity: 0, y: 40, scale: 0.7 },
-        { opacity: 1, y: 0, scale: 1, duration: 0.25, ease: "back.out(1.7)" },
+        { opacity: 1, y: 0, scale: 1, duration: 0.25, ease: "power2.out" },
         i * 0.19
       );
     });

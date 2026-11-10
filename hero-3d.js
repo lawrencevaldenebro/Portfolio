@@ -77,9 +77,9 @@ async function init() {
 
   const key = new THREE.DirectionalLight(0xffffff, 1.4);
   key.position.set(-3, 4, 5);
-  const cyan = new THREE.PointLight(0x4cc9f0, 40, 14);
+  const cyan = new THREE.PointLight(0x8db6fa, 40, 14);
   cyan.position.set(-3.5, 1.5, 3);
-  const violet = new THREE.PointLight(0x7b61ff, 40, 14);
+  const violet = new THREE.PointLight(0x3b82f6, 40, 14);
   violet.position.set(3.5, -1.5, 2.5);
   scene.add(key, cyan, violet);
 
@@ -129,7 +129,7 @@ async function init() {
     ? new THREE.MeshPhysicalMaterial({ color: 0x9fd0ff, metalness: 0.1, roughness: 0.1, transparent: true, opacity: 0.55, clearcoat: 1 })
     : new THREE.MeshPhysicalMaterial({ color: 0xcfe6ff, metalness: 0, roughness: 0.04, transmission: 1, thickness: 0.6, ior: 1.45, clearcoat: 1 });
   const chrome = new THREE.MeshPhysicalMaterial({ color: 0x6aa8ff, metalness: 0.9, roughness: 0.2, clearcoat: 1 });
-  const violetMat = new THREE.MeshPhysicalMaterial({ color: 0x7b61ff, metalness: 0.5, roughness: 0.25, clearcoat: 1, iridescence: 0.6 });
+  const violetMat = new THREE.MeshPhysicalMaterial({ color: 0x2f6fe0, metalness: 0.5, roughness: 0.25, clearcoat: 1 });
   disposables.push(glass, chrome, violetMat);
 
   const geos = {

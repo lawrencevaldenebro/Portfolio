@@ -68,6 +68,9 @@
 
 html {
   scroll-behavior: smooth;
+  /* Clip (not hide) so off-screen carousel cards and glows can't make
+     the page swipeable sideways, including on iOS Safari */
+  overflow-x: clip;
 }
 
 body {

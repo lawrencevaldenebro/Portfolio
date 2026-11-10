@@ -5,6 +5,9 @@
    2. SCENE: lighting, logo mark, floating shapes, rings, dust
    3. MOTION: entrance fly-in, idle float, pointer follow,
       scroll-linked spin
+   3b. INTERACTION: drag the mark to spin it (with momentum),
+      grab and throw shapes (they spring home), click the
+      mark to burst the shapes outward
    4. LIFECYCLE: pauses off screen / hidden tab, cleans up
    ---------------------------------------------------------
    No WebGL or a failed CDN load leaves the SVG fallback in
@@ -61,7 +64,9 @@ async function init() {
 
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(35, 1, 0.1, 100);
-  camera.position.set(0, 0, 8);
+  // Canvas bleeds 12% past the stage (CSS) so thrown shapes have room; camera backs off to match
+  const CAM_Z = 8 * 1.24;
+  camera.position.set(0, 0, CAM_Z);
 
   /* =========================================================
      2. SCENE
@@ -159,6 +164,11 @@ async function init() {
       speed: 0.7 + (i % 4) * 0.18,
       spin: new THREE.Vector3(0.3 + (i % 3) * 0.2, 0.4 + (i % 2) * 0.3, 0.1),
       scale: 0.85 + (i % 3) * 0.2,
+      rest: new THREE.Vector3(), // where the shape would sit without physics
+      off: new THREE.Vector3(), // spring offset from rest (drag / throw / burst)
+      vel: new THREE.Vector3(),
+      tumble: 0,
+      held: false,
     };
     scene.add(mesh);
     return mesh;
@@ -218,32 +228,159 @@ async function init() {
   window.addEventListener("scroll", onScroll, { passive: true });
   document.addEventListener("hero:enter", onEnter);
 
+  /* =========================================================
+     3b. INTERACTION
+  ========================================================= */
+  const canvas = renderer.domElement;
+  const raycaster = new THREE.Raycaster();
+  const ndc = new THREE.Vector2();
+  const dragPlane = new THREE.Plane();
+  const hit = new THREE.Vector3();
+  const grabOffset = new THREE.Vector3();
+  const camDir = new THREE.Vector3();
+  const spin = { angle: 0, vel: 0, tilt: 0 };
+  let pulse = 0;
+  let drag = null;
+
+  function setRay(e) {
+    const r = canvas.getBoundingClientRect();
+    ndc.set(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1);
+    raycaster.setFromCamera(ndc, camera);
+  }
+
+  function shapeAt(e) {
+    setRay(e);
+    const hits = raycaster.intersectObjects(shapes.filter((m) => m.scale.x > 0.2), false);
+    return hits.length ? hits[0].object : null;
+  }
+
+  function onDown(e) {
+    const mesh = shapeAt(e);
+    drag = { mesh, x: e.clientX, y: e.clientY, sx: e.clientX, sy: e.clientY, t: performance.now() };
+
+    if (mesh) {
+      // Drag in a plane facing the camera, through the shape
+      camera.getWorldDirection(camDir);
+      dragPlane.setFromNormalAndCoplanarPoint(camDir.negate(), mesh.position);
+      raycaster.ray.intersectPlane(dragPlane, hit);
+      grabOffset.copy(mesh.position).sub(hit);
+      mesh.userData.held = true;
+      mesh.userData.vel.set(0, 0, 0);
+    } else {
+      spin.vel = 0;
+    }
+
+    try {
+      canvas.setPointerCapture(e.pointerId);
+    } catch {
+      /* pointer already released */
+    }
+    stage.classList.add("is-dragging");
+  }
+
+  function onMove(e) {
+    if (!drag) {
+      stage.dataset.cursor = shapeAt(e) ? "Throw" : "Drag";
+      return;
+    }
+
+    const now = performance.now();
+    const dt = Math.max(1, now - drag.t) / 1000;
+    const dx = e.clientX - drag.x;
+    const dy = e.clientY - drag.y;
+    drag.x = e.clientX;
+    drag.y = e.clientY;
+    drag.t = now;
+
+    if (drag.mesh) {
+      const d = drag.mesh.userData;
+      setRay(e);
+      if (raycaster.ray.intersectPlane(dragPlane, hit)) {
+        const next = hit.add(grabOffset).sub(d.rest);
+        d.vel.copy(next).sub(d.off).divideScalar(dt).clampLength(0, 25); // throw speed on release
+        d.off.copy(next);
+      }
+    } else {
+      spin.vel = dx * 0.01;
+      spin.angle += spin.vel;
+      spin.tilt = clamp(spin.tilt + dy * 0.006, -0.7, 0.7);
+    }
+  }
+
+  function onUp(e) {
+    if (!drag) return;
+    const tap = Math.hypot(e.clientX - drag.sx, e.clientY - drag.sy) < 6;
+
+    if (drag.mesh) {
+      drag.mesh.userData.held = false;
+    } else if (tap) {
+      // Tap the mark: it pulses and the shapes burst outward
+      pulse = 1;
+      shapes.forEach((m) => {
+        const d = m.userData;
+        d.vel.add(d.base.clone().normalize().multiplyScalar(9));
+      });
+    }
+
+    drag = null;
+    stage.classList.remove("is-dragging");
+  }
+
+  if (!reduceMotion) {
+    canvas.addEventListener("pointerdown", onDown);
+    canvas.addEventListener("pointermove", onMove);
+    canvas.addEventListener("pointerup", onUp);
+    canvas.addEventListener("pointercancel", onUp);
+    stage.dataset.cursor = "Drag";
+  }
+
+  let lastT = 0;
+
   function update(t) {
     // Entrance: 0 → 1 over ~1.6s once the hero is revealed
     const e = reduceMotion ? 1 : enterStart === null ? 0 : clamp((t - enterStart) / 1.6);
     const still = reduceMotion ? 0 : 1;
+    const dt = clamp(t - lastT, 0, 0.05);
+    lastT = t;
+
+    // Drag momentum fades out; the tilt eases back level
+    if (!drag || drag.mesh) {
+      spin.angle += spin.vel;
+      spin.vel *= Math.pow(0.94, dt * 60);
+      spin.tilt *= Math.pow(0.95, dt * 60);
+    }
+    pulse = Math.max(0, pulse - dt * 1.4);
+    const bump = pulse > 0 ? Math.sin((1 - pulse) * Math.PI) * 0.22 : 0;
 
     pointer.x += (pointer.tx - pointer.x) * 0.05;
     pointer.y += (pointer.ty - pointer.y) * 0.05;
 
     // Logo: flies in spinning, then floats, turns toward the pointer and spins with scroll
     const le = easeOutBack(clamp(e / 0.75));
-    logoPivot.scale.setScalar(Math.max(0.001, le));
+    logoPivot.scale.setScalar(Math.max(0.001, le * (1 + bump)));
     logoPivot.position.y = Math.sin(t * 1.1) * 0.08 * still;
     logoPivot.rotation.y =
-      (1 - easeOutCubic(clamp(e / 0.75))) * -3 + Math.sin(t * 0.5) * 0.28 * still + pointer.x * 0.55 + scrollP * Math.PI;
-    logoPivot.rotation.x = -0.12 + pointer.y * 0.3 + Math.sin(t * 0.7) * 0.05 * still;
+      (1 - easeOutCubic(clamp(e / 0.75))) * -3 + Math.sin(t * 0.5) * 0.28 * still + pointer.x * 0.55 + scrollP * Math.PI + spin.angle;
+    logoPivot.rotation.x = -0.12 + pointer.y * 0.3 + Math.sin(t * 0.7) * 0.05 * still + spin.tilt;
 
     // Shapes: stream in from depth one after another, then bob and tumble
     shapes.forEach((m, i) => {
       const d = m.userData;
       const p = easeOutCubic(clamp((e - 0.15 - i * 0.04) / 0.6));
-      m.position.set(
+      d.rest.set(
         d.base.x * (1 + (1 - p) * 1.4),
         d.base.y * (1 + (1 - p) * 1.4) + Math.sin(t * d.speed + d.phase) * 0.14 * still,
         d.base.z - (1 - p) * 6 + scrollP * (i % 2 ? 1.5 : -1.5)
       );
-      m.rotation.set(t * d.spin.x * still + d.phase, t * d.spin.y * still, t * d.spin.z * still);
+
+      // Spring back home after a drag, throw or burst
+      if (!d.held) {
+        d.vel.addScaledVector(d.off, -22 * dt).multiplyScalar(Math.pow(0.9, dt * 60));
+        d.off.addScaledVector(d.vel, dt);
+      }
+      d.tumble += d.vel.length() * dt * 0.8;
+      m.position.copy(d.rest).add(d.off);
+      m.rotation.set(t * d.spin.x * still + d.phase + d.tumble, t * d.spin.y * still + d.tumble * 0.6, t * d.spin.z * still);
       m.scale.setScalar(Math.max(0.001, d.scale * p));
     });
 
@@ -258,7 +395,7 @@ async function init() {
     // Camera parallax
     camera.position.x += (pointer.x * 0.45 - camera.position.x) * 0.05;
     camera.position.y += (-pointer.y * 0.3 - camera.position.y) * 0.05;
-    camera.position.z = 8 + scrollP * 1.5;
+    camera.position.z = CAM_Z + scrollP * 1.5;
     camera.lookAt(0, 0, 0);
   }
 
@@ -266,8 +403,8 @@ async function init() {
      4. LIFECYCLE
   ========================================================= */
   function resize() {
-    const w = stage.clientWidth;
-    const h = stage.clientHeight;
+    const w = canvas.clientWidth;
+    const h = canvas.clientHeight;
     if (!w || !h) return;
     renderer.setSize(w, h, false);
     camera.aspect = w / h;
@@ -319,6 +456,10 @@ async function init() {
     ro.disconnect();
     io.disconnect();
     window.removeEventListener("pointermove", onPointer);
+    canvas.removeEventListener("pointerdown", onDown);
+    canvas.removeEventListener("pointermove", onMove);
+    canvas.removeEventListener("pointerup", onUp);
+    canvas.removeEventListener("pointercancel", onUp);
     window.removeEventListener("scroll", onScroll);
     document.removeEventListener("hero:enter", onEnter);
     document.removeEventListener("visibilitychange", syncLoop);

@@ -213,7 +213,8 @@ document.addEventListener("DOMContentLoaded", () => {
   /* =========================================================
      3c. SKILLS ICON SPHERE
      - Icons sit on a Fibonacci sphere that slowly turns;
-       the pointer steers it, depth sets size and fade
+       drag/flick to spin it (momentum eases back to the idle
+       turn), depth sets size and fade
   ========================================================= */
   const sphere = document.getElementById("skillsSphere");
 
@@ -228,9 +229,12 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     let rotX = -0.3;
     let rotY = 0;
-    let velX = 0.0012;
-    let velY = 0.004;
+    const IDLE_X = 0.0012;
+    const IDLE_Y = 0.004;
+    let velX = IDLE_X;
+    let velY = IDLE_Y;
     let raf = null;
+    let drag = null;
 
     function place() {
       const radius = sphere.clientWidth * 0.42;
@@ -251,6 +255,14 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function tick() {
+      if (drag) {
+        // Holding still while grabbed brings it to a stop
+        velX *= 0.85;
+        velY *= 0.85;
+      } else {
+        velX += (IDLE_X - velX) * 0.02;
+        velY += (IDLE_Y - velY) * 0.02;
+      }
       rotX += velX;
       rotY += velY;
       place();
@@ -268,18 +280,29 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       }).observe(sphere);
 
-      if (finePointer) {
-        const skills = sphere.closest("#skills");
-        skills.addEventListener("pointermove", (e) => {
-          const r = sphere.getBoundingClientRect();
-          velY = ((e.clientX - (r.left + r.width / 2)) / window.innerWidth) * 0.03;
-          velX = (-(e.clientY - (r.top + r.height / 2)) / window.innerHeight) * 0.02;
-        });
-        skills.addEventListener("pointerleave", () => {
-          velX = 0.0012;
-          velY = 0.004;
-        });
-      }
+      sphere.addEventListener("pointerdown", (e) => {
+        drag = { x: e.clientX, y: e.clientY };
+        try {
+          sphere.setPointerCapture(e.pointerId);
+        } catch {
+          /* pointer already released */
+        }
+        sphere.classList.add("is-dragging");
+      });
+
+      sphere.addEventListener("pointermove", (e) => {
+        if (!drag) return;
+        velY = (e.clientX - drag.x) * 0.006;
+        velX = -(e.clientY - drag.y) * 0.006;
+        drag = { x: e.clientX, y: e.clientY };
+      });
+
+      const release = () => {
+        drag = null;
+        sphere.classList.remove("is-dragging");
+      };
+      sphere.addEventListener("pointerup", release);
+      sphere.addEventListener("pointercancel", release);
     }
   }
 

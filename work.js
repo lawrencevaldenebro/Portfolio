@@ -189,7 +189,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let inView = false;
 
     cfStage.innerHTML = SHOWCASE.map((item, i) => `
-      <button type="button" class="cf-card${item.video ? " is-reel" : ""}" data-i="${i}" data-tilt aria-label="${item.title}">
+      <button type="button" class="cf-card${item.video ? " is-reel" : ""}" data-i="${i}" data-tilt data-cursor="View" aria-label="${item.title}">
         ${item.video
           ? `<video src="${item.video}" poster="${item.poster}" muted loop playsinline preload="metadata" aria-hidden="true"></video>`
           : `<img src="${imgUrl(item)}" alt="" loading="lazy" decoding="async" />`}
@@ -365,7 +365,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const visible = list.slice(0, shown);
 
     grid.innerHTML = visible.map((item, i) => `
-      <button type="button" class="work-tile${item.drive ? " is-video" : ""}" data-i="${i}" data-tilt style="--d:${(i % 3) * 80}ms">
+      <button type="button" class="work-tile${item.drive ? " is-video" : ""}" data-i="${i}" data-tilt data-cursor="View" style="--d:${(i % 3) * 80}ms">
         <img src="${imgUrl(item)}" alt="${item.title}" width="${item.w}" height="${item.h}" loading="lazy" decoding="async" />
         ${item.drive ? '<span class="tile-play" aria-hidden="true"><i class="fas fa-play"></i></span>' : ""}
         <span class="tile-info">

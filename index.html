@@ -171,7 +171,7 @@
       <div class="container">
         <div class="about-layout">
           <figure class="about-portrait reveal" data-reveal="left">
-            <div class="about-portrait-card" id="aboutPortrait">
+            <div class="about-portrait-card" id="aboutPortrait" data-tilt>
               <div class="about-photo-frame">
                 <img src="./images/formal.webp" width="900" height="900" loading="lazy"
                   alt="Lawrence portfolio profile" class="about-photo" />
@@ -494,33 +494,96 @@
             <span class="section-kicker">SKILLS</span>
             <h2>Tools I use.</h2>
             <p>Automation, AI, websites, and integrations.</p>
+
+            <!-- 3D icon sphere (scroll-fx.js); decorative, the cards list every tool -->
+            <div class="skills-sphere" id="skillsSphere" aria-hidden="true">
+              <div class="sphere-core"></div>
+                <span class="sphere-icon"><i class="fas fa-diagram-project"></i></span>
+                <span class="sphere-icon"><i class="fa-brands fa-meta"></i></span>
+                <span class="sphere-icon"><i class="fas fa-robot"></i></span>
+                <span class="sphere-icon"><i class="fas fa-bolt"></i></span>
+                <span class="sphere-icon"><i class="fa-brands fa-shopify"></i></span>
+                <span class="sphere-icon"><i class="fas fa-cloud"></i></span>
+                <span class="sphere-icon"><i class="fas fa-envelope-open-text"></i></span>
+                <span class="sphere-icon"><i class="fa-brands fa-google"></i></span>
+                <span class="sphere-icon"><i class="fas fa-palette"></i></span>
+                <span class="sphere-icon"><i class="fas fa-image"></i></span>
+                <span class="sphere-icon"><i class="fas fa-plug"></i></span>
+                <span class="sphere-icon"><i class="fa-brands fa-microsoft"></i></span>
+                <span class="sphere-icon"><i class="fas fa-comment-sms"></i></span>
+                <span class="sphere-icon"><i class="fas fa-terminal"></i></span>
+                <span class="sphere-icon"><i class="fas fa-server"></i></span>
+                <span class="sphere-icon"><i class="fas fa-filter"></i></span>
+            </div>
           </div>
 
-          <div class="skills-right">
-            <div class="skills-track" id="skillsTrack">
-              <div class="skill-pill"><i class="fas fa-diagram-project"></i>GoHighLevel</div>
-              <div class="skill-pill"><i class="fas fa-filter"></i>Funnel Creation/Web Development</div>
-              <div class="skill-pill"><i class="fas fa-gears"></i>CRM Automations</div>
-              <div class="skill-pill"><i class="fas fa-robot"></i>AI Chatbots</div>
-              <div class="skill-pill"><i class="fas fa-magnet"></i>Lead Gen Systems</div>
-              <div class="skill-pill"><i class="fas fa-comment-sms"></i>Email & SMS Automation</div>
-              <div class="skill-pill"><i class="fas fa-shield-halved"></i>A2P 10DLC Registration</div>
-              <div class="skill-pill"><i class="fas fa-envelope-open-text"></i>ActiveCampaign</div>
-              <div class="skill-pill"><i class="fas fa-terminal"></i>Replit</div>
-              <div class="skill-pill"><i class="fa-brands fa-shopify"></i>Shopify</div>
-              <div class="skill-pill"><i class="fa-brands fa-google"></i>Google Workspace</div>
-              <div class="skill-pill"><i class="fas fa-cloud"></i>Cloudflare</div>
-              <div class="skill-pill"><i class="fas fa-server"></i>SiteGround</div>
-              <div class="skill-pill"><i class="fas fa-network-wired"></i>DNS Setup</div>
-              <div class="skill-pill"><i class="fa-brands fa-microsoft"></i>Microsoft Ads</div>
-              <div class="skill-pill"><i class="fas fa-palette"></i>Canva</div>
-              <div class="skill-pill"><i class="fa-brands fa-adobe"></i>Adobe Photoshop</div>
-              <div class="skill-pill"><i class="fas fa-bolt"></i>Zapier</div>
-              <div class="skill-pill"><i class="fas fa-plug"></i>API Integrations</div>
-              <div class="skill-pill"><i class="fa-brands fa-meta"></i>Meta Ads (Facebook & Instagram)</div>
-              <div class="skill-pill"><i class="fas fa-code"></i>AI-Assisted Web Development</div>
-              <div class="skill-pill"><i class="fas fa-wand-magic-sparkles"></i>AI-Augmented Automation & Prompt Engineering</div>
-            </div>
+          <div class="skills-grid">
+            <article class="skill-shell reveal" style="--stagger:0">
+              <div class="skill-card tone-blue" data-tilt>
+                <div class="skill-card-head">
+                  <span class="skill-card-icon"><i class="fas fa-gears"></i></span>
+                  <h3>Automation &amp; CRM</h3>
+                  <span class="skill-card-count">8</span>
+                </div>
+                <ul class="skill-chips">
+                  <li><i class="fas fa-diagram-project"></i>GoHighLevel</li>
+                  <li><i class="fas fa-gears"></i>CRM Automations</li>
+                  <li><i class="fas fa-comment-sms"></i>Email &amp; SMS Automation</li>
+                  <li><i class="fas fa-magnet"></i>Lead Gen Systems</li>
+                  <li><i class="fas fa-shield-halved"></i>A2P 10DLC Registration</li>
+                  <li><i class="fas fa-envelope-open-text"></i>ActiveCampaign</li>
+                  <li><i class="fas fa-bolt"></i>Zapier</li>
+                  <li><i class="fas fa-plug"></i>API Integrations</li>
+                </ul>
+              </div>
+            </article>
+            <article class="skill-shell reveal" style="--stagger:1">
+              <div class="skill-card tone-violet" data-tilt>
+                <div class="skill-card-head">
+                  <span class="skill-card-icon"><i class="fas fa-robot"></i></span>
+                  <h3>AI</h3>
+                  <span class="skill-card-count">3</span>
+                </div>
+                <ul class="skill-chips">
+                  <li><i class="fas fa-robot"></i>AI Chatbots</li>
+                  <li><i class="fas fa-wand-magic-sparkles"></i>AI-Augmented Automation &amp; Prompt Engineering</li>
+                  <li><i class="fas fa-code"></i>AI-Assisted Web Development</li>
+                </ul>
+              </div>
+            </article>
+            <article class="skill-shell reveal" style="--stagger:2">
+              <div class="skill-card tone-teal" data-tilt>
+                <div class="skill-card-head">
+                  <span class="skill-card-icon"><i class="fas fa-globe"></i></span>
+                  <h3>Web &amp; Infrastructure</h3>
+                  <span class="skill-card-count">7</span>
+                </div>
+                <ul class="skill-chips">
+                  <li><i class="fas fa-filter"></i>Funnel Creation/Web Development</li>
+                  <li><i class="fa-brands fa-shopify"></i>Shopify</li>
+                  <li><i class="fas fa-terminal"></i>Replit</li>
+                  <li><i class="fas fa-cloud"></i>Cloudflare</li>
+                  <li><i class="fas fa-server"></i>SiteGround</li>
+                  <li><i class="fas fa-network-wired"></i>DNS Setup</li>
+                  <li><i class="fa-brands fa-google"></i>Google Workspace</li>
+                </ul>
+              </div>
+            </article>
+            <article class="skill-shell reveal" style="--stagger:3">
+              <div class="skill-card tone-amber" data-tilt>
+                <div class="skill-card-head">
+                  <span class="skill-card-icon"><i class="fas fa-bullhorn"></i></span>
+                  <h3>Ads &amp; Creative</h3>
+                  <span class="skill-card-count">4</span>
+                </div>
+                <ul class="skill-chips">
+                  <li><i class="fa-brands fa-meta"></i>Meta Ads (Facebook &amp; Instagram)</li>
+                  <li><i class="fa-brands fa-microsoft"></i>Microsoft Ads</li>
+                  <li><i class="fas fa-palette"></i>Canva</li>
+                  <li><i class="fas fa-image"></i>Adobe Photoshop</li>
+                </ul>
+              </div>
+            </article>
           </div>
         </div>
       </div>

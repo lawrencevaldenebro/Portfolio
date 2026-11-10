@@ -584,21 +584,6 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   /* =========================================================
-     12. SKILLS MARQUEE
-     - Duplicates the skill pills so the CSS marquee loop is seamless
-  ========================================================= */
-  const skillsTrack = document.getElementById("skillsTrack");
-
-  if (skillsTrack) {
-    const originalPills = Array.from(skillsTrack.children);
-    originalPills.forEach((pill) => {
-      const clone = pill.cloneNode(true);
-      clone.setAttribute("aria-hidden", "true");
-      skillsTrack.appendChild(clone);
-    });
-  }
-
-  /* =========================================================
      15. CONTACT FORM SUBMIT (Formspree AJAX)
      ---------------------------------------------------------
      Submits in-page instead of redirecting to Formspree.

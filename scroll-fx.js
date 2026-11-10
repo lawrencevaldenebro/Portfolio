@@ -172,26 +172,100 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   /* =========================================================
-     3b. ABOUT PORTRAIT TILT
-     - Card leans toward the pointer; badges sit in front (CSS)
+     3b. POINTER TILT ([data-tilt]: About portrait, skill cards)
+     - Element leans toward the pointer; CSS reads --rx/--ry
+       for the rotation and --gx/--gy for the glare
   ========================================================= */
-  const portrait = document.getElementById("aboutPortrait");
+  if (finePointer && !reduceMotion) {
+    document.querySelectorAll("[data-tilt]").forEach((el) => {
+      el.addEventListener("pointermove", (e) => {
+        const r = el.getBoundingClientRect();
+        const x = (e.clientX - r.left) / r.width - 0.5;
+        const y = (e.clientY - r.top) / r.height - 0.5;
+        el.style.setProperty("--ry", `${x * 12}deg`);
+        el.style.setProperty("--rx", `${-y * 10}deg`);
+        el.style.setProperty("--gx", `${(x + 0.5) * 100}%`);
+        el.style.setProperty("--gy", `${(y + 0.5) * 100}%`);
+      });
 
-  if (portrait && finePointer && !reduceMotion) {
-    portrait.addEventListener("pointermove", (e) => {
-      const r = portrait.getBoundingClientRect();
-      const x = (e.clientX - r.left) / r.width - 0.5;
-      const y = (e.clientY - r.top) / r.height - 0.5;
-      portrait.style.setProperty("--ry", `${x * 12}deg`);
-      portrait.style.setProperty("--rx", `${-y * 10}deg`);
-      portrait.style.setProperty("--gx", `${(x + 0.5) * 100}%`);
-      portrait.style.setProperty("--gy", `${(y + 0.5) * 100}%`);
+      el.addEventListener("pointerleave", () => {
+        el.style.setProperty("--ry", "0deg");
+        el.style.setProperty("--rx", "0deg");
+      });
     });
+  }
 
-    portrait.addEventListener("pointerleave", () => {
-      portrait.style.setProperty("--ry", "0deg");
-      portrait.style.setProperty("--rx", "0deg");
+  /* =========================================================
+     3c. SKILLS ICON SPHERE
+     - Icons sit on a Fibonacci sphere that slowly turns;
+       the pointer steers it, depth sets size and fade
+  ========================================================= */
+  const sphere = document.getElementById("skillsSphere");
+
+  if (sphere) {
+    const icons = Array.from(sphere.querySelectorAll(".sphere-icon"));
+    const n = icons.length;
+    const points = icons.map((_, i) => {
+      const y = 1 - (2 * (i + 0.5)) / n;
+      const r = Math.sqrt(1 - y * y);
+      const a = i * Math.PI * (3 - Math.sqrt(5));
+      return [Math.cos(a) * r, y, Math.sin(a) * r];
     });
+    let rotX = -0.3;
+    let rotY = 0;
+    let velX = 0.0012;
+    let velY = 0.004;
+    let raf = null;
+
+    function place() {
+      const radius = sphere.clientWidth * 0.42;
+      const cx = Math.cos(rotX), sx = Math.sin(rotX), cy = Math.cos(rotY), sy = Math.sin(rotY);
+
+      points.forEach(([x, y, z], i) => {
+        // Rotate around Y, then X
+        const x1 = x * cy + z * sy;
+        const z1 = -x * sy + z * cy;
+        const y2 = y * cx - z1 * sx;
+        const z2 = y * sx + z1 * cx;
+        const depth = (z2 + 1) / 2; // 0 back → 1 front
+        const icon = icons[i];
+        icon.style.transform = `translate3d(${x1 * radius}px, ${y2 * radius}px, 0) scale(${0.6 + depth * 0.55})`;
+        icon.style.opacity = (0.25 + depth * 0.75).toFixed(2);
+        icon.style.zIndex = Math.round(depth * 100);
+      });
+    }
+
+    function tick() {
+      rotX += velX;
+      rotY += velY;
+      place();
+      raf = requestAnimationFrame(tick);
+    }
+
+    place();
+
+    if (!reduceMotion) {
+      new IntersectionObserver(([entry]) => {
+        if (entry.isIntersecting && !raf) raf = requestAnimationFrame(tick);
+        if (!entry.isIntersecting && raf) {
+          cancelAnimationFrame(raf);
+          raf = null;
+        }
+      }).observe(sphere);
+
+      if (finePointer) {
+        const skills = sphere.closest("#skills");
+        skills.addEventListener("pointermove", (e) => {
+          const r = sphere.getBoundingClientRect();
+          velY = ((e.clientX - (r.left + r.width / 2)) / window.innerWidth) * 0.03;
+          velX = (-(e.clientY - (r.top + r.height / 2)) / window.innerHeight) * 0.02;
+        });
+        skills.addEventListener("pointerleave", () => {
+          velX = 0.0012;
+          velY = 0.004;
+        });
+      }
+    }
   }
 
   /* =========================================================

@@ -172,6 +172,29 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   /* =========================================================
+     3b. ABOUT PORTRAIT TILT
+     - Card leans toward the pointer; badges sit in front (CSS)
+  ========================================================= */
+  const portrait = document.getElementById("aboutPortrait");
+
+  if (portrait && finePointer && !reduceMotion) {
+    portrait.addEventListener("pointermove", (e) => {
+      const r = portrait.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width - 0.5;
+      const y = (e.clientY - r.top) / r.height - 0.5;
+      portrait.style.setProperty("--ry", `${x * 12}deg`);
+      portrait.style.setProperty("--rx", `${-y * 10}deg`);
+      portrait.style.setProperty("--gx", `${(x + 0.5) * 100}%`);
+      portrait.style.setProperty("--gy", `${(y + 0.5) * 100}%`);
+    });
+
+    portrait.addEventListener("pointerleave", () => {
+      portrait.style.setProperty("--ry", "0deg");
+      portrait.style.setProperty("--rx", "0deg");
+    });
+  }
+
+  /* =========================================================
      4. GSAP SCROLL SCENES
   ========================================================= */
   if (!hasGsap || reduceMotion) return;
@@ -195,6 +218,36 @@ document.addEventListener("DOMContentLoaded", () => {
         scrub: true
       }
     });
+  }
+
+  /* ---------- About: photo drifts inside its frame, diagram floats up ---------- */
+  const aboutPhoto = document.querySelector("#about .about-photo");
+
+  if (aboutPhoto) {
+    gsap.fromTo(
+      aboutPhoto,
+      { yPercent: -10 },
+      {
+        yPercent: 0,
+        ease: "none",
+        scrollTrigger: { trigger: "#about", start: "top bottom", end: "bottom top", scrub: true }
+      }
+    );
+  }
+
+  const aboutDiagram = document.querySelector("#about .about-visual img");
+
+  if (aboutDiagram) {
+    gsap.fromTo(
+      aboutDiagram,
+      { y: 40, scale: 0.94 },
+      {
+        y: -20,
+        scale: 1,
+        ease: "none",
+        scrollTrigger: { trigger: "#about .about-visual", start: "top bottom", end: "bottom 30%", scrub: true }
+      }
+    );
   }
 
   /* ---------- About: words light up as you read down ---------- */

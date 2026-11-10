@@ -3359,14 +3359,51 @@ html.has-lenis {
   border-color: rgba(130, 180, 255, 0.32);
 }
 
+.about-photo-frame {
+  overflow: hidden;
+  border-radius: 20px;
+  aspect-ratio: 4 / 5;
+}
+
+/* Oversized so scroll parallax (scroll-fx.js) can move it inside the frame */
 .about-photo {
   display: block;
   width: 100%;
-  height: auto;
-  aspect-ratio: 4 / 5;
+  height: 112%;
   object-fit: cover;
   object-position: center top;
+}
+
+/* Light glare that follows the pointer */
+.about-portrait-card::after {
+  content: "";
+  position: absolute;
+  inset: 12px;
   border-radius: 20px;
+  background: radial-gradient(circle at var(--gx, 30%) var(--gy, 0%), rgba(255, 255, 255, 0.12), transparent 50%);
+  pointer-events: none;
+}
+
+/* Chips pop in one after another once the heading reveals */
+#about .has-split .about-chip {
+  opacity: 0;
+  transform: translateY(14px) scale(0.94);
+  transition: opacity 0.6s ease, transform 0.7s var(--ease-out-expo), border-color 0.25s ease, background 0.25s ease;
+}
+
+#about .has-split.show .about-chip {
+  opacity: 1;
+  transform: none;
+}
+
+#about .has-split.show .about-chip:nth-child(1) { transition-delay: 0.55s, 0.55s, 0s, 0s; }
+#about .has-split.show .about-chip:nth-child(2) { transition-delay: 0.63s, 0.63s, 0s, 0s; }
+#about .has-split.show .about-chip:nth-child(3) { transition-delay: 0.71s, 0.71s, 0s, 0s; }
+#about .has-split.show .about-chip:nth-child(4) { transition-delay: 0.79s, 0.79s, 0s, 0s; }
+
+#about .has-split.show .about-chip:hover {
+  transform: translateY(-3px);
+  transition-delay: 0s;
 }
 
 /* Badges float in front of the photo */
@@ -3394,7 +3431,9 @@ html.has-lenis {
   }
 
   .about-portrait {
+    width: 100%;
     max-width: 380px;
+    margin: 0 auto;
   }
 
   .about-portrait-card .hero-badge {
@@ -3407,5 +3446,14 @@ html.has-lenis {
   .hero-fallback,
   .scroll-cue-mouse span {
     animation: none;
+  }
+
+  #about .has-split .about-chip {
+    opacity: 1;
+    transform: none;
+  }
+
+  .about-photo {
+    height: 100%;
   }
 }

@@ -63,7 +63,6 @@
     document.documentElement.style.overflow = '';
     el.classList.add('si-done');
     el.remove();
-    document.dispatchEvent(new CustomEvent('intro:done'));
   }
 
   function onKey(e) {
@@ -98,7 +97,7 @@
     timer = setTimeout(end, DURATION + 120);
   }
 
-  window.SamuraiIntro = { play: play, end: end, isPlaying: function () { return !!overlay; } };
+  window.SamuraiIntro = { play: play, end: end };
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', function () { play(); });

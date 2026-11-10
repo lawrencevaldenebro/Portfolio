@@ -16,12 +16,10 @@ document.addEventListener("DOMContentLoaded", () => {
      - type: "ad" | "social" | "web" | "ghl"
      - w/h: image size, used to reserve space before load
      - drive: optional Drive file id (videos)
-     - video/poster: optional looping clip, plays inline in the grid
   ========================================================= */
   const IMG = "./images/work/";
 
   const WORK = [
-    { src: "ad-deck", type: "ad", title: "Ad creatives in motion", video: "./videos/ad-deck.mp4", poster: "./videos/ad-deck-poster.jpg", w: 800, h: 1000 },
     { src: "ad-property-1", type: "ad", title: "Property management ad", w: 1000, h: 1250 },
     { src: "ad-cleaning-1", type: "ad", title: "Commercial cleaning ad", w: 1000, h: 1250 },
     { src: "social-1", type: "social", title: "\"Did you know\" post", w: 900, h: 1125 },
@@ -29,7 +27,6 @@ document.addEventListener("DOMContentLoaded", () => {
     { src: "ad-property-2", type: "ad", title: "Owner health-check ad", w: 1000, h: 1250 },
     { src: "ad-cleaning-2", type: "ad", title: "Signed checklist ad", w: 1000, h: 1250 },
     { src: "social-2", type: "social", title: "Meet-the-team post", w: 900, h: 1125 },
-    { src: "social-wall", type: "social", title: "Social content wall", video: "./videos/social-wall.mp4", poster: "./videos/social-wall-poster.jpg", w: 800, h: 1000 },
     { src: "ghl-ai-receptionist", type: "ghl", title: "AI receptionist offer page", w: 1143, h: 1089 },
     { src: "ad-property-sq-a", type: "ad", title: "Multifamily owner ad", w: 1000, h: 1000 },
     { src: "ad-property-3", type: "ad", title: "Transparent pricing ad", w: 1000, h: 1250 },
@@ -100,16 +97,13 @@ document.addEventListener("DOMContentLoaded", () => {
   let lbIndex = 0;
   let lbLastFocus = null;
 
-  function renderLightbox(dir = 0) {
+  function renderLightbox() {
     const item = lbList[lbIndex];
     if (!item || !lbStage) return;
 
-    lbStage.style.setProperty("--dir", dir); // slide in from the side you're heading to
-
     lbStage.classList.remove("is-in");
     if (item.video) {
-      const tall = item.h > item.w;
-      lbStage.innerHTML = `<video class="lb-reel${tall ? " is-tall" : ""}" src="${item.video}" poster="${item.poster}" style="aspect-ratio:${item.w} / ${item.h}" controls autoplay playsinline loop></video>`;
+      lbStage.innerHTML = `<video class="lb-reel" src="${item.video}" poster="${item.poster}" controls autoplay playsinline loop></video>`;
     } else if (item.drive) {
       lbStage.innerHTML = `<div class="lb-video"><iframe src="https://drive.google.com/file/d/${item.drive}/preview" allow="autoplay; fullscreen" allowfullscreen title="${item.title}"></iframe></div>`;
     } else {
@@ -151,7 +145,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function stepLightbox(dir) {
     if (!lbList.length) return;
     lbIndex = (lbIndex + dir + lbList.length) % lbList.length;
-    renderLightbox(dir);
+    renderLightbox();
   }
 
   if (lb) {
@@ -193,12 +187,11 @@ document.addEventListener("DOMContentLoaded", () => {
     let inView = false;
 
     cfStage.innerHTML = SHOWCASE.map((item, i) => `
-      <button type="button" class="cf-card${item.video ? " is-reel" : ""}" data-i="${i}" data-tilt data-cursor="View" aria-label="${item.title}">
+      <button type="button" class="cf-card${item.video ? " is-reel" : ""}" data-i="${i}" aria-label="${item.title}">
         ${item.video
           ? `<video src="${item.video}" poster="${item.poster}" muted loop playsinline preload="metadata" aria-hidden="true"></video>`
           : `<img src="${imgUrl(item)}" alt="" loading="lazy" decoding="async" />`}
         <span class="cf-shine" aria-hidden="true"></span>
-        <span class="cf-glare" aria-hidden="true"></span>
       </button>`).join("");
 
     const cards = Array.from(cfStage.querySelectorAll(".cf-card"));
@@ -353,38 +346,14 @@ document.addEventListener("DOMContentLoaded", () => {
     return filter === "all" ? WORK : WORK.filter((w) => w.type === filter);
   }
 
-  const tileObserver = "IntersectionObserver" in window
-    ? new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (!entry.isIntersecting) return;
-        entry.target.classList.add("is-in");
-        tileObserver.unobserve(entry.target);
-      });
-    }, { rootMargin: "0px 0px -8% 0px" })
-    : null;
-
-  const videoObserver = "IntersectionObserver" in window && !reduceMotion
-    ? new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        const v = entry.target;
-        if (!v.isConnected) return;
-        if (entry.isIntersecting) v.play().catch(() => {});
-        else v.pause();
-      });
-    }, { threshold: 0.35 })
-    : null;
-
   function renderGrid() {
     if (!grid) return;
     const list = currentList();
     const visible = list.slice(0, shown);
 
     grid.innerHTML = visible.map((item, i) => `
-      <button type="button" class="work-tile${item.drive ? " is-video" : ""}${item.video ? " is-motion" : ""}" data-i="${i}" data-tilt data-cursor="${item.video ? "Play" : "View"}" style="--d:${(i % 3) * 80}ms">
-        ${item.video
-          ? `<video src="${item.video}" poster="${item.poster}" width="${item.w}" height="${item.h}" muted loop playsinline preload="none" aria-label="${item.title}"></video>
-             <span class="tile-motion" aria-hidden="true"><i class="fas fa-play"></i> Motion</span>`
-          : `<img src="${imgUrl(item)}" alt="${item.title}" width="${item.w}" height="${item.h}" loading="lazy" decoding="async" />`}
+      <button type="button" class="work-tile${item.drive ? " is-video" : ""}" data-i="${i}" style="--d:${(i % PAGE) * 55}ms">
+        <img src="${imgUrl(item)}" alt="${item.title}" width="${item.w}" height="${item.h}" loading="lazy" decoding="async" />
         ${item.drive ? '<span class="tile-play" aria-hidden="true"><i class="fas fa-play"></i></span>' : ""}
         <span class="tile-info">
           <span class="tile-type"><i class="fas ${TYPE_ICON[item.type]}"></i> ${TYPE_LABEL[item.type]}</span>
@@ -392,19 +361,7 @@ document.addEventListener("DOMContentLoaded", () => {
         </span>
       </button>`).join("");
 
-    // Motion tiles play only while on screen
-    if (videoObserver) {
-      videoObserver.disconnect();
-      grid.querySelectorAll(".work-tile video").forEach((v) => videoObserver.observe(v));
-    }
-
-    // Each tile rises in as it scrolls into view
-    tileObserver?.disconnect();
-    if (tileObserver) {
-      grid.querySelectorAll(".work-tile").forEach((tile) => tileObserver.observe(tile));
-    } else {
-      grid.querySelectorAll(".work-tile").forEach((tile) => tile.classList.add("is-in"));
-    }
+    requestAnimationFrame(() => grid.classList.add("is-in"));
 
     grid.querySelectorAll(".work-tile").forEach((tile) => {
       tile.addEventListener("click", () => openLightbox(list, Number(tile.dataset.i)));

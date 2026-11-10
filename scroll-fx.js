@@ -1,7 +1,6 @@
 /* =========================================================
    SCROLL FX — Webflow-style scroll interactions
    ---------------------------------------------------------
-   0. HERO ENTRANCE
    1. SPLIT HEADINGS (word-by-word rise, CSS driven)
    2. STAGGERED SERVICE CARDS
    3. LENIS SMOOTH SCROLL
@@ -16,24 +15,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const finePointer = window.matchMedia("(pointer: fine)").matches;
   const hasGsap = typeof window.gsap !== "undefined" && typeof window.ScrollTrigger !== "undefined";
-
-  /* =========================================================
-     0. HERO ENTRANCE
-     - Waits for the samurai intro, then staggers the hero in
-       (CSS) and tells hero-3d.js to fly its scene in
-  ========================================================= */
-  function enterHero() {
-    if (window.__heroEntered) return;
-    window.__heroEntered = true;
-    document.documentElement.classList.add("hero-in");
-    document.dispatchEvent(new CustomEvent("hero:enter"));
-  }
-
-  if (window.SamuraiIntro && window.SamuraiIntro.isPlaying()) {
-    document.addEventListener("intro:done", () => setTimeout(enterHero, 150), { once: true });
-  } else {
-    requestAnimationFrame(() => requestAnimationFrame(enterHero));
-  }
 
   /* =========================================================
      1. SPLIT HEADINGS
@@ -172,141 +153,6 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   /* =========================================================
-     3b. POINTER TILT ([data-tilt]: portrait, skill cards, work)
-     - Element leans toward the pointer; CSS reads --rx/--ry
-       for the rotation and --gx/--gy for the glare
-  ========================================================= */
-  // Delegated, so cards that work.js renders later are covered too
-  if (finePointer && !reduceMotion) {
-    let tiltEl = null;
-
-    const resetTilt = (el) => {
-      el.style.setProperty("--ry", "0deg");
-      el.style.setProperty("--rx", "0deg");
-      el.style.setProperty("--px", "0");
-      el.style.setProperty("--py", "0");
-    };
-
-    document.addEventListener("pointermove", (e) => {
-      const el = e.target.closest?.("[data-tilt]") || null;
-      if (tiltEl && tiltEl !== el) resetTilt(tiltEl);
-      tiltEl = el;
-      if (!el) return;
-
-      const r = el.getBoundingClientRect();
-      const x = (e.clientX - r.left) / r.width - 0.5;
-      const y = (e.clientY - r.top) / r.height - 0.5;
-      el.style.setProperty("--ry", `${x * 12}deg`);
-      el.style.setProperty("--rx", `${-y * 10}deg`);
-      el.style.setProperty("--px", x.toFixed(3)); // -0.5 → 0.5, for image parallax
-      el.style.setProperty("--py", y.toFixed(3));
-      el.style.setProperty("--gx", `${(x + 0.5) * 100}%`);
-      el.style.setProperty("--gy", `${(y + 0.5) * 100}%`);
-    }, { passive: true });
-
-    document.documentElement.addEventListener("pointerleave", () => {
-      if (tiltEl) resetTilt(tiltEl);
-      tiltEl = null;
-    });
-  }
-
-  /* =========================================================
-     3c. SKILLS ICON SPHERE
-     - Icons sit on a Fibonacci sphere that slowly turns;
-       drag/flick to spin it (momentum eases back to the idle
-       turn), depth sets size and fade
-  ========================================================= */
-  const sphere = document.getElementById("skillsSphere");
-
-  if (sphere) {
-    const icons = Array.from(sphere.querySelectorAll(".sphere-icon"));
-    const n = icons.length;
-    const points = icons.map((_, i) => {
-      const y = 1 - (2 * (i + 0.5)) / n;
-      const r = Math.sqrt(1 - y * y);
-      const a = i * Math.PI * (3 - Math.sqrt(5));
-      return [Math.cos(a) * r, y, Math.sin(a) * r];
-    });
-    let rotX = -0.3;
-    let rotY = 0;
-    const IDLE_X = 0.0012;
-    const IDLE_Y = 0.004;
-    let velX = IDLE_X;
-    let velY = IDLE_Y;
-    let raf = null;
-    let drag = null;
-
-    function place() {
-      const radius = sphere.clientWidth * 0.42;
-      const cx = Math.cos(rotX), sx = Math.sin(rotX), cy = Math.cos(rotY), sy = Math.sin(rotY);
-
-      points.forEach(([x, y, z], i) => {
-        // Rotate around Y, then X
-        const x1 = x * cy + z * sy;
-        const z1 = -x * sy + z * cy;
-        const y2 = y * cx - z1 * sx;
-        const z2 = y * sx + z1 * cx;
-        const depth = (z2 + 1) / 2; // 0 back → 1 front
-        const icon = icons[i];
-        icon.style.transform = `translate3d(${x1 * radius}px, ${y2 * radius}px, 0) scale(${0.6 + depth * 0.55})`;
-        icon.style.opacity = (0.25 + depth * 0.75).toFixed(2);
-        icon.style.zIndex = Math.round(depth * 100);
-      });
-    }
-
-    function tick() {
-      if (drag) {
-        // Holding still while grabbed brings it to a stop
-        velX *= 0.85;
-        velY *= 0.85;
-      } else {
-        velX += (IDLE_X - velX) * 0.02;
-        velY += (IDLE_Y - velY) * 0.02;
-      }
-      rotX += velX;
-      rotY += velY;
-      place();
-      raf = requestAnimationFrame(tick);
-    }
-
-    place();
-
-    if (!reduceMotion) {
-      new IntersectionObserver(([entry]) => {
-        if (entry.isIntersecting && !raf) raf = requestAnimationFrame(tick);
-        if (!entry.isIntersecting && raf) {
-          cancelAnimationFrame(raf);
-          raf = null;
-        }
-      }).observe(sphere);
-
-      sphere.addEventListener("pointerdown", (e) => {
-        drag = { x: e.clientX, y: e.clientY };
-        try {
-          sphere.setPointerCapture(e.pointerId);
-        } catch {
-          /* pointer already released */
-        }
-        sphere.classList.add("is-dragging");
-      });
-
-      sphere.addEventListener("pointermove", (e) => {
-        if (!drag) return;
-        velY = (e.clientX - drag.x) * 0.006;
-        velX = -(e.clientY - drag.y) * 0.006;
-        drag = { x: e.clientX, y: e.clientY };
-      });
-
-      const release = () => {
-        drag = null;
-        sphere.classList.remove("is-dragging");
-      };
-      sphere.addEventListener("pointerup", release);
-      sphere.addEventListener("pointercancel", release);
-    }
-  }
-
-  /* =========================================================
      4. GSAP SCROLL SCENES
   ========================================================= */
   if (!hasGsap || reduceMotion) return;
@@ -330,52 +176,6 @@ document.addEventListener("DOMContentLoaded", () => {
         scrub: true
       }
     });
-  }
-
-  /* ---------- About: photo drifts inside its frame, diagram floats up ---------- */
-  const aboutPhoto = document.querySelector("#about .about-photo");
-
-  if (aboutPhoto) {
-    gsap.fromTo(
-      aboutPhoto,
-      { yPercent: -10 },
-      {
-        yPercent: 0,
-        ease: "none",
-        scrollTrigger: { trigger: "#about", start: "top bottom", end: "bottom top", scrub: true }
-      }
-    );
-  }
-
-  const aboutDiagram = document.querySelector("#about .about-visual img");
-
-  if (aboutDiagram) {
-    gsap.fromTo(
-      aboutDiagram,
-      { y: 40, scale: 0.94 },
-      {
-        y: -20,
-        scale: 1,
-        ease: "none",
-        scrollTrigger: { trigger: "#about .about-visual", start: "top bottom", end: "bottom 30%", scrub: true }
-      }
-    );
-  }
-
-  /* ---------- Experience: timeline line draws as you scroll ---------- */
-  const timeline = document.getElementById("expTimeline");
-
-  if (timeline) {
-    timeline.classList.add("is-scrubbed");
-    gsap.fromTo(
-      timeline,
-      { "--line": 0 },
-      {
-        "--line": 1,
-        ease: "none",
-        scrollTrigger: { trigger: timeline, start: "top 70%", end: "bottom 60%", scrub: 0.5 }
-      }
-    );
   }
 
   /* ---------- About: words light up as you read down ---------- */

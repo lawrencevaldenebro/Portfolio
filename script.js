@@ -35,16 +35,12 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!mobileMenu) return;
     mobileMenu.style.display = "flex";
     menuToggle?.setAttribute("aria-expanded", "true");
-    menuToggle?.setAttribute("aria-label", "Close menu");
-    menuToggle?.setAttribute("data-tooltip", "Close menu");
   }
 
   function closeMobileMenu() {
     if (!mobileMenu) return;
     mobileMenu.style.display = "none";
     menuToggle?.setAttribute("aria-expanded", "false");
-    menuToggle?.setAttribute("aria-label", "Open menu");
-    menuToggle?.setAttribute("data-tooltip", "Open menu");
   }
 
   function toggleMobileMenu() {
@@ -70,7 +66,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     window.addEventListener("resize", () => {
-      if (window.innerWidth >= 768) {
+      if (window.innerWidth > 860) {
         closeMobileMenu();
       }
     });
@@ -225,87 +221,51 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   /* =========================================================
-     5. CONTACT CTAs + FIELD VALIDATION
-     - "Contact me" / "Start a project" scroll to the inline
-       form (anchor), then focus its first field
-     - Fields validate on first blur; an error clears as soon
-       as the visitor focuses or edits the field
-     - Submit stays clickable; an invalid submit focuses the
-       first problem instead of sending
+     5. CONTACT MODAL
+     - Opens popup
+     - Locks body scroll
+     - Closes on overlay / close button / ESC
   ========================================================= */
-  document.querySelectorAll("[data-open-form]").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      setTimeout(() => {
-        document.querySelector("#contactForm input:not([type='hidden'])")?.focus({ preventScroll: true });
-      }, 700);
-    });
-  });
+  const openBtns = document.querySelectorAll("[data-open-form]");
+  const modal = document.getElementById("formModal");
+  const closeOverlay = document.getElementById("closeForm");
+  const closeBtn = document.getElementById("closeFormBtn");
 
-  // data-name overrides the label when the label is a question
-  function fieldName(field) {
-    if (field.dataset.name) return field.dataset.name;
-    const label = field.closest("label");
-    const text = label ? label.firstChild.textContent.trim() : field.name;
-    return text.charAt(0).toLowerCase() + text.slice(1);
+  function openModal() {
+    if (!modal) return;
+    modal.classList.add("active");
+    document.body.classList.add("modal-open");
   }
 
-  function errorFor(field) {
-    const v = field.validity;
-    if (v.valueMissing) {
-      return field.tagName === "SELECT" ? `Choose your ${fieldName(field)}.` : `Enter your ${fieldName(field)}.`;
-    }
-    if (v.typeMismatch && field.type === "email") return "Enter an email like name@company.com.";
-    if (v.patternMismatch) return `Use digits only, like ${field.placeholder || "2015550123"}.`;
-    return "Check this field.";
+  function closeModal() {
+    if (!modal) return;
+    modal.classList.remove("active");
+    document.body.classList.remove("modal-open");
+    resetDemo();
   }
 
-  function showError(field) {
-    const box = field.parentElement.querySelector(".field-error");
-    box.textContent = errorFor(field);
-    field.setAttribute("aria-invalid", "true");
-  }
-
-  function clearError(field) {
-    if (field.getAttribute("aria-invalid") !== "true") return;
-    field.removeAttribute("aria-invalid");
-    field.parentElement.querySelector(".field-error").textContent = "";
-  }
-
-  document.querySelectorAll("#contactForm, #demoLeadForm").forEach((form) => {
-    form.noValidate = true;
-    const fields = Array.from(form.querySelectorAll("input:not([type='hidden']), select, textarea"));
-
-    fields.forEach((field) => {
-      const box = document.createElement("span");
-      box.className = "field-error";
-      box.id = `${field.name}-error`;
-      box.setAttribute("aria-live", "polite");
-      field.parentElement.appendChild(box);
-      field.setAttribute("aria-describedby", [field.getAttribute("aria-describedby"), box.id].filter(Boolean).join(" "));
-
-      field.addEventListener("blur", () => {
-        if (!field.checkValidity()) showError(field);
+  if (openBtns.length && modal && closeOverlay && closeBtn) {
+    openBtns.forEach((btn) => {
+      btn.addEventListener("click", (event) => {
+        event.preventDefault();
+        openModal();
       });
-      field.addEventListener("focus", () => clearError(field));
-      field.addEventListener("input", () => clearError(field));
-      field.addEventListener("change", () => clearError(field));
     });
 
-    // Capture phase: runs before the send / demo handlers on the same form
-    form.addEventListener("submit", (event) => {
-      const invalid = fields.filter((f) => !f.checkValidity());
-      if (!invalid.length) return;
-      event.preventDefault();
-      event.stopImmediatePropagation();
-      invalid[0].focus({ preventScroll: true });
-      invalid[0].scrollIntoView({ block: "center", behavior: "smooth" });
-      invalid.forEach(showError); // after focus, so the first message stays visible
-    }, true);
-  });
+    closeOverlay.addEventListener("click", closeModal);
+    closeBtn.addEventListener("click", closeModal);
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && modal.classList.contains("active")) {
+        closeModal();
+      }
+    });
+  }
 
   /* =========================================================
      6. LIVE DEMO SIMULATION
      - Fake CRM automation sequence
+     - Resets when modal closes
   ========================================================= */
   const demoForm = document.getElementById("demoLeadForm");
   const demoFlow = document.getElementById("demoFlow");
@@ -317,6 +277,25 @@ document.addEventListener("DOMContentLoaded", () => {
   function clearDemoTimers() {
     demoTimers.forEach((timer) => clearTimeout(timer));
     demoTimers = [];
+  }
+
+  function resetDemo() {
+    clearDemoTimers();
+
+    if (demoFlow) {
+      demoFlow.classList.remove("active");
+    }
+
+    if (demoStatus) {
+      demoStatus.classList.remove("active");
+      demoStatus.textContent = "";
+    }
+
+    demoSteps.forEach((step) => {
+      step.classList.remove("show");
+    });
+
+    demoForm?.reset();
   }
 
   function setDemoStatus(text) {
@@ -458,7 +437,7 @@ document.addEventListener("DOMContentLoaded", () => {
       pattern: "[0-9]{9,15}"
     },
     "Other": {
-      placeholder: "2015550123",
+      placeholder: "Enter your phone / WhatsApp number",
       pattern: "[0-9]{6,20}"
     }
   };
@@ -527,6 +506,84 @@ document.addEventListener("DOMContentLoaded", () => {
   handleScrollMotion();
 
   /* =========================================================
+     9. 3D TILT ON CARDS
+     - Cursor-reactive tilt for project / experience / contact cards
+     - Skipped on touch-only devices
+  ========================================================= */
+  const tiltEls = document.querySelectorAll(".project-card, .experience-card, .contact-card, .service-card:not(.service-featured)");
+
+  if (tiltEls.length && window.matchMedia("(pointer: fine)").matches) {
+    tiltEls.forEach((card) => {
+      card.classList.add("spotlight");
+
+      const maxTilt = card.classList.contains("experience-card") ? 3 : 6;
+      const lift = card.classList.contains("project-card") || card.classList.contains("service-card")
+        ? -8
+        : card.classList.contains("contact-card")
+        ? -6
+        : -3;
+
+      card.addEventListener("mousemove", (event) => {
+        const rect = card.getBoundingClientRect();
+        const x = event.clientX - rect.left;
+        const y = event.clientY - rect.top;
+
+        const rotateY = (x / rect.width - 0.5) * maxTilt * 2;
+        const rotateX = (y / rect.height - 0.5) * -maxTilt * 2;
+
+        card.style.transition = "transform 0.08s linear, border-color 0.3s ease, background 0.3s ease";
+        card.style.transform = `perspective(900px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(${lift}px)`;
+
+        card.style.setProperty("--mx", `${(x / rect.width) * 100}%`);
+        card.style.setProperty("--my", `${(y / rect.height) * 100}%`);
+      });
+
+      card.addEventListener("mouseleave", () => {
+        card.style.transition = "transform 0.5s cubic-bezier(.2,.8,.2,1), border-color 0.3s ease, background 0.3s ease";
+        card.style.transform = "";
+      });
+    });
+  }
+
+  /* =========================================================
+     10. MAGNETIC BUTTONS
+     - Primary CTAs subtly follow the cursor on hover
+  ========================================================= */
+  const magneticEls = document.querySelectorAll(".btn-primary, .nav-cta");
+
+  if (magneticEls.length && window.matchMedia("(pointer: fine)").matches) {
+    magneticEls.forEach((btn) => {
+      btn.addEventListener("mousemove", (event) => {
+        const rect = btn.getBoundingClientRect();
+        const x = event.clientX - rect.left - rect.width / 2;
+        const y = event.clientY - rect.top - rect.height / 2;
+
+        btn.style.transition = "transform 0.1s ease";
+        btn.style.transform = `translate(${x * 0.25}px, ${y * 0.25}px)`;
+      });
+
+      btn.addEventListener("mouseleave", () => {
+        btn.style.transition = "transform 0.4s cubic-bezier(.2,.8,.2,1)";
+        btn.style.transform = "translate(0, 0)";
+      });
+    });
+  }
+
+  /* =========================================================
+     11. PARALLAX BACKGROUND ORBS
+     - Whole background layer drifts slightly with the cursor
+  ========================================================= */
+  const pageBg = document.querySelector(".page-bg");
+
+  if (pageBg && window.matchMedia("(pointer: fine)").matches) {
+    window.addEventListener("mousemove", (event) => {
+      const px = (event.clientX / window.innerWidth - 0.5) * 30;
+      const py = (event.clientY / window.innerHeight - 0.5) * 30;
+      pageBg.style.transform = `translate(${px}px, ${py}px)`;
+    });
+  }
+
+  /* =========================================================
      15. CONTACT FORM SUBMIT (Formspree AJAX)
      ---------------------------------------------------------
      Submits in-page instead of redirecting to Formspree.
@@ -537,20 +594,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const contactStatus = document.getElementById("contactStatus");
   const contactSubmit = document.getElementById("contactSubmit");
 
-  // What happened, why it matters, how to recover; technical detail goes to the clipboard
-  function showSendError(detail) {
-    setContactStatus(
-      "error",
-      `<i class="fas fa-triangle-exclamation"></i> Your message didn't send, so it hasn't reached me yet.
-       Email me at <a href="mailto:lawrencevaldenebro@gmail.com">lawrencevaldenebro@gmail.com</a> instead.
-       <button type="button" class="copy-error">Copy error details</button>`
-    );
-    contactStatus.querySelector(".copy-error").addEventListener("click", (e) => {
-      navigator.clipboard?.writeText(detail);
-      e.currentTarget.textContent = "Copied";
-    });
-  }
-
   function setContactStatus(type, html) {
     if (!contactStatus) return;
     contactStatus.className = `form-status active ${type}`;
@@ -560,13 +603,14 @@ document.addEventListener("DOMContentLoaded", () => {
   if (contactForm) {
     contactForm.addEventListener("submit", async (event) => {
       event.preventDefault();
-      if (contactForm.getAttribute("aria-busy") === "true") return; // already sending
 
       const data = new FormData(contactForm);
       const originalLabel = contactSubmit ? contactSubmit.textContent : "";
 
-      contactForm.setAttribute("aria-busy", "true");
-      if (contactSubmit) contactSubmit.textContent = "Sending...";
+      if (contactSubmit) {
+        contactSubmit.disabled = true;
+        contactSubmit.textContent = "Sending...";
+      }
       setContactStatus("pending", '<i class="fas fa-circle-notch fa-spin"></i> Sending your message...');
 
       try {
@@ -584,7 +628,7 @@ document.addEventListener("DOMContentLoaded", () => {
           );
         } else {
           // Formspree returns JSON explaining exactly what went wrong.
-          let reason = `HTTP ${response.status}`;
+          let reason = `Server responded ${response.status}.`;
           try {
             const payload = await response.json();
             if (Array.isArray(payload.errors) && payload.errors.length) {
@@ -596,13 +640,25 @@ document.addEventListener("DOMContentLoaded", () => {
             /* non-JSON response — keep the status-code message */
           }
 
-          showSendError(reason);
+          setContactStatus(
+            "error",
+            `<i class="fas fa-triangle-exclamation"></i> Couldn't send: ${reason}
+             <br>You can email me directly at
+             <a href="mailto:lawrencevaldenebro@gmail.com">lawrencevaldenebro@gmail.com</a>.`
+          );
         }
       } catch (networkErr) {
-        showSendError(`Network error: ${networkErr.message}`);
+        setContactStatus(
+          "error",
+          `<i class="fas fa-triangle-exclamation"></i> Network error — the message didn't send.
+           <br>Please email me directly at
+           <a href="mailto:lawrencevaldenebro@gmail.com">lawrencevaldenebro@gmail.com</a>.`
+        );
       } finally {
-        contactForm.removeAttribute("aria-busy");
-        if (contactSubmit) contactSubmit.textContent = originalLabel || "Send message";
+        if (contactSubmit) {
+          contactSubmit.disabled = false;
+          contactSubmit.textContent = originalLabel || "Send Message";
+        }
       }
     });
   }

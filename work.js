@@ -165,18 +165,6 @@ document.addEventListener("DOMContentLoaded", () => {
     document.addEventListener("keydown", (event) => {
       if (!lb.classList.contains("active")) return;
       if (event.key === "Escape") closeLightbox();
-      if (event.key === "Tab") {
-        const focusable = Array.from(lb.querySelectorAll("button, video[controls], iframe"));
-        const first = focusable[0];
-        const last = focusable[focusable.length - 1];
-        if (event.shiftKey && document.activeElement === first) {
-          event.preventDefault();
-          last.focus();
-        } else if (!event.shiftKey && document.activeElement === last) {
-          event.preventDefault();
-          first.focus();
-        }
-      }
       if (event.key === "ArrowLeft") stepLightbox(-1);
       if (event.key === "ArrowRight") stepLightbox(1);
     });
@@ -232,7 +220,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.addEventListener("lightboxchange", () => syncVideos());
 
     if (cfDots) {
-      cfDots.innerHTML = SHOWCASE.map((item, i) => `<button type="button" aria-label="Show ${item.title}" data-tooltip="Show ${item.title}" data-i="${i}"></button>`).join("");
+      cfDots.innerHTML = SHOWCASE.map((_, i) => `<button type="button" aria-label="Show item ${i + 1}" data-i="${i}"></button>`).join("");
     }
 
     function layout() {
@@ -392,7 +380,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const visible = list.slice(0, shown);
 
     grid.innerHTML = visible.map((item, i) => `
-      <button type="button" class="work-tile${item.drive ? " is-video" : ""}${item.video ? " is-motion" : ""}" data-i="${i}" data-tilt data-cursor="${item.video ? "Play" : "View"}" style="--d:${(i % 3) * 30}ms">
+      <button type="button" class="work-tile${item.drive ? " is-video" : ""}${item.video ? " is-motion" : ""}" data-i="${i}" data-tilt data-cursor="${item.video ? "Play" : "View"}" style="--d:${(i % 3) * 80}ms">
         ${item.video
           ? `<video src="${item.video}" poster="${item.poster}" width="${item.w}" height="${item.h}" muted loop playsinline preload="none" aria-label="${item.title}"></video>
              <span class="tile-motion" aria-hidden="true"><i class="fas fa-play"></i> Motion</span>`

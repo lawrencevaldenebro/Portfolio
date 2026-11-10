@@ -339,6 +339,22 @@ document.addEventListener("DOMContentLoaded", () => {
     );
   }
 
+  /* ---------- Experience: timeline line draws as you scroll ---------- */
+  const timeline = document.getElementById("expTimeline");
+
+  if (timeline) {
+    timeline.classList.add("is-scrubbed");
+    gsap.fromTo(
+      timeline,
+      { "--line": 0 },
+      {
+        "--line": 1,
+        ease: "none",
+        scrollTrigger: { trigger: timeline, start: "top 70%", end: "bottom 60%", scrub: 0.5 }
+      }
+    );
+  }
+
   /* ---------- About: words light up as you read down ---------- */
   const scrubText = document.querySelector("#about .section-heading p");
 

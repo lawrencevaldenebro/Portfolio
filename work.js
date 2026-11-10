@@ -97,9 +97,11 @@ document.addEventListener("DOMContentLoaded", () => {
   let lbIndex = 0;
   let lbLastFocus = null;
 
-  function renderLightbox() {
+  function renderLightbox(dir = 0) {
     const item = lbList[lbIndex];
     if (!item || !lbStage) return;
+
+    lbStage.style.setProperty("--dir", dir); // slide in from the side you're heading to
 
     lbStage.classList.remove("is-in");
     if (item.video) {
@@ -145,7 +147,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function stepLightbox(dir) {
     if (!lbList.length) return;
     lbIndex = (lbIndex + dir + lbList.length) % lbList.length;
-    renderLightbox();
+    renderLightbox(dir);
   }
 
   if (lb) {
@@ -187,11 +189,12 @@ document.addEventListener("DOMContentLoaded", () => {
     let inView = false;
 
     cfStage.innerHTML = SHOWCASE.map((item, i) => `
-      <button type="button" class="cf-card${item.video ? " is-reel" : ""}" data-i="${i}" aria-label="${item.title}">
+      <button type="button" class="cf-card${item.video ? " is-reel" : ""}" data-i="${i}" data-tilt aria-label="${item.title}">
         ${item.video
           ? `<video src="${item.video}" poster="${item.poster}" muted loop playsinline preload="metadata" aria-hidden="true"></video>`
           : `<img src="${imgUrl(item)}" alt="" loading="lazy" decoding="async" />`}
         <span class="cf-shine" aria-hidden="true"></span>
+        <span class="cf-glare" aria-hidden="true"></span>
       </button>`).join("");
 
     const cards = Array.from(cfStage.querySelectorAll(".cf-card"));
@@ -346,13 +349,23 @@ document.addEventListener("DOMContentLoaded", () => {
     return filter === "all" ? WORK : WORK.filter((w) => w.type === filter);
   }
 
+  const tileObserver = "IntersectionObserver" in window
+    ? new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add("is-in");
+        tileObserver.unobserve(entry.target);
+      });
+    }, { rootMargin: "0px 0px -8% 0px" })
+    : null;
+
   function renderGrid() {
     if (!grid) return;
     const list = currentList();
     const visible = list.slice(0, shown);
 
     grid.innerHTML = visible.map((item, i) => `
-      <button type="button" class="work-tile${item.drive ? " is-video" : ""}" data-i="${i}" style="--d:${(i % PAGE) * 55}ms">
+      <button type="button" class="work-tile${item.drive ? " is-video" : ""}" data-i="${i}" data-tilt style="--d:${(i % 3) * 80}ms">
         <img src="${imgUrl(item)}" alt="${item.title}" width="${item.w}" height="${item.h}" loading="lazy" decoding="async" />
         ${item.drive ? '<span class="tile-play" aria-hidden="true"><i class="fas fa-play"></i></span>' : ""}
         <span class="tile-info">
@@ -361,7 +374,13 @@ document.addEventListener("DOMContentLoaded", () => {
         </span>
       </button>`).join("");
 
-    requestAnimationFrame(() => grid.classList.add("is-in"));
+    // Each tile rises in as it scrolls into view
+    tileObserver?.disconnect();
+    if (tileObserver) {
+      grid.querySelectorAll(".work-tile").forEach((tile) => tileObserver.observe(tile));
+    } else {
+      grid.querySelectorAll(".work-tile").forEach((tile) => tile.classList.add("is-in"));
+    }
 
     grid.querySelectorAll(".work-tile").forEach((tile) => {
       tile.addEventListener("click", () => openLightbox(list, Number(tile.dataset.i)));

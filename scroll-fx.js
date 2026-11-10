@@ -172,26 +172,41 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   /* =========================================================
-     3b. POINTER TILT ([data-tilt]: About portrait, skill cards)
+     3b. POINTER TILT ([data-tilt]: portrait, skill cards, work)
      - Element leans toward the pointer; CSS reads --rx/--ry
        for the rotation and --gx/--gy for the glare
   ========================================================= */
+  // Delegated, so cards that work.js renders later are covered too
   if (finePointer && !reduceMotion) {
-    document.querySelectorAll("[data-tilt]").forEach((el) => {
-      el.addEventListener("pointermove", (e) => {
-        const r = el.getBoundingClientRect();
-        const x = (e.clientX - r.left) / r.width - 0.5;
-        const y = (e.clientY - r.top) / r.height - 0.5;
-        el.style.setProperty("--ry", `${x * 12}deg`);
-        el.style.setProperty("--rx", `${-y * 10}deg`);
-        el.style.setProperty("--gx", `${(x + 0.5) * 100}%`);
-        el.style.setProperty("--gy", `${(y + 0.5) * 100}%`);
-      });
+    let tiltEl = null;
 
-      el.addEventListener("pointerleave", () => {
-        el.style.setProperty("--ry", "0deg");
-        el.style.setProperty("--rx", "0deg");
-      });
+    const resetTilt = (el) => {
+      el.style.setProperty("--ry", "0deg");
+      el.style.setProperty("--rx", "0deg");
+      el.style.setProperty("--px", "0");
+      el.style.setProperty("--py", "0");
+    };
+
+    document.addEventListener("pointermove", (e) => {
+      const el = e.target.closest?.("[data-tilt]") || null;
+      if (tiltEl && tiltEl !== el) resetTilt(tiltEl);
+      tiltEl = el;
+      if (!el) return;
+
+      const r = el.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width - 0.5;
+      const y = (e.clientY - r.top) / r.height - 0.5;
+      el.style.setProperty("--ry", `${x * 12}deg`);
+      el.style.setProperty("--rx", `${-y * 10}deg`);
+      el.style.setProperty("--px", x.toFixed(3)); // -0.5 → 0.5, for image parallax
+      el.style.setProperty("--py", y.toFixed(3));
+      el.style.setProperty("--gx", `${(x + 0.5) * 100}%`);
+      el.style.setProperty("--gy", `${(y + 0.5) * 100}%`);
+    }, { passive: true });
+
+    document.documentElement.addEventListener("pointerleave", () => {
+      if (tiltEl) resetTilt(tiltEl);
+      tiltEl = null;
     });
   }
 

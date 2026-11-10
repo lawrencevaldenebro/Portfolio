@@ -638,36 +638,6 @@ img {
   justify-content: center;
 }
 
-.hero-image-card {
-  position: relative;
-  width: 100%;
-  max-width: 440px;
-  padding: 14px;
-  border-radius: 28px;
-  background: linear-gradient(180deg, rgba(10, 23, 42, 0.92), rgba(7, 16, 29, 0.88));
-  border: 1px solid rgba(130, 180, 255, 0.16);
-  box-shadow: var(--shadow);
-  overflow: hidden;
-  transition: border-color 0.35s ease;
-}
-
-.hero-image-card:hover {
-  border-color: rgba(130, 180, 255, 0.32);
-}
-
-.hero-photo {
-  width: 100%;
-  height: 520px;
-  object-fit: cover;
-  object-position: center top;
-  border-radius: 20px;
-  transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
-}
-
-.hero-image-card:hover .hero-photo {
-  transform: scale(1.05);
-}
-
 .hero-badge {
   position: absolute;
   display: inline-flex;
@@ -693,81 +663,6 @@ img {
 .badge-bottom {
   right: 18px;
   bottom: 18px;
-}
-
-/* Rocket launch + smoke accent */
-.hero-rocket {
-  position: absolute;
-  top: 18px;
-  right: 18px;
-  width: 42px;
-  height: 42px;
-  display: grid;
-  place-items: center;
-  z-index: 3;
-}
-
-.rocket-icon {
-  position: relative;
-  z-index: 2;
-  font-size: 1.35rem;
-  color: #ffb454;
-  filter: drop-shadow(0 0 10px rgba(255, 150, 60, 0.55));
-  transform-origin: center;
-  animation: rocketBob 2.6s ease-in-out infinite;
-}
-
-@keyframes rocketBob {
-  0%, 100% {
-    transform: translateY(0) rotate(-6deg);
-  }
-
-  50% {
-    transform: translateY(-7px) rotate(6deg);
-  }
-}
-
-.smoke-puff {
-  position: absolute;
-  bottom: 2px;
-  left: 50%;
-  width: 9px;
-  height: 9px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0));
-  opacity: 0;
-  transform: translate(-50%, 0) scale(0.4);
-  animation: smokeRise 2.6s ease-out infinite;
-}
-
-.puff-1 {
-  animation-delay: 0s;
-}
-
-.puff-2 {
-  left: 42%;
-  animation-delay: 0.5s;
-}
-
-.puff-3 {
-  left: 58%;
-  animation-delay: 1s;
-}
-
-@keyframes smokeRise {
-  0% {
-    opacity: 0;
-    transform: translate(-50%, 0) scale(0.3);
-  }
-
-  15% {
-    opacity: 0.55;
-  }
-
-  100% {
-    opacity: 0;
-    transform: translate(-50%, 24px) scale(1.6);
-  }
 }
 
 /* =========================================================
@@ -2114,14 +2009,6 @@ img {
     font-size: clamp(2.2rem, 6vw, 3.3rem);
   }
 
-  .hero-image-card {
-    max-width: 100%;
-  }
-
-  .hero-photo {
-    height: 440px;
-  }
-
   .badge-top,
   .badge-bottom {
     position: static;
@@ -2182,10 +2069,6 @@ img {
   .contact-intro,
   .footer-inner {
     padding: 20px;
-  }
-
-  .hero-photo {
-    height: 420px;
   }
 
   .form-modal.active {
@@ -3287,5 +3170,242 @@ html.has-lenis {
   .work-tile {
     opacity: 1;
     transform: none;
+  }
+}
+
+/* =========================================================
+   18. 3D HERO + ABOUT PORTRAIT
+   - WebGL stage (hero-3d.js) with SVG fallback
+   - Staggered hero entrance after the intro, scroll cue
+   - About portrait card with pointer depth
+========================================================= */
+
+/* ---------- Hero stage ---------- */
+.hero-section {
+  position: relative;
+}
+
+.hero-shell {
+  grid-template-columns: minmax(0, 1.1fr) minmax(360px, 520px);
+  overflow: hidden;
+}
+
+.hero-stage {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  max-width: 520px;
+}
+
+/* Soft studio glow behind the mark */
+.hero-stage::before {
+  content: "";
+  position: absolute;
+  inset: 12%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(58, 134, 255, 0.28), rgba(123, 97, 255, 0.12) 45%, transparent 70%);
+  filter: blur(30px);
+  pointer-events: none;
+}
+
+.hero-stage canvas {
+  position: absolute;
+  inset: 0;
+  width: 100% !important;
+  height: 100% !important;
+  opacity: 0;
+  transition: opacity 1.2s ease;
+}
+
+.hero-fallback {
+  position: absolute;
+  inset: 20%;
+  width: 60%;
+  height: 60%;
+  filter: drop-shadow(0 24px 40px rgba(58, 134, 255, 0.35));
+  animation: heroFloat 6s ease-in-out infinite;
+  transition: opacity 0.8s ease;
+}
+
+.hero-stage.is-ready canvas {
+  opacity: 1;
+}
+
+.hero-stage.is-ready .hero-fallback {
+  opacity: 0;
+}
+
+@keyframes heroFloat {
+  0%, 100% { transform: translateY(0) rotate(-2deg); }
+  50% { transform: translateY(-12px) rotate(2deg); }
+}
+
+/* ---------- Hero entrance (html.js-hero set in <head>) ---------- */
+.js-hero .hero-copy .eyebrow,
+.js-hero .kinetic-h1 > span,
+.js-hero .hero-description,
+.js-hero .hero-actions,
+.js-hero .hero-stage,
+.js-hero .scroll-cue {
+  opacity: 0;
+  transform: translateY(36px);
+}
+
+.js-hero .kinetic-h1 {
+  perspective: 600px;
+}
+
+.js-hero .kinetic-h1 > span {
+  transform: translateY(60%) rotateX(-40deg);
+  transform-origin: 50% 100%;
+}
+
+.js-hero .hero-stage {
+  transform: scale(0.92);
+}
+
+.js-hero.hero-in .hero-copy .eyebrow,
+.js-hero.hero-in .kinetic-h1 > span,
+.js-hero.hero-in .hero-description,
+.js-hero.hero-in .hero-actions,
+.js-hero.hero-in .hero-stage,
+.js-hero.hero-in .scroll-cue {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity 0.9s ease,
+    transform 1.2s var(--ease-out-expo);
+  transition-delay: var(--d, 0s);
+}
+
+.hero-copy .eyebrow { --d: 0s; }
+.kinetic-h1 > span:nth-child(1) { --d: 0.1s; }
+.kinetic-h1 > span:nth-child(2) { --d: 0.2s; }
+.kinetic-h1 > span:nth-child(3) { --d: 0.3s; }
+.hero-description { --d: 0.45s; }
+.hero-actions { --d: 0.55s; }
+.hero-stage { --d: 0.15s; }
+.scroll-cue { --d: 1s; }
+
+/* ---------- Scroll cue ---------- */
+.scroll-cue {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  width: max-content;
+  margin: 22px auto 0;
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+.scroll-cue:hover {
+  color: var(--text);
+}
+
+.scroll-cue-mouse {
+  width: 22px;
+  height: 34px;
+  border: 1.5px solid rgba(168, 189, 219, 0.5);
+  border-radius: 12px;
+  display: flex;
+  justify-content: center;
+  padding-top: 6px;
+}
+
+.scroll-cue-mouse span {
+  width: 3px;
+  height: 7px;
+  border-radius: 2px;
+  background: var(--accent-cyan);
+  animation: scrollCue 1.8s ease-in-out infinite;
+}
+
+@keyframes scrollCue {
+  0% { opacity: 0; transform: translateY(-3px); }
+  30% { opacity: 1; }
+  100% { opacity: 0; transform: translateY(10px); }
+}
+
+/* ---------- About portrait ---------- */
+.about-layout {
+  grid-template-columns: minmax(280px, 0.8fr) minmax(0, 1.2fr);
+  gap: 48px;
+  align-items: center;
+}
+
+.about-portrait {
+  margin: 0;
+  perspective: 1200px;
+}
+
+.about-portrait-card {
+  position: relative;
+  padding: 12px;
+  border-radius: 28px;
+  background: linear-gradient(180deg, rgba(10, 23, 42, 0.92), rgba(7, 16, 29, 0.88));
+  border: 1px solid rgba(130, 180, 255, 0.16);
+  box-shadow: var(--shadow-strong);
+  transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  transform-style: preserve-3d;
+  transition: transform 0.6s var(--ease-out-expo), border-color 0.35s ease;
+}
+
+.about-portrait-card:hover {
+  border-color: rgba(130, 180, 255, 0.32);
+}
+
+.about-photo {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  object-position: center top;
+  border-radius: 20px;
+}
+
+/* Badges float in front of the photo */
+.about-portrait-card .hero-badge {
+  transform: translateZ(40px);
+}
+
+.about-main .section-heading {
+  margin-bottom: 26px;
+}
+
+@media (max-width: 860px) {
+  .hero-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-stage {
+    max-width: 340px;
+    margin: 0 auto;
+  }
+
+  .about-layout {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+
+  .about-portrait {
+    max-width: 380px;
+  }
+
+  .about-portrait-card .hero-badge {
+    position: absolute;
+    margin: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-fallback,
+  .scroll-cue-mouse span {
+    animation: none;
   }
 }

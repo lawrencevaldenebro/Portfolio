@@ -1,6 +1,7 @@
 /* =========================================================
    SCROLL FX — Webflow-style scroll interactions
    ---------------------------------------------------------
+   0. HERO ENTRANCE
    1. SPLIT HEADINGS (word-by-word rise, CSS driven)
    2. STAGGERED SERVICE CARDS
    3. LENIS SMOOTH SCROLL
@@ -15,6 +16,24 @@ document.addEventListener("DOMContentLoaded", () => {
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const finePointer = window.matchMedia("(pointer: fine)").matches;
   const hasGsap = typeof window.gsap !== "undefined" && typeof window.ScrollTrigger !== "undefined";
+
+  /* =========================================================
+     0. HERO ENTRANCE
+     - Waits for the samurai intro, then staggers the hero in
+       (CSS) and tells hero-3d.js to fly its scene in
+  ========================================================= */
+  function enterHero() {
+    if (window.__heroEntered) return;
+    window.__heroEntered = true;
+    document.documentElement.classList.add("hero-in");
+    document.dispatchEvent(new CustomEvent("hero:enter"));
+  }
+
+  if (window.SamuraiIntro && window.SamuraiIntro.isPlaying()) {
+    document.addEventListener("intro:done", () => setTimeout(enterHero, 150), { once: true });
+  } else {
+    requestAnimationFrame(() => requestAnimationFrame(enterHero));
+  }
 
   /* =========================================================
      1. SPLIT HEADINGS

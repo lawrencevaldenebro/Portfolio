@@ -4,6 +4,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Hide the hero until its entrance plays (scroll-fx.js); 7s failsafe if scripts don't load -->
+  <script>
+    if (!matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      document.documentElement.classList.add("js-hero");
+      setTimeout(function () { document.documentElement.classList.add("hero-in"); }, 7000);
+    }
+  </script>
   <title>Lawrence | Marketing Automation & Funnel Specialist</title>
   <meta name="description" content="Lawrence builds GoHighLevel funnels, CRM automations, AI chatbots and websites that turn clicks into booked calls.">
 
@@ -11,6 +18,7 @@
   <meta property="og:type" content="website">
   <meta property="og:title" content="Lawrence | Marketing Automation & Funnel Specialist">
   <meta property="og:description" content="GoHighLevel funnels, CRM automations, AI chatbots and websites that turn clicks into booked calls.">
+  <meta property="og:image" content="/og-image.jpg">
   <meta name="twitter:card" content="summary_large_image">
 
   <!-- Favicons: SVG for modern browsers, ICO/PNG fallbacks, iOS + Android home-screen icons -->
@@ -44,6 +52,15 @@
   <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js" defer></script>
   <script src="./scroll-fx.js" defer></script>
   <script src="./work.js" defer></script>
+
+  <!-- 3D hero: Three.js loads on demand from inside hero-3d.js -->
+  <script type="importmap">
+    { "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.min.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+    } }
+  </script>
+  <script type="module" src="./hero-3d.js"></script>
 </head>
 
 <body>
@@ -99,7 +116,7 @@
     <!-- HERO -->
     <section class="hero-section" id="home">
       <div class="container hero-shell glass">
-        <div class="hero-copy reveal">
+        <div class="hero-copy">
           <div class="eyebrow">
             <span class="eyebrow-pill"></span>
             Marketing Automation • Funnels • AI Systems
@@ -135,55 +152,61 @@
           </div>
         </div>
 
-        <div class="hero-visual reveal">
-          <div class="hero-image-card">
-            <div class="hero-badge badge-top">
-              <i class="fas fa-bolt"></i>
-              Fast execution
-            </div>
-
-            <img src="./images/formal.webp" width="900" height="900" alt="Lawrence portfolio profile" class="hero-photo" />
-
-            <div class="hero-badge badge-bottom">
-              <i class="fas fa-chart-line"></i>
-              Marketing-focused
-            </div>
-
-            <div class="hero-rocket" aria-hidden="true">
-              <i class="fas fa-rocket rocket-icon"></i>
-              <span class="smoke-puff puff-1"></span>
-              <span class="smoke-puff puff-2"></span>
-              <span class="smoke-puff puff-3"></span>
-            </div>
+        <!-- 3D centrepiece (hero-3d.js); the SVG mark is the no-WebGL / loading fallback -->
+        <div class="hero-visual" aria-hidden="true">
+          <div class="hero-stage" id="heroStage">
+            <img src="./images/logo-mark.svg" class="hero-fallback" alt="" width="360" height="360" />
           </div>
         </div>
       </div>
+
+      <a href="#about" class="scroll-cue" aria-label="Scroll to About">
+        <span class="scroll-cue-mouse"><span></span></span>
+        Scroll
+      </a>
     </section>
 
     <!-- ABOUT -->
     <section class="section-block" id="about">
       <div class="container">
         <div class="about-layout">
-          <div class="section-heading reveal">
-            <span class="section-kicker">ABOUT</span>
-            <h2>Complete lead systems, not just pages.</h2>
-            <p>
-              Funnels, CRM, automation, and AI wired into one clean system,
-              so your tools finally work together.
-            </p>
-
-            <div class="about-highlights">
-              <div class="about-chip"><i class="fas fa-bolt"></i> Fast turnaround</div>
-              <div class="about-chip"><i class="fas fa-shield-halved"></i> Reliable builds</div>
-              <div class="about-chip"><i class="fas fa-arrows-rotate"></i> End-to-end setup</div>
-              <div class="about-chip"><i class="fas fa-wand-magic-sparkles"></i> AI-assisted builds</div>
+          <figure class="about-portrait reveal" data-reveal="left">
+            <div class="about-portrait-card" id="aboutPortrait">
+              <img src="./images/formal.webp" width="900" height="900" loading="lazy"
+                alt="Lawrence portfolio profile" class="about-photo" />
+              <div class="hero-badge badge-top">
+                <i class="fas fa-bolt"></i>
+                Fast execution
+              </div>
+              <div class="hero-badge badge-bottom">
+                <i class="fas fa-chart-line"></i>
+                Marketing-focused
+              </div>
             </div>
-          </div>
-
-          <figure class="about-visual glass reveal" data-reveal="right">
-            <img src="./images/automation-flow.svg" alt="Diagram showing leads flowing from landing pages and ads into a CRM, then through conditional if/then workflows to conversion" />
-            <figcaption>How a lead moves through a system I build</figcaption>
           </figure>
+
+          <div class="about-main">
+            <div class="section-heading reveal">
+              <span class="section-kicker">ABOUT</span>
+              <h2>Complete lead systems, not just pages.</h2>
+              <p>
+                Funnels, CRM, automation, and AI wired into one clean system,
+                so your tools finally work together.
+              </p>
+
+              <div class="about-highlights">
+                <div class="about-chip"><i class="fas fa-bolt"></i> Fast turnaround</div>
+                <div class="about-chip"><i class="fas fa-shield-halved"></i> Reliable builds</div>
+                <div class="about-chip"><i class="fas fa-arrows-rotate"></i> End-to-end setup</div>
+                <div class="about-chip"><i class="fas fa-wand-magic-sparkles"></i> AI-assisted builds</div>
+              </div>
+            </div>
+
+            <figure class="about-visual glass reveal" data-reveal="right">
+              <img src="./images/automation-flow.svg" alt="Diagram showing leads flowing from landing pages and ads into a CRM, then through conditional if/then workflows to conversion" />
+              <figcaption>How a lead moves through a system I build</figcaption>
+            </figure>
+          </div>
         </div>
       </div>
     </section>

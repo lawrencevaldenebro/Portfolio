@@ -257,7 +257,7 @@
               <span>Services I build</span>
             </li>
             <li>
-              <strong data-count data-count-from="#skillsTrack > :not([aria-hidden])">22</strong>
+              <strong data-count data-count-from=".stack-item:not([aria-hidden])">22</strong>
               <span>Tools in my stack</span>
             </li>
             <li>
@@ -651,51 +651,59 @@
     </section>
 
     <!-- SKILLS -->
-    <section class="section-block" id="skills">
+    <section class="section-block stack" id="skills" data-mood="blue">
       <div class="container">
-        <div class="skills-wrap glass reveal">
-          <div class="skills-left">
-            <span class="section-kicker">SKILLS</span>
-            <h2>Tools I use.</h2>
-            <p>Automation, AI, websites, and integrations.</p>
-          </div>
+        <div class="section-heading skills-left reveal">
+          <span class="section-kicker"><b>06</b>Skills</span>
+          <h2>Tools I <em>use.</em></h2>
+          <p>Automation, AI, websites, and integrations.</p>
+        </div>
+      </div>
 
-          <div class="skills-right">
-            <div class="skills-track" id="skillsTrack">
-              <div class="skill-pill"><i class="fas fa-diagram-project"></i>GoHighLevel</div>
-              <div class="skill-pill"><i class="fas fa-filter"></i>Funnel Creation/Web Development</div>
-              <div class="skill-pill"><i class="fas fa-gears"></i>CRM Automations</div>
-              <div class="skill-pill"><i class="fas fa-robot"></i>AI Chatbots</div>
-              <div class="skill-pill"><i class="fas fa-magnet"></i>Lead Gen Systems</div>
-              <div class="skill-pill"><i class="fas fa-comment-sms"></i>Email & SMS Automation</div>
-              <div class="skill-pill"><i class="fas fa-shield-halved"></i>A2P 10DLC Registration</div>
-              <div class="skill-pill"><i class="fas fa-envelope-open-text"></i>ActiveCampaign</div>
-              <div class="skill-pill"><i class="fas fa-terminal"></i>Replit</div>
-              <div class="skill-pill"><i class="fa-brands fa-shopify"></i>Shopify</div>
-              <div class="skill-pill"><i class="fa-brands fa-google"></i>Google Workspace</div>
-              <div class="skill-pill"><i class="fas fa-cloud"></i>Cloudflare</div>
-              <div class="skill-pill"><i class="fas fa-server"></i>SiteGround</div>
-              <div class="skill-pill"><i class="fas fa-network-wired"></i>DNS Setup</div>
-              <div class="skill-pill"><i class="fa-brands fa-microsoft"></i>Microsoft Ads</div>
-              <div class="skill-pill"><i class="fas fa-palette"></i>Canva</div>
-              <div class="skill-pill"><i class="fa-brands fa-adobe"></i>Adobe Photoshop</div>
-              <div class="skill-pill"><i class="fas fa-bolt"></i>Zapier</div>
-              <div class="skill-pill"><i class="fas fa-plug"></i>API Integrations</div>
-              <div class="skill-pill"><i class="fa-brands fa-meta"></i>Meta Ads (Facebook & Instagram)</div>
-              <div class="skill-pill"><i class="fas fa-code"></i>AI-Assisted Web Development</div>
-              <div class="skill-pill"><i class="fas fa-wand-magic-sparkles"></i>AI-Augmented Automation & Prompt Engineering</div>
-            </div>
-          </div>
+      <div class="stack-wall" id="skillsTrack">
+        <div class="stack-row">
+          <ul class="stack-track" data-loop>
+            <li class="stack-item"><i class="fas fa-diagram-project" aria-hidden="true"></i>GoHighLevel</li>
+            <li class="stack-item"><i class="fas fa-filter" aria-hidden="true"></i>Funnel Creation/Web Development</li>
+            <li class="stack-item"><i class="fas fa-gears" aria-hidden="true"></i>CRM Automations</li>
+            <li class="stack-item"><i class="fas fa-robot" aria-hidden="true"></i>AI Chatbots</li>
+            <li class="stack-item"><i class="fas fa-magnet" aria-hidden="true"></i>Lead Gen Systems</li>
+            <li class="stack-item"><i class="fas fa-comment-sms" aria-hidden="true"></i>Email &amp; SMS Automation</li>
+            <li class="stack-item"><i class="fas fa-shield-halved" aria-hidden="true"></i>A2P 10DLC Registration</li>
+            <li class="stack-item"><i class="fas fa-envelope-open-text" aria-hidden="true"></i>ActiveCampaign</li>
+          </ul>
+        </div>
+        <div class="stack-row">
+          <ul class="stack-track" data-loop>
+            <li class="stack-item"><i class="fas fa-terminal" aria-hidden="true"></i>Replit</li>
+            <li class="stack-item"><i class="fa-brands fa-shopify" aria-hidden="true"></i>Shopify</li>
+            <li class="stack-item"><i class="fa-brands fa-google" aria-hidden="true"></i>Google Workspace</li>
+            <li class="stack-item"><i class="fas fa-cloud" aria-hidden="true"></i>Cloudflare</li>
+            <li class="stack-item"><i class="fas fa-server" aria-hidden="true"></i>SiteGround</li>
+            <li class="stack-item"><i class="fas fa-network-wired" aria-hidden="true"></i>DNS Setup</li>
+            <li class="stack-item"><i class="fa-brands fa-microsoft" aria-hidden="true"></i>Microsoft Ads</li>
+          </ul>
+        </div>
+        <div class="stack-row">
+          <ul class="stack-track" data-loop>
+            <li class="stack-item"><i class="fas fa-palette" aria-hidden="true"></i>Canva</li>
+            <li class="stack-item"><i class="fa-brands fa-adobe" aria-hidden="true"></i>Adobe Photoshop</li>
+            <li class="stack-item"><i class="fas fa-bolt" aria-hidden="true"></i>Zapier</li>
+            <li class="stack-item"><i class="fas fa-plug" aria-hidden="true"></i>API Integrations</li>
+            <li class="stack-item"><i class="fa-brands fa-meta" aria-hidden="true"></i>Meta Ads (Facebook &amp; Instagram)</li>
+            <li class="stack-item"><i class="fas fa-code" aria-hidden="true"></i>AI-Assisted Web Development</li>
+            <li class="stack-item"><i class="fas fa-wand-magic-sparkles" aria-hidden="true"></i>AI-Augmented Automation &amp; Prompt Engineering</li>
+          </ul>
         </div>
       </div>
     </section>
 
     <!-- MINIGAME -->
-    <section class="section-block" id="game">
+    <section class="section-block game" id="game" data-mood="deep">
       <div class="container">
         <div class="section-heading reveal">
-          <span class="section-kicker">PLAY</span>
-          <h2>Lead Rush — catch the leads, dodge the spam.</h2>
+          <span class="section-kicker"><b>07</b>Play</span>
+          <h2><em>Lead Rush.</em> Catch the leads, dodge the spam.</h2>
           <p>
             Catch the good leads, filter out the junk.
           </p>
@@ -749,43 +757,50 @@
     </section>
 
     <!-- CONTACT -->
-    <section class="section-block" id="contact">
+    <section class="section-block contact" id="contact" data-mood="cyan">
       <div class="container">
-        <div class="contact-shell">
-          <div class="contact-intro glass reveal">
-            <div class="contact-intro-copy">
-              <span class="section-kicker">CONTACT</span>
-              <h2>Let’s build your system.</h2>
-              <p>Open for freelance and contract work.</p>
-            </div>
-            <img src="./images/funnel-viz.svg" class="contact-funnel"
-              alt="Conversion funnel showing traffic narrowing through leads and qualified prospects to closed customers" />
+        <div class="contact-top">
+          <div class="section-heading contact-intro reveal">
+            <span class="section-kicker"><b>08</b>Contact</span>
+            <h2>Let’s build <em>your system.</em></h2>
           </div>
 
-          <div class="contact-grid">
-            <a href="#" class="contact-card glass reveal" data-open-form>
-              <div class="contact-icon"><i class="fas fa-paper-plane"></i></div>
-              <div>
-                <h3>Project Inquiry</h3>
-                <p>Use the contact form to get in touch.</p>
-              </div>
-            </a>
+          <img src="./images/funnel-viz.svg" class="contact-funnel" width="420" height="330" loading="lazy"
+            alt="Conversion funnel showing traffic narrowing through leads and qualified prospects to closed customers" />
+        </div>
 
-            <div class="contact-card glass reveal">
-              <div class="contact-icon"><i class="fas fa-briefcase"></i></div>
-              <div>
-                <h3>Work Samples</h3>
-                <p>Browse selected project folders and completed tasks above.</p>
-              </div>
-            </div>
+        <div class="contact-cta reveal">
+          <p>Open for freelance and contract work.</p>
 
-            <div class="contact-card glass reveal">
-              <div class="contact-icon"><i class="fas fa-globe"></i></div>
-              <div>
-                <h3>Remote Availability</h3>
-                <p>Open to freelance and contract-based opportunities.</p>
-              </div>
-            </div>
+          <a href="#" class="btn btn-primary btn-xl" data-open-form>
+            Let’s Talk
+            <i class="fas fa-arrow-right" aria-hidden="true"></i>
+          </a>
+        </div>
+
+        <div class="contact-grid">
+          <a href="#" class="contact-card reveal" data-open-form>
+            <span class="contact-icon"><i class="fas fa-paper-plane" aria-hidden="true"></i></span>
+            <h3>Project Inquiry</h3>
+            <p>Use the contact form to get in touch.</p>
+          </a>
+
+          <a href="mailto:lawrencevaldenebro@gmail.com?subject=Portfolio%20Inquiry" class="contact-card reveal">
+            <span class="contact-icon"><i class="fas fa-envelope" aria-hidden="true"></i></span>
+            <h3>Email</h3>
+            <p>lawrencevaldenebro@gmail.com</p>
+          </a>
+
+          <a href="#projects" class="contact-card reveal">
+            <span class="contact-icon"><i class="fas fa-briefcase" aria-hidden="true"></i></span>
+            <h3>Work Samples</h3>
+            <p>Browse selected project folders and completed tasks above.</p>
+          </a>
+
+          <div class="contact-card reveal">
+            <span class="contact-icon"><i class="fas fa-globe" aria-hidden="true"></i></span>
+            <h3>Remote Availability</h3>
+            <p>Open to freelance and contract-based opportunities.</p>
           </div>
         </div>
       </div>
@@ -793,19 +808,31 @@
   </main>
 
   <footer class="site-footer">
-    <div class="container footer-inner glass">
-      <div>
-        <h3>Lawrence</h3>
-        <p>Marketing Automation & Funnel Specialist</p>
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <a href="#home" class="brand" aria-label="Lawrence, back to top">
+            <img src="./favicon.svg" class="brand-mark" width="32" height="32" alt="" />
+            <span>Lawrence</span>
+          </a>
+          <p>Marketing Automation &amp; Funnel Specialist</p>
+        </div>
+
+        <nav class="footer-links" aria-label="Footer">
+          <a href="#home">Home</a>
+          <a href="#services">Services</a>
+          <a href="#experience">Experience</a>
+          <a href="#projects">Work</a>
+          <a href="#contact">Contact</a>
+        </nav>
+
+        <a href="#home" class="footer-up">
+          Back to top
+          <i class="fas fa-arrow-up" aria-hidden="true"></i>
+        </a>
       </div>
 
-      <div class="footer-links">
-        <a href="#home">Home</a>
-        <a href="#services">Services</a>
-        <a href="#experience">Experience</a>
-        <a href="#projects">Work</a>
-        <a href="#contact">Contact</a>
-      </div>
+      <div class="footer-word" aria-hidden="true"><span>Lawrence</span></div>
 
       <p class="footer-copy">© 2026 Lawrence. All rights reserved.</p>
     </div>

@@ -520,7 +520,7 @@ document.addEventListener("DOMContentLoaded", () => {
      - Cursor-reactive tilt for project / experience / contact cards
      - Skipped on touch-only devices
   ========================================================= */
-  const tiltEls = document.querySelectorAll(".contact-card");
+  const tiltEls = document.querySelectorAll("[data-tilt]");
 
   if (tiltEls.length && window.matchMedia("(pointer: fine)").matches) {
     tiltEls.forEach((card) => {
@@ -643,18 +643,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
   /* =========================================================
      12. SKILLS MARQUEE
-     - Duplicates the skill pills so the CSS marquee loop is seamless
+     - Doubles each row of tools so its CSS marquee loop is seamless
   ========================================================= */
-  const skillsTrack = document.getElementById("skillsTrack");
-
-  if (skillsTrack) {
-    const originalPills = Array.from(skillsTrack.children);
-    originalPills.forEach((pill) => {
-      const clone = pill.cloneNode(true);
+  document.querySelectorAll("[data-loop]").forEach((track) => {
+    Array.from(track.children).forEach((item) => {
+      const clone = item.cloneNode(true);
       clone.setAttribute("aria-hidden", "true");
-      skillsTrack.appendChild(clone);
+      track.appendChild(clone);
     });
-  }
+
+    track.classList.add("is-looped");
+  });
 
   /* =========================================================
      15. CONTACT FORM SUBMIT (Formspree AJAX)

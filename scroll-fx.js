@@ -263,11 +263,13 @@ document.addEventListener("DOMContentLoaded", () => {
       lenis.scrollTo(target, { offset: id === "#home" ? 0 : -84 });
     });
 
-    // The ticker leans into the scroll: it speeds up while the page is moving.
-    if (ticker && typeof ticker.getAnimations === "function") {
+    // Marquees lean into the scroll: they speed up while the page is moving.
+    const loopTracks = Array.from(document.querySelectorAll(".ticker-track.is-looped, .stack-track.is-looped"));
+
+    if (loopTracks.length && typeof loopTracks[0].getAnimations === "function") {
       let rate = 1;
       let targetRate = 1;
-      let tickerAnimation = null;
+      let loopAnimations = null;
 
       lenis.on("scroll", (instance) => {
         const velocity = Math.abs(instance.velocity || 0);
@@ -275,12 +277,17 @@ document.addEventListener("DOMContentLoaded", () => {
       });
 
       const easeRate = () => {
-        if (!tickerAnimation) tickerAnimation = ticker.getAnimations()[0] || null;
+        if (!loopAnimations) {
+          loopAnimations = loopTracks.map((track) => track.getAnimations()[0]).filter(Boolean);
+        }
+
         targetRate += (1 - targetRate) * 0.06;
         rate += (targetRate - rate) * 0.12;
-        if (tickerAnimation && Math.abs(tickerAnimation.playbackRate - rate) > 0.01) {
-          tickerAnimation.playbackRate = rate;
-        }
+
+        loopAnimations.forEach((animation) => {
+          if (Math.abs(animation.playbackRate - rate) > 0.01) animation.playbackRate = rate;
+        });
+
         requestAnimationFrame(easeRate);
       };
       requestAnimationFrame(easeRate);
@@ -503,6 +510,21 @@ document.addEventListener("DOMContentLoaded", () => {
         xPercent: -7,
         ease: "none",
         scrollTrigger: { trigger: ".work-showcase", start: "top bottom", end: "bottom top", scrub: true }
+      }
+    );
+  }
+
+  /* ---------- Footer: the wordmark rises into its slot ---------- */
+  const footerWord = document.querySelector(".footer-word span");
+
+  if (footerWord) {
+    gsap.fromTo(
+      footerWord,
+      { yPercent: 46 },
+      {
+        yPercent: 0,
+        ease: "none",
+        scrollTrigger: { trigger: ".footer-word", start: "top bottom", end: "bottom bottom", scrub: 0.4 }
       }
     );
   }

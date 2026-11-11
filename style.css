@@ -2167,251 +2167,289 @@ html:not(.js) .xp-body-inner {
 }
 
 /* =========================================================
-   ICON BADGES + ACCENT VARIETY
+   SKILLS
+   - A wall of type: three rows of tools drifting in opposite
+     directions (rows are doubled in script.js so they loop)
 ========================================================= */
-.project-icon,
-.contact-icon {
-  width: 58px;
-  height: 58px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 18px;
-  border-radius: 18px;
-  background: linear-gradient(135deg, rgba(81, 143, 255, 0.22), rgba(113, 183, 255, 0.08));
-  border: 1px solid rgba(130, 180, 255, 0.14);
-  font-size: 1.2rem;
-  transition: transform 0.35s ease, background 0.35s ease;
+.stack .section-heading {
+  margin-bottom: clamp(30px, 5vw, 64px);
 }
 
-.project-card:hover .project-icon,
-.contact-card:hover .contact-icon {
-  transform: scale(1.12) rotate(-6deg);
-}
-
-/* Per-card accent variety (stays inside the blue family) */
-.projects-grid .project-card:nth-child(4n + 1) .project-icon,
-.contact-grid .contact-card:nth-child(3n + 1) .contact-icon {
-  background: linear-gradient(135deg, rgba(76, 201, 240, 0.26), rgba(76, 201, 240, 0.06));
-  color: #8fe6ff;
-}
-
-.projects-grid .project-card:nth-child(4n + 2) .project-icon,
-.contact-grid .contact-card:nth-child(3n + 2) .contact-icon {
-  background: linear-gradient(135deg, rgba(58, 134, 255, 0.28), rgba(58, 134, 255, 0.06));
-  color: #a8c8ff;
-}
-
-.projects-grid .project-card:nth-child(4n + 3) .project-icon,
-.contact-grid .contact-card:nth-child(3n + 3) .contact-icon {
-  background: linear-gradient(135deg, rgba(123, 97, 255, 0.28), rgba(123, 97, 255, 0.06));
-  color: #bcaaff;
-}
-
-.projects-grid .project-card:nth-child(4n + 4) .project-icon {
-  background: linear-gradient(135deg, rgba(0, 201, 167, 0.24), rgba(0, 201, 167, 0.05));
-  color: #7ff0d8;
-}
-
-/* Experience icons cycle accents too */
-.experience-layout .experience-card:nth-child(4n + 1) .experience-icon {
-  background: linear-gradient(135deg, rgba(76, 201, 240, 0.26), rgba(76, 201, 240, 0.06));
-  color: #8fe6ff;
-}
-
-.experience-layout .experience-card:nth-child(4n + 2) .experience-icon {
-  background: linear-gradient(135deg, rgba(58, 134, 255, 0.28), rgba(58, 134, 255, 0.06));
-  color: #a8c8ff;
-}
-
-.experience-layout .experience-card:nth-child(4n + 3) .experience-icon {
-  background: linear-gradient(135deg, rgba(123, 97, 255, 0.28), rgba(123, 97, 255, 0.06));
-  color: #bcaaff;
-}
-
-.experience-layout .experience-card:nth-child(4n + 4) .experience-icon {
-  background: linear-gradient(135deg, rgba(0, 201, 167, 0.24), rgba(0, 201, 167, 0.05));
-  color: #7ff0d8;
-}
-
-/* =========================================================
-   10. SKILLS SECTION
-========================================================= */
-.skills-wrap {
-  padding: 34px;
-  border-radius: 32px;
+.stack-wall {
   display: grid;
-  grid-template-columns: 0.95fr 1.05fr;
-  gap: 26px;
-  align-items: center;
+  gap: clamp(6px, 1vw, 14px);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 9%, #000 91%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 9%, #000 91%, transparent);
 }
 
-.skills-right {
-  position: relative;
+.stack-row {
   overflow: hidden;
-  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
-  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  padding: clamp(10px, 1.4vw, 18px) 0;
+  border-top: 1px solid var(--border);
 }
 
-.skills-track {
+.stack-row:last-child {
+  border-bottom: 1px solid var(--border);
+}
+
+.stack-track {
+  list-style: none;
   display: flex;
-  flex-wrap: nowrap;
   width: max-content;
-  gap: 12px;
-  animation: skillsMarquee 28s linear infinite;
+  will-change: transform;
 }
 
-.skills-right:hover .skills-track {
-  animation-play-state: paused;
+.stack-track.is-looped {
+  animation: stackMove 64s linear infinite;
 }
 
-@keyframes skillsMarquee {
-  from {
-    transform: translateX(0);
+.stack-row:nth-child(2) .stack-track.is-looped {
+  animation-duration: 76s;
+  animation-direction: reverse;
+}
+
+.stack-row:nth-child(3) .stack-track.is-looped {
+  animation-duration: 58s;
+}
+
+/* Hovering a row holds it still so a name can be read */
+@media (hover: hover) {
+  .stack-row:hover .stack-track {
+    animation-play-state: paused;
   }
+}
 
+@keyframes stackMove {
   to {
-    transform: translateX(-50%);
+    transform: translate3d(-50%, 0, 0);
   }
 }
 
-.skill-pill {
-  position: relative;
-  overflow: hidden;
+.stack-item {
   display: inline-flex;
   align-items: center;
-  gap: 9px;
-  padding: 12px 18px;
-  border-radius: var(--radius-pill);
-  color: #e6f0ff;
+  gap: 14px;
+  padding-right: clamp(28px, 4vw, 60px);
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 2.9vw, 2.5rem);
   font-weight: 600;
-  font-size: 0.9rem;
-  letter-spacing: 0.02em;
-  border: 1px solid rgba(130, 180, 255, 0.12);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.05),
-    0 6px 16px rgba(0, 0, 0, 0.25);
-  transition: all 0.3s ease;
+  line-height: 1.2;
+  letter-spacing: -0.035em;
+  white-space: nowrap;
+  color: #e8f0ff;
+  transition: color 0.3s ease;
 }
 
-.skill-pill i {
-  font-size: 0.92rem;
+.stack-item i {
+  font-size: 0.56em;
+  color: var(--accent-cyan);
+}
+
+/* Middle row is drawn in outline for contrast */
+.stack-row:nth-child(2) .stack-item {
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(170, 205, 255, 0.6);
+}
+
+.stack-row:nth-child(2) .stack-item i {
+  color: var(--accent-violet);
+  -webkit-text-stroke: 0;
+}
+
+.stack-row:nth-child(3) .stack-item {
+  color: #a9bfe2;
+}
+
+.stack-row:nth-child(3) .stack-item i {
+  color: var(--accent-teal);
+}
+
+.stack-item:hover {
   color: #fff;
-  opacity: 0.92;
-  transition: transform 0.3s ease;
+  -webkit-text-stroke: 0;
 }
 
-.skill-pill:hover i {
-  transform: scale(1.2) rotate(-10deg);
-}
+/* Calm version: no motion, every tool listed once */
+@media (prefers-reduced-motion: reduce) {
+  .stack-wall {
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
 
-/* Rotating gradient variations for pills */
-.skill-pill:nth-child(4n + 1) {
-  background: linear-gradient(135deg, #0f2d66, #1a4fb3);
-}
+  .stack-track,
+  .stack-track.is-looped {
+    width: min(calc(100% - 2 * var(--gutter)), var(--container));
+    margin: 0 auto;
+    flex-wrap: wrap;
+    gap: 10px 0;
+    animation: none;
+  }
 
-.skill-pill:nth-child(4n + 2) {
-  background: linear-gradient(135deg, #3b1d82, #6a4cff);
-}
+  .stack-track [aria-hidden="true"] {
+    display: none;
+  }
 
-.skill-pill:nth-child(4n + 3) {
-  background: linear-gradient(135deg, #0d5c63, #00c9a7);
-}
-
-.skill-pill:nth-child(4n + 4) {
-  background: linear-gradient(135deg, #7a3e00, #ff9f1c);
-}
-
-.skill-pill:hover {
-  transform: translateY(-3px) scale(1.02);
-  box-shadow:
-    0 12px 28px rgba(0, 0, 0, 0.35),
-    0 0 18px rgba(120, 170, 255, 0.18);
-}
-
-.skill-pill::before {
-  content: "";
-  position: absolute;
-  top: -30%;
-  left: -120%;
-  width: 60%;
-  height: 160%;
-  transform: skewX(-20deg);
-  pointer-events: none;
-  background: linear-gradient(
-    110deg,
-    transparent,
-    rgba(255, 255, 255, 0.35),
-    transparent
-  );
-}
-
-.skill-pill:hover::before {
-  animation: pillShine 0.8s ease forwards;
-}
-
-@keyframes pillShine {
-  to {
-    left: 140%;
+  .stack-item {
+    font-size: clamp(1.05rem, 2vw, 1.5rem);
   }
 }
 
 /* =========================================================
-   11. CONTACT SECTION
+   CONTACT
+   - Closing statement set very large, one clear action,
+     then the ways to reach me as a ruled index
 ========================================================= */
-.contact-shell {
+.contact-top {
   display: grid;
-  gap: 20px;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: clamp(20px, 4vw, 64px);
+  align-items: end;
 }
 
 .contact-intro {
-  padding: 28px;
-  border-radius: 28px;
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 28px;
-  align-items: center;
+  max-width: none;
+  margin-bottom: 0;
+}
+
+.contact-intro h2 {
+  font-size: clamp(3rem, 10.6vw, 9.6rem);
+  line-height: 0.94;
+  letter-spacing: -0.06em;
 }
 
 .contact-funnel {
-  width: 260px;
+  width: clamp(150px, 19vw, 270px);
   height: auto;
-  transition: transform 0.45s ease;
+  margin-bottom: 0.6vw;
 }
 
-.contact-intro:hover .contact-funnel {
-  transform: scale(1.05) translateY(-4px);
+.contact-cta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px 32px;
+  margin-top: clamp(28px, 4vw, 56px);
+  padding-top: clamp(22px, 3vw, 36px);
+  border-top: 1px solid var(--border);
+}
+
+.contact-cta p {
+  color: var(--muted);
+  font-family: var(--font-display);
+  font-size: clamp(1.1rem, 2vw, 1.6rem);
+  font-weight: 500;
+  letter-spacing: -0.025em;
+}
+
+.btn-xl {
+  min-height: 68px;
+  padding: 0 36px;
+  font-size: 1.12rem;
 }
 
 .contact-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 18px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(16px, 2.4vw, 36px);
+  margin-top: clamp(40px, 6vw, 84px);
 }
 
 .contact-card {
-  padding: 24px;
-  border-radius: 24px;
+  position: relative;
+  display: block;
+  padding-top: 22px;
+  border-top: 1px solid rgba(140, 185, 255, 0.24);
   text-decoration: none;
-  display: flex;
-  align-items: center;
-  gap: 18px;
-  transition: transform 0.3s ease, border-color 0.3s ease;
-  will-change: transform;
 }
 
-.contact-card:hover {
-  transform: translateY(-6px);
-  border-color: rgba(130, 180, 255, 0.25);
+/* Accent line that draws across the top on hover */
+.contact-card::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -1px;
+  height: 2px;
+  background: var(--gradient-line);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.7s var(--ease-out-expo);
+}
+
+a.contact-card:hover::before {
+  transform: scaleX(1);
+}
+
+.contact-icon {
+  width: 46px;
+  height: 46px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 18px;
+  border-radius: 50%;
+  border: 1px solid rgba(140, 185, 255, 0.24);
+  color: #8fe6ff;
+  font-size: 0.95rem;
+  transition:
+    transform 0.6s var(--ease-out-expo),
+    background-color 0.35s ease,
+    border-color 0.35s ease,
+    color 0.35s ease;
+}
+
+a.contact-card:hover .contact-icon {
+  transform: rotate(-12deg) scale(1.08);
+  background-color: var(--accent-sky);
+  border-color: transparent;
+  color: #fff;
 }
 
 .contact-card h3 {
-  margin-bottom: 6px;
-  font-size: 1.1rem;
+  margin-bottom: 8px;
+  font-size: 1.15rem;
+  letter-spacing: -0.03em;
 }
 
 .contact-card p {
   color: var(--muted);
+  font-size: 0.93rem;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 960px) {
+  .contact-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .contact-top {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .contact-funnel {
+    width: 170px;
+    order: -1;
+  }
+
+  .contact-cta .btn-xl {
+    width: 100%;
+  }
+}
+
+@media (max-width: 420px) {
+  .contact-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .contact-card::before,
+  .contact-icon {
+    transition: none;
+  }
 }
 
 /* =========================================================
@@ -2561,39 +2599,38 @@ html:not(.js) .xp-body-inner {
 }
 
 /* =========================================================
-   12. FOOTER
+   FOOTER
+   - Links on a rule, then the name set as wide as the page
 ========================================================= */
 .site-footer {
-  padding: 10px 0 34px;
+  position: relative;
+  padding: clamp(28px, 4vw, 56px) 0 28px;
+  border-top: 1px solid var(--border);
 }
 
 .footer-inner {
-  padding: 24px 28px;
-  border-radius: 28px;
   display: grid;
-  grid-template-columns: 1.1fr auto auto;
-  gap: 20px;
+  grid-template-columns: minmax(0, 1.2fr) auto auto;
+  gap: 20px clamp(24px, 5vw, 72px);
   align-items: center;
 }
 
-.footer-inner h3 {
-  margin-bottom: 8px;
-}
-
-.footer-inner p,
-.footer-copy {
+.footer-brand p {
+  margin-top: 8px;
   color: var(--muted);
+  font-size: 0.92rem;
 }
 
 .footer-links {
   display: flex;
-  gap: 16px;
   flex-wrap: wrap;
+  gap: 8px clamp(16px, 2vw, 28px);
 }
 
 .footer-links a {
   position: relative;
   padding-bottom: 3px;
+  font-size: 0.95rem;
 }
 
 .footer-links a::after {
@@ -2601,14 +2638,82 @@ html:not(.js) .xp-body-inner {
   position: absolute;
   left: 0;
   bottom: 0;
-  width: 0;
+  width: 100%;
   height: 1px;
-  background: var(--primary-2);
-  transition: width 0.3s ease;
+  background: var(--accent-cyan);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.5s var(--ease-out-expo);
 }
 
 .footer-links a:hover::after {
-  width: 100%;
+  transform: scaleX(1);
+}
+
+.footer-up {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 18px;
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(140, 185, 255, 0.22);
+  color: #dbe8ff;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.footer-up i {
+  font-size: 0.8em;
+  transition: transform 0.5s var(--ease-out-expo);
+}
+
+.footer-up:hover {
+  background-color: rgba(80, 140, 255, 0.14);
+  border-color: var(--border-strong);
+}
+
+.footer-up:hover i {
+  transform: translateY(-4px);
+}
+
+/* The wordmark fills the width and fades into the page */
+.footer-word {
+  overflow: hidden;
+  margin-top: clamp(20px, 4vw, 56px);
+  text-align: center;
+  line-height: 0.8;
+  user-select: none;
+}
+
+.footer-word span {
+  display: inline-block;
+  font-family: var(--font-display);
+  font-size: clamp(3.4rem, 18.6vw, 17.5rem);
+  font-weight: 800;
+  line-height: 0.86;
+  letter-spacing: -0.06em;
+  white-space: nowrap;
+  background: linear-gradient(180deg, rgba(150, 195, 255, 0.5) 0%, rgba(80, 140, 255, 0.16) 58%, rgba(80, 140, 255, 0) 96%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.footer-copy {
+  margin-top: 18px;
+  color: var(--dim);
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+@media (max-width: 860px) {
+  .footer-inner {
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: start;
+  }
 }
 
 /* =========================================================
@@ -2978,56 +3083,11 @@ html:not(.js) .xp-body-inner {
 }
 
 /* =========================================================
-   RESPONSIVE (shared section rules)
+   RESPONSIVE (contact form + minigame on phones)
 ========================================================= */
-@media (max-width: 1180px) {
-  .skills-wrap,
-  .footer-inner,
-  .about-layout,
-  .contact-intro {
-    grid-template-columns: 1fr;
-  }
-
-  .contact-funnel {
-    width: 220px;
-    margin: 0 auto;
-  }
-
-  .experience-layout,
-  .contact-grid {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  }
-
-  .footer-inner {
-    text-align: center;
-    justify-items: center;
-  }
-}
-
-@media (max-width: 860px) {
-  .experience-layout,
-  .contact-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .experience-top {
-    flex-direction: column;
-  }
-}
-
 @media (max-width: 560px) {
-  .section-heading p,
-  .skills-left p,
-  .contact-intro p {
+  .section-heading p {
     font-size: 0.97rem;
-  }
-
-  .experience-card,
-  .contact-card,
-  .skills-wrap,
-  .contact-intro,
-  .footer-inner {
-    padding: 20px;
   }
 
   .form-modal.active {

@@ -33,20 +33,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function openMobileMenu() {
     if (!mobileMenu) return;
-    mobileMenu.style.display = "flex";
+    mobileMenu.classList.add("open");
     menuToggle?.setAttribute("aria-expanded", "true");
   }
 
   function closeMobileMenu() {
     if (!mobileMenu) return;
-    mobileMenu.style.display = "none";
+    mobileMenu.classList.remove("open");
     menuToggle?.setAttribute("aria-expanded", "false");
   }
 
   function toggleMobileMenu() {
     if (!mobileMenu) return;
-    const isOpen = getComputedStyle(mobileMenu).display === "flex";
-    isOpen ? closeMobileMenu() : openMobileMenu();
+    mobileMenu.classList.contains("open") ? closeMobileMenu() : openMobileMenu();
   }
 
   if (menuToggle && mobileMenu) {
@@ -477,6 +476,7 @@ document.addEventListener("DOMContentLoaded", () => {
   ========================================================= */
   const scrollProgress = document.getElementById("scrollProgress");
   const siteHeader = document.querySelector(".site-header");
+  let lastScrollTop = window.scrollY;
 
   function handleScrollMotion() {
     const scrollTop = window.scrollY;
@@ -489,7 +489,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (siteHeader) {
       siteHeader.classList.toggle("scrolled", scrollTop > 40);
+
+      // Tuck the nav away while reading down, bring it back on the way up.
+      const menuOpen = mobileMenu?.classList.contains("open");
+      if (scrollTop > 480 && scrollTop > lastScrollTop + 4 && !menuOpen) {
+        siteHeader.classList.add("nav-hidden");
+      } else if (scrollTop < lastScrollTop - 4 || scrollTop <= 480) {
+        siteHeader.classList.remove("nav-hidden");
+      }
     }
+
+    lastScrollTop = scrollTop;
   }
 
   let scrollMotionTicking = false;
@@ -574,13 +584,22 @@ document.addEventListener("DOMContentLoaded", () => {
      - Whole background layer drifts slightly with the cursor
   ========================================================= */
   const pageBg = document.querySelector(".page-bg");
+  const calmMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  if (pageBg && window.matchMedia("(pointer: fine)").matches) {
+  if (pageBg && !calmMotion && window.matchMedia("(pointer: fine)").matches) {
+    let bgTicking = false;
+
     window.addEventListener("mousemove", (event) => {
-      const px = (event.clientX / window.innerWidth - 0.5) * 30;
-      const py = (event.clientY / window.innerHeight - 0.5) * 30;
-      pageBg.style.transform = `translate(${px}px, ${py}px)`;
-    });
+      if (bgTicking) return;
+      bgTicking = true;
+
+      requestAnimationFrame(() => {
+        // The colour fields read these and ease toward them in CSS.
+        pageBg.style.setProperty("--bx", ((event.clientX / window.innerWidth - 0.5) * 2).toFixed(3));
+        pageBg.style.setProperty("--by", ((event.clientY / window.innerHeight - 0.5) * 2).toFixed(3));
+        bgTicking = false;
+      });
+    }, { passive: true });
   }
 
   /* =========================================================

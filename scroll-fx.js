@@ -1,10 +1,11 @@
 /* =========================================================
-   SCROLL FX — Webflow-style scroll interactions
+   SCROLL FX — scroll-driven motion
    ---------------------------------------------------------
    1. SPLIT HEADINGS (word-by-word rise, CSS driven)
    2. STAGGERED SERVICE CARDS
-   3. LENIS SMOOTH SCROLL
-   4. GSAP SCROLL SCENES (hero scroll-out, scrubbed text)
+   3. HERO (headline fit, kinetic word, pointer depth, ticker)
+   4. LENIS SMOOTH SCROLL
+   5. GSAP SCROLL SCENES
    ---------------------------------------------------------
    Everything degrades gracefully: if the CDN libraries fail
    to load, or the visitor prefers reduced motion, content is
@@ -12,27 +13,58 @@
 ========================================================= */
 
 document.addEventListener("DOMContentLoaded", () => {
+  const root = document.documentElement;
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const finePointer = window.matchMedia("(pointer: fine)").matches;
   const hasGsap = typeof window.gsap !== "undefined" && typeof window.ScrollTrigger !== "undefined";
 
+  const escapeHtml = (text) => text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+  // Runs cb once <html> carries the given class (set by the inline head script).
+  function onRootClass(name, cb) {
+    if (root.classList.contains(name)) {
+      cb();
+      return;
+    }
+    const observer = new MutationObserver(() => {
+      if (!root.classList.contains(name)) return;
+      observer.disconnect();
+      cb();
+    });
+    observer.observe(root, { attributes: true, attributeFilter: ["class"] });
+  }
+
   /* =========================================================
      1. SPLIT HEADINGS
      - Wraps each word in a mask so it can slide up into view
+     - Keeps <em> highlights (gradient words)
      - Plays when the parent .reveal gets .show
   ========================================================= */
-  const splitTargets = document.querySelectorAll(".section-heading h2:not(.gtk-title), .skills-left h2, .contact-intro h2");
+  const splitTargets = document.querySelectorAll(".section-heading h2, .skills-left h2, .contact-intro h2");
 
   splitTargets.forEach((heading) => {
-    const text = heading.textContent.trim().replace(/\s+/g, " ");
-    if (!text) return;
+    const label = heading.textContent.trim().replace(/\s+/g, " ");
+    if (!label) return;
 
-    heading.setAttribute("aria-label", text);
+    let index = 0;
+    const parts = [];
+
+    heading.childNodes.forEach((node) => {
+      const isEm = node.nodeType === 1 && node.tagName === "EM";
+      node.textContent
+        .split(/\s+/)
+        .filter(Boolean)
+        .forEach((word) => {
+          parts.push(
+            `<span class="w" aria-hidden="true"><span${isEm ? ' class="is-em"' : ""} style="--i:${index}">${escapeHtml(word)}</span></span>`
+          );
+          index += 1;
+        });
+    });
+
+    heading.setAttribute("aria-label", label);
     heading.classList.add("split-line");
-    heading.innerHTML = text
-      .split(" ")
-      .map((word, i) => `<span class="w" aria-hidden="true"><span style="--i:${i}">${word}</span></span>`)
-      .join(" ");
+    heading.innerHTML = parts.join(" ");
 
     const wrap = heading.closest(".section-heading");
     if (wrap && wrap.classList.contains("reveal")) wrap.classList.add("has-split");
@@ -57,39 +89,129 @@ document.addEventListener("DOMContentLoaded", () => {
   window.addEventListener("resize", restagger);
 
   /* =========================================================
-     2b. KINETIC WORDS (hero headline, Get to Know heading)
-     - Cycles data-words; letters flip out, the next word's
-       letters flip in one after another
+     3. HERO
   ========================================================= */
-  if (!reduceMotion) {
-    document.querySelectorAll(".kinetic-word[data-words]").forEach((el) => {
-      const words = (el.dataset.words || "").split("|").filter(Boolean);
-      let wordIndex = 0;
+  const hero = document.getElementById("home");
+  const headline = document.querySelector(".kinetic-h1");
+  const kinetic = document.getElementById("kineticWord");
+  const kineticWords = kinetic ? (kinetic.dataset.words || "").split("|").filter(Boolean) : [];
 
-      function setWord(word, state) {
-        el.innerHTML = Array.from(word)
-          .map((ch, i) => `<span class="kc ${state}" style="--c:${i}">${ch === " " ? "&nbsp;" : ch}</span>`)
-          .join("");
-      }
+  /* ---------- Headline fit ----------
+     The rotating word must never be wider than its column, so the
+     whole headline scales down a touch when the longest word needs it. */
+  function fitHeadline() {
+    if (!headline || !kineticWords.length) return;
 
-      setWord(words[0], "in");
+    headline.style.setProperty("--fit", "1");
 
+    const probe = document.createElement("span");
+    probe.setAttribute("aria-hidden", "true");
+    probe.style.cssText = "position:absolute;left:0;top:0;visibility:hidden;white-space:nowrap;pointer-events:none";
+    headline.appendChild(probe);
+
+    let widest = 0;
+    kineticWords.forEach((word) => {
+      probe.textContent = word;
+      widest = Math.max(widest, probe.getBoundingClientRect().width);
+    });
+    probe.remove();
+
+    const room = headline.clientWidth;
+    if (widest > 0 && room > 0 && widest > room) {
+      headline.style.setProperty("--fit", (Math.floor((room / widest) * 1000) / 1000).toFixed(3));
+    }
+  }
+
+  fitHeadline();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitHeadline);
+
+  let fitTimer = null;
+  window.addEventListener("resize", () => {
+    clearTimeout(fitTimer);
+    fitTimer = setTimeout(fitHeadline, 120);
+  });
+
+  /* ---------- Kinetic word ----------
+     Cycles data-words; letters flip out, the next word's letters
+     flip in one after another. Starts once the entrance has played. */
+  if (kinetic && kineticWords.length > 1 && !reduceMotion) {
+    let wordIndex = 0;
+
+    const setWord = (word, state) => {
+      kinetic.innerHTML = Array.from(word)
+        .map((ch, i) => `<span class="kc ${state}" style="--c:${i}">${ch === " " ? "&nbsp;" : escapeHtml(ch)}</span>`)
+        .join("");
+    };
+
+    setWord(kineticWords[0], "in");
+
+    onRootClass("hero-ready", () => {
       setInterval(() => {
+        if (document.hidden) return;
+
         // Flip current letters out
-        el.querySelectorAll(".kc").forEach((c) => c.classList.replace("in", "out"));
+        kinetic.querySelectorAll(".kc").forEach((c) => c.classList.replace("in", "out"));
 
         setTimeout(() => {
-          wordIndex = (wordIndex + 1) % words.length;
-          setWord(words[wordIndex], "pre");
-          void el.offsetWidth; // let "pre" paint before animating in
-          el.querySelectorAll(".kc").forEach((c) => c.classList.replace("pre", "in"));
+          wordIndex = (wordIndex + 1) % kineticWords.length;
+          setWord(kineticWords[wordIndex], "pre");
+          void kinetic.offsetWidth; // let "pre" paint before animating in
+          kinetic.querySelectorAll(".kc").forEach((c) => c.classList.replace("pre", "in"));
         }, 520);
       }, 2800);
     });
   }
 
+  /* ---------- Pointer depth ----------
+     The photo stage leans toward the cursor; chips, frames and the
+     seal drift at different depths (driven by --px / --py). */
+  const heroStage = document.getElementById("heroStage");
+
+  if (hero && heroStage && finePointer && !reduceMotion) {
+    let targetX = 0;
+    let targetY = 0;
+    let currentX = 0;
+    let currentY = 0;
+    let depthRaf = null;
+
+    const stepDepth = () => {
+      currentX += (targetX - currentX) * 0.07;
+      currentY += (targetY - currentY) * 0.07;
+      heroStage.style.setProperty("--px", currentX.toFixed(4));
+      heroStage.style.setProperty("--py", currentY.toFixed(4));
+
+      const settled = Math.abs(targetX - currentX) < 0.002 && Math.abs(targetY - currentY) < 0.002;
+      depthRaf = settled ? null : requestAnimationFrame(stepDepth);
+    };
+
+    const aim = (x, y) => {
+      targetX = x;
+      targetY = y;
+      if (!depthRaf) depthRaf = requestAnimationFrame(stepDepth);
+    };
+
+    hero.addEventListener("pointermove", (event) => {
+      const rect = hero.getBoundingClientRect();
+      aim(
+        Math.max(-1, Math.min(1, ((event.clientX - rect.left) / rect.width - 0.5) * 2)),
+        Math.max(-1, Math.min(1, ((event.clientY - rect.top) / rect.height - 0.5) * 2))
+      );
+    });
+
+    hero.addEventListener("pointerleave", () => aim(0, 0));
+  }
+
+  /* ---------- Services ticker ----------
+     Items are doubled so the CSS loop is seamless. */
+  const ticker = document.getElementById("heroTicker");
+
+  if (ticker) {
+    ticker.innerHTML += ticker.innerHTML;
+    if (!reduceMotion) ticker.classList.add("is-looped");
+  }
+
   /* =========================================================
-     3. LENIS SMOOTH SCROLL
+     4. LENIS SMOOTH SCROLL
      - Desktop only (touch devices keep native momentum)
      - Pauses while the intro or contact modal is open
   ========================================================= */
@@ -101,8 +223,6 @@ document.addEventListener("DOMContentLoaded", () => {
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true
     });
-
-    document.documentElement.classList.add("has-lenis");
 
     let lenisStopped = false;
 
@@ -136,7 +256,7 @@ document.addEventListener("DOMContentLoaded", () => {
       requestAnimationFrame(raf);
     }
 
-    // Smooth in-page anchor links, offset for the sticky header.
+    // Smooth in-page anchor links, offset for the floating header.
     document.addEventListener("click", (event) => {
       const link = event.target.closest('a[href^="#"]');
       if (!link) return;
@@ -148,35 +268,63 @@ document.addEventListener("DOMContentLoaded", () => {
       if (!target) return;
 
       event.preventDefault();
-      lenis.scrollTo(target, { offset: id === "#home" ? 0 : -90 });
+      lenis.scrollTo(target, { offset: id === "#home" ? 0 : -84 });
     });
+
+    // The ticker leans into the scroll: it speeds up while the page is moving.
+    if (ticker && typeof ticker.getAnimations === "function") {
+      let rate = 1;
+      let targetRate = 1;
+      let tickerAnimation = null;
+
+      lenis.on("scroll", (instance) => {
+        const velocity = Math.abs(instance.velocity || 0);
+        targetRate = 1 + Math.min(6, velocity * 0.18);
+      });
+
+      const easeRate = () => {
+        if (!tickerAnimation) tickerAnimation = ticker.getAnimations()[0] || null;
+        targetRate += (1 - targetRate) * 0.06;
+        rate += (targetRate - rate) * 0.12;
+        if (tickerAnimation && Math.abs(tickerAnimation.playbackRate - rate) > 0.01) {
+          tickerAnimation.playbackRate = rate;
+        }
+        requestAnimationFrame(easeRate);
+      };
+      requestAnimationFrame(easeRate);
+    }
   }
 
   /* =========================================================
-     4. GSAP SCROLL SCENES
+     5. GSAP SCROLL SCENES
   ========================================================= */
   if (!hasGsap || reduceMotion) return;
 
   const { gsap, ScrollTrigger } = window;
   gsap.registerPlugin(ScrollTrigger);
 
-  /* ---------- Hero: shrinks and fades as you scroll away ---------- */
-  const heroShell = document.querySelector(".hero-shell");
+  const media = gsap.matchMedia();
 
-  if (heroShell) {
-    gsap.to(heroShell, {
-      scale: 0.93,
-      opacity: 0.25,
-      y: 80,
-      ease: "none",
+  /* ---------- Hero: copy and photo part ways as you scroll off ---------- */
+  media.add("(min-width: 861px)", () => {
+    if (!hero) return;
+
+    const heroOut = gsap.timeline({
+      defaults: { ease: "none" },
       scrollTrigger: {
-        trigger: ".hero-section",
+        trigger: hero,
         start: "top top",
         end: "bottom top",
         scrub: true
       }
     });
-  }
+
+    heroOut
+      .to(".hero-copy", { y: -110, opacity: 0, duration: 1 }, 0)
+      .to(".hero-visual", { y: 70, scale: 0.93, duration: 1 }, 0)
+      .to(".hero-visual", { opacity: 0, duration: 0.5 }, 0.5)
+      .to(".hero-ticker", { opacity: 0, duration: 0.6 }, 0.1);
+  });
 
   /* ---------- About: words light up as you read down ---------- */
   const scrubText = document.querySelector("#about .section-heading p");
@@ -185,7 +333,7 @@ document.addEventListener("DOMContentLoaded", () => {
     scrubText.innerHTML = scrubText.textContent
       .trim()
       .split(/\s+/)
-      .map((word) => `<span class="scrub-word">${word}</span>`)
+      .map((word) => `<span class="scrub-word">${escapeHtml(word)}</span>`)
       .join(" ");
 
     gsap.fromTo(

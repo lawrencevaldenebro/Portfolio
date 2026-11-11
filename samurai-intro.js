@@ -63,6 +63,8 @@
     document.documentElement.style.overflow = '';
     el.classList.add('si-done');
     el.remove();
+    // Skipping early shouldn't leave the hero waiting on its entrance.
+    if (typeof window.__heroGo === 'function') window.__heroGo();
   }
 
   function onKey(e) {

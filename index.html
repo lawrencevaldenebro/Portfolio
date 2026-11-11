@@ -24,11 +24,34 @@
   <meta name="apple-mobile-web-app-title" content="Lawrence V.">
   <meta name="application-name" content="Lawrence V.">
 
-  <link rel="stylesheet" href="style.css" />
+  <!-- Marks JS as available and releases the hero entrance (after the intro, when it plays) -->
+  <script>
+    (function () {
+      var d = document.documentElement;
+      d.classList.add("js");
+      var intro = false;
+      try { intro = !sessionStorage.getItem("si-intro-played"); } catch (e) { intro = true; }
+      if (window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches) intro = false;
+      var gone = false;
+      function go() {
+        if (gone) return;
+        gone = true;
+        d.classList.add("hero-go");
+        setTimeout(function () { d.classList.add("hero-ready"); }, 1900);
+      }
+      window.__heroGo = go;
+      if (intro) setTimeout(go, 2250);
+      else if (window.requestAnimationFrame) requestAnimationFrame(function () { requestAnimationFrame(go); });
+      else go();
+    })();
+  </script>
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;700;800;900&display=swap"
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Sora:wght@500;600;700;800&display=swap"
     rel="stylesheet">
+  <link rel="preload" as="image" href="./images/formal.webp" fetchpriority="high">
+  <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
 
   <!-- Samurai slash intro -->
@@ -57,14 +80,14 @@
     <canvas id="bg-flow-canvas" aria-hidden="true"></canvas>
   </div>
 
-  <header class="site-header">
-    <div class="container nav-wrap glass">
-      <a href="#home" class="brand">
-        <span class="brand-dot"></span>
+  <header class="site-header" id="siteHeader">
+    <div class="nav-wrap">
+      <a href="#home" class="brand" aria-label="Lawrence, back to top">
+        <img src="./favicon.svg" class="brand-mark" width="32" height="32" alt="" />
         <span>Lawrence</span>
       </a>
 
-      <nav class="desktop-nav">
+      <nav class="desktop-nav" aria-label="Primary">
         <a href="#about">About</a>
         <a href="#services">Services</a>
         <a href="#experience">Experience</a>
@@ -74,78 +97,93 @@
         <a href="#contact">Contact</a>
       </nav>
 
-      <a href="#" class="btn btn-primary" data-open-form>
+      <a href="#" class="btn btn-primary nav-btn" data-open-form>
         Let’s Talk
+        <i class="fas fa-arrow-right" aria-hidden="true"></i>
       </a>
 
-      <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
+      <button class="menu-toggle" id="menuToggle" type="button" aria-label="Toggle menu" aria-expanded="false"
+        aria-controls="mobileMenu">
         <span></span><span></span><span></span>
       </button>
     </div>
 
-    <div class="mobile-menu glass" id="mobileMenu">
-      <a href="#home">Home</a>
-      <a href="#about">About</a>
-      <a href="#services">Services</a>
-      <a href="#experience">Experience</a>
-      <a href="#projects">Work</a>
-      <a href="#skills">Skills</a>
-      <a href="#game">Play</a>
-      <a href="#contact">Contact</a>
-    </div>
+    <nav class="mobile-menu" id="mobileMenu" aria-label="Mobile">
+      <a href="#home" style="--i:0">Home</a>
+      <a href="#about" style="--i:1">About</a>
+      <a href="#services" style="--i:2">Services</a>
+      <a href="#experience" style="--i:3">Experience</a>
+      <a href="#projects" style="--i:4">Work</a>
+      <a href="#skills" style="--i:5">Skills</a>
+      <a href="#game" style="--i:6">Play</a>
+      <a href="#contact" style="--i:7">Contact</a>
+    </nav>
   </header>
 
   <main>
     <!-- HERO -->
-    <section class="hero-section" id="home">
-      <div class="container hero-shell glass">
-        <div class="hero-copy reveal">
-          <div class="eyebrow">
+    <section class="hero" id="home">
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <div class="eyebrow" data-hero style="--i:0">
             <span class="eyebrow-pill"></span>
             Marketing Automation • Funnels • AI Systems
           </div>
 
           <h1 class="kinetic-h1" aria-label="I build funnels, CRM automations, AI chatbots, and websites that convert.">
-            <span aria-hidden="true">I build</span>
-            <span class="kinetic-word" id="kineticWord" aria-hidden="true"
-              data-words="funnels|CRM automations|AI chatbots|websites|lead systems">funnels</span>
-            <span aria-hidden="true">that convert.</span>
+            <span class="h-line" aria-hidden="true"><span class="h-inner" style="--i:1">I build</span></span>
+            <span class="h-line h-line-kinetic" aria-hidden="true"><span class="h-inner" style="--i:2"><span
+                  class="kinetic-word" id="kineticWord"
+                  data-words="funnels|CRM automations|AI chatbots|websites|lead systems">funnels</span></span></span>
+            <span class="h-line" aria-hidden="true"><span class="h-inner" style="--i:3">that convert.</span></span>
           </h1>
 
-          <p class="hero-description">
+          <p class="hero-description" data-hero style="--i:5">
             I’m Lawrence. I build GoHighLevel funnels, CRM automations, and AI
             systems that turn clicks into booked calls.
           </p>
 
-          <div class="hero-actions">
+          <div class="hero-actions" data-hero style="--i:6">
             <a href="#" class="btn btn-primary" data-open-form>
-              <i class="fas fa-paper-plane"></i>
+              <i class="fas fa-paper-plane" aria-hidden="true"></i>
               Contact Me
             </a>
 
             <a href="#projects" class="btn btn-secondary">
-              <i class="fas fa-briefcase"></i>
+              <i class="fas fa-briefcase" aria-hidden="true"></i>
               See My Work
             </a>
 
-            <a href="./Lawrence-Valdenebro-Resume.pdf" class="btn btn-secondary" download="Lawrence-Valdenebro-Resume.pdf">
-              <i class="fas fa-download"></i>
+            <a href="./Lawrence-Valdenebro-Resume.pdf" class="btn btn-ghost" download="Lawrence-Valdenebro-Resume.pdf">
+              <i class="fas fa-download" aria-hidden="true"></i>
               Download Resume
             </a>
           </div>
         </div>
 
-        <div class="hero-visual reveal">
-          <div class="hero-image-card">
+        <div class="hero-visual">
+          <div class="hero-stage" id="heroStage" data-hero="stage" style="--i:2">
+            <span class="hero-glow" aria-hidden="true"></span>
+            <span class="hero-orbit" aria-hidden="true"></span>
+            <span class="hero-frame frame-a" aria-hidden="true"></span>
+            <span class="hero-frame frame-b" aria-hidden="true"></span>
+
+            <div class="hero-image-card">
+              <img src="./images/formal.webp" width="900" height="900" alt="Portrait of Lawrence" class="hero-photo"
+                fetchpriority="high" />
+              <div class="hero-plate">
+                <strong>Lawrence</strong>
+                <span>Marketing Automation &amp; Funnel Specialist</span>
+              </div>
+            </div>
+
             <div class="hero-badge badge-top">
-              <i class="fas fa-bolt"></i>
+              <i class="fas fa-bolt" aria-hidden="true"></i>
               Fast execution
             </div>
 
-            <img src="./images/formal.webp" width="900" height="900" alt="Lawrence portfolio profile" class="hero-photo" />
-
             <div class="hero-badge badge-bottom">
-              <i class="fas fa-chart-line"></i>
+              <i class="fas fa-chart-line" aria-hidden="true"></i>
               Marketing-focused
             </div>
 
@@ -155,7 +193,32 @@
               <span class="smoke-puff puff-2"></span>
               <span class="smoke-puff puff-3"></span>
             </div>
+
+            <div class="hero-ring" aria-hidden="true">
+              <svg viewBox="0 0 200 200">
+                <defs>
+                  <path id="heroRingPath" d="M100,100 m-76,0 a76,76 0 1,1 152,0 a76,76 0 1,1 -152,0" />
+                </defs>
+                <text>
+                  <textPath href="#heroRingPath" textLength="466">Open for freelance • Contract work • Remote •</textPath>
+                </text>
+              </svg>
+              <img src="./favicon.svg" width="40" height="40" alt="" />
+            </div>
           </div>
+        </div>
+      </div>
+
+      <div class="hero-ticker" aria-hidden="true">
+        <div class="ticker-track" id="heroTicker">
+          <span>Funnels &amp; Websites</span>
+          <span>GoHighLevel CRM</span>
+          <span>Workflow Automation</span>
+          <span>AI Chatbots</span>
+          <span>Quizzes &amp; Lead Scoring</span>
+          <span>Email, SMS &amp; A2P</span>
+          <span>Meta &amp; Microsoft Ads</span>
+          <span>Domains, DNS &amp; Fixes</span>
         </div>
       </div>
     </section>

@@ -476,6 +476,37 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  /* ---------- Work: the carousel tips up into place, the outline word drifts ---------- */
+  const cfTilt = document.querySelector(".cf-tilt");
+  const workGhost = document.querySelector(".work-ghost");
+
+  if (cfTilt) {
+    gsap.fromTo(
+      cfTilt,
+      { rotateX: 24, scale: 0.82, y: 80, opacity: 0.35 },
+      {
+        rotateX: 0,
+        scale: 1,
+        y: 0,
+        opacity: 1,
+        ease: "none",
+        scrollTrigger: { trigger: cfTilt, start: "top 96%", end: "top 36%", scrub: 0.5 }
+      }
+    );
+  }
+
+  if (workGhost) {
+    gsap.fromTo(
+      workGhost,
+      { xPercent: 7 },
+      {
+        xPercent: -7,
+        ease: "none",
+        scrollTrigger: { trigger: ".work-showcase", start: "top bottom", end: "bottom top", scrub: true }
+      }
+    );
+  }
+
   // Lazy images and web fonts change heights after load.
   window.addEventListener("load", () => ScrollTrigger.refresh());
 });

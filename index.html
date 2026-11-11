@@ -586,42 +586,54 @@
     </section>
 
     <!-- WORK (3D showcase + filterable gallery; data + logic in work.js) -->
-    <section class="section-block" id="projects">
+    <section class="section-block work" id="projects" data-mood="deep">
       <div class="container">
-        <div class="section-heading reveal">
-          <span class="section-kicker">WORK</span>
-          <h2>Selected work.</h2>
+        <div class="work-head">
+          <div class="section-heading reveal">
+            <span class="section-kicker"><b>05</b>Work</span>
+            <h2>Selected <em>work.</em></h2>
+          </div>
+
+          <div class="work-intro reveal">
+            <p>Drag the carousel, or open any piece to see it full size.</p>
+            <ul class="work-disciplines" aria-label="Disciplines">
+              <li>Ad creatives</li>
+              <li>Social posts</li>
+              <li>Websites</li>
+              <li>GoHighLevel</li>
+              <li>Motion graphics</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="work-showcase">
+        <span class="work-ghost" aria-hidden="true">Work</span>
+        <span class="work-glow" aria-hidden="true"></span>
+
+        <div class="cf-tilt">
+          <div class="cf-stage" id="cfStage" aria-roledescription="carousel"></div>
         </div>
 
-        <div class="work-showcase reveal">
-          <svg class="work-morph" viewBox="0 0 600 400" aria-hidden="true">
-            <defs>
-              <linearGradient id="morphGrad" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stop-color="#4cc9f0" />
-                <stop offset="50%" stop-color="#3a86ff" />
-                <stop offset="100%" stop-color="#7b61ff" />
-              </linearGradient>
-            </defs>
-            <path fill="url(#morphGrad)">
-              <animate attributeName="d" dur="14s" repeatCount="indefinite" calcMode="spline"
-                keySplines="0.45 0 0.55 1; 0.45 0 0.55 1; 0.45 0 0.55 1"
-                values="M300,60 C420,50 540,120 530,210 C520,300 420,350 300,340 C180,330 70,290 70,200 C70,110 180,70 300,60 Z;
-                        M300,40 C450,70 560,160 510,240 C460,320 380,370 280,350 C160,325 50,260 90,170 C130,80 190,30 300,40 Z;
-                        M320,70 C430,40 520,140 540,220 C560,300 440,360 310,345 C200,332 60,300 60,210 C60,120 220,95 320,70 Z;
-                        M300,60 C420,50 540,120 530,210 C520,300 420,350 300,340 C180,330 70,290 70,200 C70,110 180,70 300,60 Z" />
-            </path>
-          </svg>
+        <div class="container cf-bar">
+          <div class="cf-index" aria-hidden="true"><b id="cfIndex">01</b><span id="cfTotal">/ 09</span></div>
 
-          <div class="cf-stage" id="cfStage" aria-roledescription="carousel"></div>
+          <p class="cf-caption" id="cfCaption" aria-live="polite"></p>
 
           <div class="cf-controls">
             <button type="button" class="cf-arrow" id="cfPrev" aria-label="Previous"><i class="fas fa-arrow-left"></i></button>
-            <p class="cf-caption" id="cfCaption" aria-live="polite"></p>
             <button type="button" class="cf-arrow" id="cfNext" aria-label="Next"><i class="fas fa-arrow-right"></i></button>
+            <button type="button" class="btn btn-secondary cf-open" id="cfOpen">
+              View full size
+              <i class="fas fa-up-right-and-down-left-from-center" aria-hidden="true"></i>
+            </button>
           </div>
-          <div class="cf-dots" id="cfDots"></div>
         </div>
 
+        <div class="cf-dots" id="cfDots"></div>
+      </div>
+
+      <div class="container">
         <div class="work-tabs reveal" role="tablist" aria-label="Filter work">
           <button type="button" class="work-tab" role="tab" aria-selected="true" data-filter="all">All <em></em></button>
           <button type="button" class="work-tab" role="tab" aria-selected="false" data-filter="ad">Ad creatives <em></em></button>
@@ -633,7 +645,7 @@
         <div class="work-grid" id="workGrid"></div>
 
         <div class="work-more-wrap">
-          <button type="button" class="btn btn-secondary" id="workMore"><i class="fas fa-plus"></i> <span>Show more</span></button>
+          <button type="button" class="btn btn-secondary" id="workMore"><i class="fas fa-plus" aria-hidden="true"></i> <span>Show more</span></button>
         </div>
       </div>
     </section>

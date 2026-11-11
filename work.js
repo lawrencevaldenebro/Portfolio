@@ -399,5 +399,10 @@ document.addEventListener("DOMContentLoaded", () => {
     if (badge) badge.textContent = n;
   });
 
+  // The About section quotes the gallery size; keep it honest.
+  document.querySelectorAll("[data-work-count]").forEach((el) => {
+    el.textContent = String(WORK.length);
+  });
+
   renderGrid();
 });

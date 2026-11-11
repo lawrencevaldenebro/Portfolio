@@ -122,7 +122,7 @@
 
   <main>
     <!-- HERO -->
-    <section class="hero" id="home">
+    <section class="hero" id="home" data-mood="base">
       <div class="container hero-grid">
         <div class="hero-copy">
           <div class="eyebrow" data-hero style="--i:0">
@@ -224,90 +224,117 @@
     </section>
 
     <!-- ABOUT -->
-    <section class="section-block" id="about">
+    <section class="section-block about" id="about" data-mood="violet">
       <div class="container">
-        <div class="about-layout">
-          <div class="section-heading reveal">
-            <span class="section-kicker">ABOUT</span>
-            <h2>Complete lead systems, not just pages.</h2>
-            <p>
+        <div class="about-grid">
+          <aside class="about-side reveal">
+            <span class="section-kicker"><b>01</b>About</span>
+
+            <ul class="about-points">
+              <li><i class="fas fa-bolt" aria-hidden="true"></i> Fast turnaround</li>
+              <li><i class="fas fa-shield-halved" aria-hidden="true"></i> Reliable builds</li>
+              <li><i class="fas fa-arrows-rotate" aria-hidden="true"></i> End-to-end setup</li>
+              <li><i class="fas fa-wand-magic-sparkles" aria-hidden="true"></i> AI-assisted builds</li>
+            </ul>
+          </aside>
+
+          <div class="about-main">
+            <div class="section-heading reveal">
+              <h2>Complete lead systems, <em>not just pages.</em></h2>
+            </div>
+
+            <p class="about-lead" id="aboutLead">
               Funnels, CRM, automation, and AI wired into one clean system,
               so your tools finally work together.
             </p>
-
-            <div class="about-highlights">
-              <div class="about-chip"><i class="fas fa-bolt"></i> Fast turnaround</div>
-              <div class="about-chip"><i class="fas fa-shield-halved"></i> Reliable builds</div>
-              <div class="about-chip"><i class="fas fa-arrows-rotate"></i> End-to-end setup</div>
-              <div class="about-chip"><i class="fas fa-wand-magic-sparkles"></i> AI-assisted builds</div>
-            </div>
           </div>
+        </div>
 
-          <figure class="about-visual glass reveal" data-reveal="right">
-            <img src="./images/automation-flow.svg" alt="Diagram showing leads flowing from landing pages and ads into a CRM, then through conditional if/then workflows to conversion" />
-            <figcaption>How a lead moves through a system I build</figcaption>
+        <div class="about-plate">
+          <ul class="about-stats reveal" aria-label="This site in numbers">
+            <li>
+              <strong data-count data-count-from=".svc-row">8</strong>
+              <span>Services I build</span>
+            </li>
+            <li>
+              <strong data-count data-count-from="#skillsTrack > :not([aria-hidden])">22</strong>
+              <span>Tools in my stack</span>
+            </li>
+            <li>
+              <strong data-count data-work-count>33</strong>
+              <span>Pieces in the gallery</span>
+            </li>
+          </ul>
+
+          <figure class="about-visual" data-clip>
+            <div class="clip-box">
+              <img src="./images/automation-flow.svg" width="620" height="330"
+                alt="Diagram showing leads flowing from landing pages and ads into a CRM, then through conditional if/then workflows to conversion" />
+              <figcaption><span>Fig. 01</span> How a lead moves through a system I build</figcaption>
+            </div>
           </figure>
         </div>
       </div>
     </section>
 
     <!-- SERVICES -->
-    <section class="section-block" id="services">
-      <div class="container">
-        <div class="section-heading reveal">
-          <span class="section-kicker">SERVICES</span>
-          <h2>What I can build for you.</h2>
+    <section class="section-block services" id="services" data-mood="blue">
+      <div class="container svc-layout">
+        <div class="section-heading svc-head reveal">
+          <span class="section-kicker"><b>02</b>Services</span>
+          <h2>What I can build <em>for you.</em></h2>
         </div>
 
-        <div class="services-grid" id="servicesGrid">
-          <article class="service-card glass reveal">
-            <div class="service-icon"><i class="fas fa-filter"></i></div>
+        <ol class="svc-list" id="servicesGrid">
+          <li class="svc-row reveal">
+            <span class="svc-num">01</span>
             <h3>Funnels &amp; Websites</h3>
             <p>Landing pages, booking funnels, and AI-built sites.</p>
-          </article>
-
-          <article class="service-card glass reveal">
-            <div class="service-icon"><i class="fas fa-diagram-project"></i></div>
+            <span class="svc-icon" aria-hidden="true"><i class="fas fa-filter"></i></span>
+          </li>
+          <li class="svc-row reveal">
+            <span class="svc-num">02</span>
             <h3>GoHighLevel CRM</h3>
             <p>Pipelines, calendars, and clean CRM setup.</p>
-          </article>
-
-          <article class="service-card glass reveal">
-            <div class="service-icon"><i class="fas fa-gears"></i></div>
+            <span class="svc-icon" aria-hidden="true"><i class="fas fa-diagram-project"></i></span>
+          </li>
+          <li class="svc-row reveal">
+            <span class="svc-num">03</span>
             <h3>Workflow Automation</h3>
             <p>Triggers, nurture sequences, and follow-up on autopilot.</p>
-          </article>
-
-          <article class="service-card glass reveal">
-            <div class="service-icon"><i class="fas fa-robot"></i></div>
+            <span class="svc-icon" aria-hidden="true"><i class="fas fa-gears"></i></span>
+          </li>
+          <li class="svc-row reveal">
+            <span class="svc-num">04</span>
             <h3>AI Chatbots</h3>
             <p>AI agents that qualify leads and book calls.</p>
-          </article>
-
-          <article class="service-card glass reveal">
-            <div class="service-icon"><i class="fas fa-list-check"></i></div>
+            <span class="svc-icon" aria-hidden="true"><i class="fas fa-robot"></i></span>
+          </li>
+          <li class="svc-row reveal">
+            <span class="svc-num">05</span>
             <h3>Quizzes &amp; Lead Scoring</h3>
             <p>Surveys with score-based logic and triggers.</p>
-          </article>
-
-          <article class="service-card glass reveal">
-            <div class="service-icon"><i class="fas fa-comment-sms"></i></div>
+            <span class="svc-icon" aria-hidden="true"><i class="fas fa-list-check"></i></span>
+          </li>
+          <li class="svc-row reveal">
+            <span class="svc-num">06</span>
             <h3>Email, SMS &amp; A2P</h3>
             <p>Campaigns plus A2P 10DLC registration.</p>
-          </article>
-
-          <article class="service-card glass reveal">
-            <div class="service-icon"><i class="fas fa-bullhorn"></i></div>
+            <span class="svc-icon" aria-hidden="true"><i class="fas fa-comment-sms"></i></span>
+          </li>
+          <li class="svc-row reveal">
+            <span class="svc-num">07</span>
             <h3>Meta &amp; Microsoft Ads</h3>
             <p>Ad account setup and lead-gen campaigns.</p>
-          </article>
-
-          <article class="service-card glass reveal">
-            <div class="service-icon"><i class="fas fa-globe"></i></div>
+            <span class="svc-icon" aria-hidden="true"><i class="fas fa-bullhorn"></i></span>
+          </li>
+          <li class="svc-row reveal">
+            <span class="svc-num">08</span>
             <h3>Domains, DNS &amp; Fixes</h3>
             <p>Cloudflare, hosting, integrations, troubleshooting.</p>
-          </article>
-        </div>
+            <span class="svc-icon" aria-hidden="true"><i class="fas fa-globe"></i></span>
+          </li>
+        </ol>
       </div>
     </section>
 

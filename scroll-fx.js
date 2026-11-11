@@ -2,7 +2,7 @@
    SCROLL FX — scroll-driven motion
    ---------------------------------------------------------
    1. SPLIT HEADINGS (word-by-word rise, CSS driven)
-   2. STAGGERED SERVICE CARDS
+   2. LIVE COUNTS
    3. HERO (headline fit, kinetic word, pointer depth, ticker)
    4. LENIS SMOOTH SCROLL
    5. GSAP SCROLL SCENES
@@ -71,22 +71,14 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   /* =========================================================
-     2. STAGGERED SERVICE CARDS
-     - Cards in the same row cascade in left to right
+     2. LIVE COUNTS
+     - The About numbers are counted from the page itself, so they
+       can't drift from what is actually listed
   ========================================================= */
-  const servicesGrid = document.getElementById("servicesGrid");
-
-  function restagger() {
-    if (!servicesGrid) return;
-    const cols = window.innerWidth > 1180 ? 4 : 2;
-
-    servicesGrid.querySelectorAll(".service-card").forEach((card, i) => {
-      card.style.setProperty("--stagger", i % cols);
-    });
-  }
-
-  restagger();
-  window.addEventListener("resize", restagger);
+  document.querySelectorAll("[data-count-from]").forEach((el) => {
+    const total = document.querySelectorAll(el.dataset.countFrom).length;
+    if (total) el.textContent = String(total);
+  });
 
   /* =========================================================
      3. HERO
@@ -327,7 +319,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   /* ---------- About: words light up as you read down ---------- */
-  const scrubText = document.querySelector("#about .section-heading p");
+  const scrubText = document.getElementById("aboutLead");
 
   if (scrubText) {
     scrubText.innerHTML = scrubText.textContent
@@ -338,20 +330,43 @@ document.addEventListener("DOMContentLoaded", () => {
 
     gsap.fromTo(
       scrubText.querySelectorAll(".scrub-word"),
-      { opacity: 0.18 },
+      { opacity: 0.16 },
       {
         opacity: 1,
         stagger: 0.05,
         ease: "none",
         scrollTrigger: {
           trigger: scrubText,
-          start: "top 85%",
-          end: "bottom 45%",
+          start: "top 84%",
+          end: "bottom 52%",
           scrub: true
         }
       }
     );
   }
+
+  /* ---------- About: numbers count up once, when first seen ---------- */
+  gsap.utils.toArray("[data-count]").forEach((el) => {
+    ScrollTrigger.create({
+      trigger: el,
+      start: "top 90%",
+      once: true,
+      onEnter: () => {
+        const end = parseInt(el.textContent, 10);
+        if (!end) return;
+
+        const counter = { value: 0 };
+        gsap.to(counter, {
+          value: end,
+          duration: 1.6,
+          ease: "power3.out",
+          onUpdate: () => {
+            el.textContent = String(Math.round(counter.value));
+          }
+        });
+      }
+    });
+  });
 
   /* ---------- How it works: line draws + nodes pop, tied to scroll ---------- */
   const infographic = document.querySelector(".infographic");

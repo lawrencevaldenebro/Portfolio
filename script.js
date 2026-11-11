@@ -75,7 +75,7 @@ document.addEventListener("DOMContentLoaded", () => {
      2. REVEAL ON SCROLL
      - Adds .show once elements enter viewport
   ========================================================= */
-  const revealEls = document.querySelectorAll(".reveal");
+  const revealEls = document.querySelectorAll(".reveal, [data-clip]");
 
   if (revealEls.length) {
     const revealObserver = new IntersectionObserver(
@@ -520,7 +520,7 @@ document.addEventListener("DOMContentLoaded", () => {
      - Cursor-reactive tilt for project / experience / contact cards
      - Skipped on touch-only devices
   ========================================================= */
-  const tiltEls = document.querySelectorAll(".project-card, .experience-card, .contact-card, .service-card:not(.service-featured)");
+  const tiltEls = document.querySelectorAll(".experience-card, .contact-card");
 
   if (tiltEls.length && window.matchMedia("(pointer: fine)").matches) {
     tiltEls.forEach((card) => {
@@ -600,6 +600,26 @@ document.addEventListener("DOMContentLoaded", () => {
         bgTicking = false;
       });
     }, { passive: true });
+  }
+
+  /* =========================================================
+     11b. BACKGROUND MOOD
+     - The colour fields behind the page shift with the section
+       crossing the middle of the screen
+  ========================================================= */
+  const moodSections = document.querySelectorAll("[data-mood]");
+
+  if (moodSections.length && "IntersectionObserver" in window) {
+    const moodObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) document.body.dataset.mood = entry.target.dataset.mood;
+        });
+      },
+      { rootMargin: "-45% 0px -45% 0px" }
+    );
+
+    moodSections.forEach((section) => moodObserver.observe(section));
   }
 
   /* =========================================================

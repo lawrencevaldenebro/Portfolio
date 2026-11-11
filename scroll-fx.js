@@ -368,31 +368,87 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  /* ---------- How it works: line draws + nodes pop, tied to scroll ---------- */
-  const infographic = document.querySelector(".infographic");
+  /* ---------- How it works ----------
+     Wide, tall screens: the stage pins and the five steps play as one
+     story (photos wipe in, the rail fills, the counter ticks).
+     Everything else: a vertical timeline whose rail fills as you pass. */
+  const flow = document.getElementById("system");
+  const flowStage = document.getElementById("flowStage");
 
-  if (infographic) {
-    // Hands control from the one-shot CSS reveal to the scrubbed timeline.
-    infographic.classList.add("is-scrubbed");
+  if (flow && flowStage) {
+    const flowSteps = gsap.utils.toArray(".flow-step", flow);
+    const flowLayers = gsap.utils.toArray(".flow-layer", flow);
+    const flowList = flow.querySelector(".flow-steps");
+    const flowCount = document.getElementById("flowCount");
+    const lastStep = flowSteps.length - 1;
+    const clearSteps = () => flowSteps.forEach((step) => step.classList.remove("is-active"));
 
-    const flow = gsap.timeline({
-      scrollTrigger: {
-        trigger: infographic,
-        start: "top 85%",
-        end: "bottom 50%",
-        scrub: 0.6
-      }
+    media.add("(min-width: 961px) and (min-height: 620px)", () => {
+      flow.classList.add("is-pinned");
+
+      let current = -1;
+      const show = (index) => {
+        if (index === current) return;
+        current = index;
+        flowSteps.forEach((step, i) => step.classList.toggle("is-active", i === index));
+        if (flowCount) flowCount.textContent = String(index + 1).padStart(2, "0");
+      };
+      show(0);
+
+      const story = gsap.timeline({
+        defaults: { ease: "none" },
+        scrollTrigger: {
+          trigger: flowStage,
+          start: "center center",
+          end: () => `+=${Math.round(window.innerHeight * 0.6 * lastStep)}`,
+          pin: true,
+          scrub: 0.6,
+          anticipatePin: 1,
+          invalidateOnRefresh: true,
+          onUpdate: (self) => show(Math.min(lastStep, Math.round(self.progress * lastStep)))
+        }
+      });
+
+      story.fromTo(flowList, { "--flow": 0 }, { "--flow": 1, duration: lastStep }, 0);
+
+      flowLayers.forEach((layer, i) => {
+        if (!i) return;
+        story.fromTo(
+          layer,
+          { clipPath: "inset(100% 0% 0% 0%)" },
+          { clipPath: "inset(0% 0% 0% 0%)", duration: 0.7 },
+          i - 0.85
+        );
+        story.fromTo(layer.querySelector("img"), { scale: 1.3 }, { scale: 1, duration: 0.7 }, i - 0.85);
+      });
+
+      return () => {
+        flow.classList.remove("is-pinned");
+        clearSteps();
+      };
     });
 
-    flow.fromTo(infographic, { "--line": 0 }, { "--line": 1, ease: "none", duration: 1 }, 0);
-
-    infographic.querySelectorAll(".info-node").forEach((node, i) => {
-      flow.fromTo(
-        node,
-        { opacity: 0, y: 40, scale: 0.7 },
-        { opacity: 1, y: 0, scale: 1, duration: 0.25, ease: "back.out(1.7)" },
-        i * 0.19
+    media.add("(max-width: 960px), (max-height: 619px)", () => {
+      gsap.fromTo(
+        flowList,
+        { "--flow": 0 },
+        {
+          "--flow": 1,
+          ease: "none",
+          scrollTrigger: { trigger: flowList, start: "top 72%", end: "bottom 60%", scrub: 0.4 }
+        }
       );
+
+      flowSteps.forEach((step) => {
+        ScrollTrigger.create({
+          trigger: step,
+          start: "top 70%",
+          onEnter: () => step.classList.add("is-active"),
+          onLeaveBack: () => step.classList.remove("is-active")
+        });
+      });
+
+      return clearSteps;
     });
   }
 

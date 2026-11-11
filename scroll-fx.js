@@ -40,7 +40,7 @@ document.addEventListener("DOMContentLoaded", () => {
      - Keeps <em> highlights (gradient words)
      - Plays when the parent .reveal gets .show
   ========================================================= */
-  const splitTargets = document.querySelectorAll(".section-heading h2, .skills-left h2, .contact-intro h2");
+  const splitTargets = document.querySelectorAll(".section-heading h2");
 
   splitTargets.forEach((heading) => {
     const label = heading.textContent.trim().replace(/\s+/g, " ");

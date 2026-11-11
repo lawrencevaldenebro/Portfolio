@@ -10,7 +10,9 @@
    6. Hero
    7. Section Shell + Headings
    8. Reveal / Motion Utilities
-   ... section styles follow, each under its own banner
+   then one banner per section, in page order:
+   About, Experience, Skills, Contact, Minigame, Footer,
+   Modal / Forms, Responsive, Services, How It Works, Work
 ========================================================= */
 
 /* =========================================================
@@ -164,29 +166,6 @@ section[id] {
   margin: 0 auto;
 }
 
-.gradient-text {
-  background: var(--gradient-text);
-  background-size: 200% auto;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  animation: gradientShift 6s ease infinite;
-}
-
-@keyframes gradientShift {
-  0% {
-    background-position: 0% 50%;
-  }
-
-  50% {
-    background-position: 100% 50%;
-  }
-
-  100% {
-    background-position: 0% 50%;
-  }
-}
-
 @keyframes spin {
   to {
     transform: rotate(360deg);
@@ -306,31 +285,6 @@ body[data-mood="deep"] .orb-three { opacity: 0.22; }
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.05),
     var(--shadow);
-}
-
-.glass-lite {
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(130, 180, 255, 0.12);
-}
-
-/* Cursor-tracking spotlight glow (paired with JS --mx / --my) */
-.spotlight {
-  position: relative;
-}
-
-.spotlight::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background: radial-gradient(320px circle at var(--mx, 50%) var(--my, 50%), rgba(110, 170, 255, 0.16), transparent 70%);
-  opacity: 0;
-  transition: opacity 0.4s ease;
-  pointer-events: none;
-}
-
-.spotlight:hover::before {
-  opacity: 1;
 }
 
 /* ---------- Buttons ---------- */
@@ -1444,6 +1398,11 @@ html.js.hero-go .hero-ring {
   .hero-plate strong {
     font-size: 1.05rem;
   }
+
+  /* Keep the name plate clear of the seal in the corner */
+  .hero-plate {
+    right: 30%;
+  }
 }
 
 /* =========================================================
@@ -1488,17 +1447,13 @@ html.js.hero-go .hero-ring {
   font-variant-numeric: tabular-nums;
 }
 
-.section-heading h2,
-.skills-left h2,
-.contact-intro h2 {
+.section-heading h2 {
   font-size: clamp(2rem, 4.4vw, 3.5rem);
   line-height: 1.06;
   letter-spacing: -0.04em;
 }
 
-.section-heading h2 em,
-.skills-left h2 em,
-.contact-intro h2 em {
+.section-heading h2 em {
   font-style: normal;
   background: var(--gradient-text);
   -webkit-background-clip: text;
@@ -1506,9 +1461,7 @@ html.js.hero-go .hero-ring {
   -webkit-text-fill-color: transparent;
 }
 
-.section-heading p,
-.skills-left p,
-.contact-intro p {
+.section-heading p {
   max-width: 600px;
   margin-top: 16px;
   color: var(--muted);
@@ -1650,13 +1603,23 @@ html.js .has-split.show > :not(h2) {
   html.js .reveal,
   html.js .reveal[data-reveal],
   html.js .has-split > :not(h2),
-  .split-line .w > span,
-  .info-node,
-  .infographic::after {
+  .split-line .w > span {
     opacity: 1;
     transform: none;
     filter: none;
     transition: none;
+  }
+}
+
+/* Safety net: with reduced motion on, nothing loops or eases anywhere */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0s !important;
   }
 }
 
@@ -1670,21 +1633,6 @@ html.js .has-split.show > :not(h2) {
     opacity: 1;
     transform: translateY(0);
   }
-}
-
-/* Staggered cascade for grid-based reveal groups */
-.experience-layout .reveal:nth-child(2),
-.contact-grid .reveal:nth-child(2) {
-  transition-delay: 0.1s;
-}
-
-.experience-layout .reveal:nth-child(3),
-.contact-grid .reveal:nth-child(3) {
-  transition-delay: 0.2s;
-}
-
-.experience-layout .reveal:nth-child(4) {
-  transition-delay: 0.3s;
 }
 
 /* =========================================================

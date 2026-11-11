@@ -6,16 +6,15 @@
    1. MOBILE MENU
    2. REVEAL ON SCROLL
    3. ACTIVE NAV LINK
-   4. SLIDER / CAROUSEL
    5. CONTACT MODAL
    6. LIVE DEMO SIMULATION
    7. COUNTRY + PHONE FIELD LOGIC
-   8. SCROLL PROGRESS + HEADER SHRINK
-   9. 3D TILT ON CARDS
+   8. SCROLL PROGRESS + HEADER SHRINK / HIDE
+   9b. EXPERIENCE ACCORDION
    10. MAGNETIC BUTTONS
    11. PARALLAX BACKGROUND ORBS
+   11b. BACKGROUND MOOD
    12. SKILLS MARQUEE
-   13. GET TO KNOW ME — FLIP CARDS
    14. LEAD RUSH MINIGAME
    15. CONTACT FORM SUBMIT (Formspree AJAX)
 ========================================================= */
@@ -126,98 +125,6 @@ document.addEventListener("DOMContentLoaded", () => {
     window.addEventListener("scroll", setActiveLink);
     setActiveLink();
   }
-
-  /* =========================================================
-     4. SLIDER / CAROUSEL
-     - Buttons
-     - Dots
-     - Touch swipe
-     - Optional autoplay
-  ========================================================= */
-  const sliders = document.querySelectorAll("[data-slider]");
-
-  sliders.forEach((slider) => {
-    const track = slider.querySelector("[data-track]");
-    if (!track) return;
-
-    const slides = Array.from(track.children);
-    const prevBtn = slider.querySelector("[data-prev]");
-    const nextBtn = slider.querySelector("[data-next]");
-    const dotsWrap = slider.querySelector("[data-dots]");
-
-    if (!slides.length) return;
-
-    let index = 0;
-    let timer = null;
-    let startX = 0;
-
-    const dots = slides.map((_, i) => {
-      const dot = document.createElement("button");
-      dot.className = `slider-dot${i === 0 ? " active" : ""}`;
-      dot.type = "button";
-      dot.setAttribute("aria-label", `Go to slide ${i + 1}`);
-      dot.addEventListener("click", () => goTo(i));
-      dotsWrap?.appendChild(dot);
-      return dot;
-    });
-
-    function updateSlider() {
-      track.style.transform = `translateX(-${index * 100}%)`;
-      dots.forEach((dot, i) => {
-        dot.classList.toggle("active", i === index);
-      });
-    }
-
-    function goTo(i) {
-      index = (i + slides.length) % slides.length;
-      updateSlider();
-    }
-
-    function stopAutoplay() {
-      if (timer) clearInterval(timer);
-      timer = null;
-    }
-
-    function startAutoplay() {
-      const autoplay = slider.getAttribute("data-autoplay") === "true";
-      const interval = parseInt(slider.getAttribute("data-interval") || "3500", 10);
-
-      if (!autoplay) return;
-
-      stopAutoplay();
-      timer = setInterval(() => goTo(index + 1), interval);
-    }
-
-    prevBtn?.addEventListener("click", () => goTo(index - 1));
-    nextBtn?.addEventListener("click", () => goTo(index + 1));
-
-    slider.addEventListener("mouseenter", stopAutoplay);
-    slider.addEventListener("mouseleave", startAutoplay);
-
-    slider.addEventListener(
-      "touchstart",
-      (event) => {
-        startX = event.touches[0].clientX;
-      },
-      { passive: true }
-    );
-
-    slider.addEventListener(
-      "touchend",
-      (event) => {
-        const endX = event.changedTouches[0].clientX;
-        const dx = endX - startX;
-
-        if (Math.abs(dx) > 40) {
-          dx > 0 ? goTo(index - 1) : goTo(index + 1);
-        }
-      },
-      { passive: true }
-    );
-
-    updateSlider();
-    startAutoplay();
-  });
 
   /* =========================================================
      5. CONTACT MODAL
@@ -516,46 +423,6 @@ document.addEventListener("DOMContentLoaded", () => {
   handleScrollMotion();
 
   /* =========================================================
-     9. 3D TILT ON CARDS
-     - Cursor-reactive tilt for project / experience / contact cards
-     - Skipped on touch-only devices
-  ========================================================= */
-  const tiltEls = document.querySelectorAll("[data-tilt]");
-
-  if (tiltEls.length && window.matchMedia("(pointer: fine)").matches) {
-    tiltEls.forEach((card) => {
-      card.classList.add("spotlight");
-
-      const maxTilt = card.classList.contains("experience-card") ? 3 : 6;
-      const lift = card.classList.contains("project-card") || card.classList.contains("service-card")
-        ? -8
-        : card.classList.contains("contact-card")
-        ? -6
-        : -3;
-
-      card.addEventListener("mousemove", (event) => {
-        const rect = card.getBoundingClientRect();
-        const x = event.clientX - rect.left;
-        const y = event.clientY - rect.top;
-
-        const rotateY = (x / rect.width - 0.5) * maxTilt * 2;
-        const rotateX = (y / rect.height - 0.5) * -maxTilt * 2;
-
-        card.style.transition = "transform 0.08s linear, border-color 0.3s ease, background 0.3s ease";
-        card.style.transform = `perspective(900px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(${lift}px)`;
-
-        card.style.setProperty("--mx", `${(x / rect.width) * 100}%`);
-        card.style.setProperty("--my", `${(y / rect.height) * 100}%`);
-      });
-
-      card.addEventListener("mouseleave", () => {
-        card.style.transition = "transform 0.5s cubic-bezier(.2,.8,.2,1), border-color 0.3s ease, background 0.3s ease";
-        card.style.transform = "";
-      });
-    });
-  }
-
-  /* =========================================================
      9b. EXPERIENCE ACCORDION
      - Each role opens and closes on its own
      - Scroll scenes are re-measured once the height settles
@@ -578,7 +445,7 @@ document.addEventListener("DOMContentLoaded", () => {
      10. MAGNETIC BUTTONS
      - Primary CTAs subtly follow the cursor on hover
   ========================================================= */
-  const magneticEls = document.querySelectorAll(".btn-primary, .nav-cta");
+  const magneticEls = document.querySelectorAll(".btn-primary");
 
   if (magneticEls.length && window.matchMedia("(pointer: fine)").matches) {
     magneticEls.forEach((btn) => {
@@ -746,6 +613,13 @@ document.addEventListener("DOMContentLoaded", () => {
   const canvas = document.getElementById("gameCanvas");
 
   if (canvas && canvas.getContext) {
+    // Phones get a taller playfield: the wide one scales down too small to
+    // play, and too short for the start screen to fit.
+    if (window.matchMedia("(max-width: 640px)").matches) {
+      canvas.width = 480;
+      canvas.height = 560;
+    }
+
     const ctx = canvas.getContext("2d");
     const W = canvas.width;
     const H = canvas.height;

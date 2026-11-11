@@ -520,7 +520,7 @@ document.addEventListener("DOMContentLoaded", () => {
      - Cursor-reactive tilt for project / experience / contact cards
      - Skipped on touch-only devices
   ========================================================= */
-  const tiltEls = document.querySelectorAll(".experience-card, .contact-card");
+  const tiltEls = document.querySelectorAll(".contact-card");
 
   if (tiltEls.length && window.matchMedia("(pointer: fine)").matches) {
     tiltEls.forEach((card) => {
@@ -554,6 +554,25 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     });
   }
+
+  /* =========================================================
+     9b. EXPERIENCE ACCORDION
+     - Each role opens and closes on its own
+     - Scroll scenes are re-measured once the height settles
+  ========================================================= */
+  document.querySelectorAll(".xp-toggle").forEach((toggle) => {
+    toggle.addEventListener("click", () => {
+      const item = toggle.closest(".xp-item");
+      if (!item) return;
+
+      const open = item.classList.toggle("is-open");
+      toggle.setAttribute("aria-expanded", String(open));
+
+      setTimeout(() => {
+        if (window.ScrollTrigger) window.ScrollTrigger.refresh();
+      }, 800);
+    });
+  });
 
   /* =========================================================
      10. MAGNETIC BUTTONS

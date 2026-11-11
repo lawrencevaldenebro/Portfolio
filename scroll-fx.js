@@ -452,6 +452,30 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  /* ---------- Experience: the rail fills and nodes light as you pass ---------- */
+  const xpList = document.getElementById("xpList");
+
+  if (xpList) {
+    gsap.fromTo(
+      xpList,
+      { "--xp": 0 },
+      {
+        "--xp": 1,
+        ease: "none",
+        scrollTrigger: { trigger: xpList, start: "top 72%", end: "bottom 62%", scrub: 0.4 }
+      }
+    );
+
+    gsap.utils.toArray(".xp-item", xpList).forEach((item) => {
+      ScrollTrigger.create({
+        trigger: item,
+        start: "top 70%",
+        onEnter: () => item.classList.add("is-passed"),
+        onLeaveBack: () => item.classList.remove("is-passed")
+      });
+    });
+  }
+
   // Lazy images and web fonts change heights after load.
   window.addEventListener("load", () => ScrollTrigger.refresh());
 });

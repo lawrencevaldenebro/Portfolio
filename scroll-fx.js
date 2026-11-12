@@ -552,19 +552,32 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  /* ---------- Experience: the rail fills and nodes light as you pass ---------- */
+  /* ---------- Experience: a comet rides the rail and lights each node it passes ---------- */
   const xpList = document.getElementById("xpList");
 
   if (xpList) {
-    gsap.fromTo(
-      xpList,
-      { "--xp": 0 },
-      {
-        "--xp": 1,
-        ease: "none",
-        scrollTrigger: { trigger: xpList, start: "top 72%", end: "bottom 62%", scrub: 0.4 }
-      }
-    );
+    const comet = document.createElement("li");
+    comet.className = "xp-comet";
+    comet.setAttribute("aria-hidden", "true");
+    comet.setAttribute("role", "presentation");
+    xpList.appendChild(comet);
+    xpList.classList.add("is-tracked");
+
+    gsap
+      .timeline({
+        defaults: { ease: "none" },
+        scrollTrigger: {
+          trigger: xpList,
+          start: "top 72%",
+          end: "bottom 62%",
+          scrub: 0.4,
+          invalidateOnRefresh: true
+        }
+      })
+      .fromTo(xpList, { "--xp": 0 }, { "--xp": 1, duration: 1 }, 0)
+      .fromTo(comet, { y: 0 }, { y: () => Math.max(0, xpList.offsetHeight - 68), duration: 1 }, 0)
+      .fromTo(comet, { opacity: 0 }, { opacity: 1, duration: 0.04 }, 0)
+      .to(comet, { opacity: 0, duration: 0.04 }, 0.96);
 
     gsap.utils.toArray(".xp-item", xpList).forEach((item) => {
       ScrollTrigger.create({
@@ -576,7 +589,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  /* ---------- Work: the carousel tips up into place, the outline word drifts ---------- */
+  /* ---------- Work: the carousel tips up, the outline word assembles behind it ---------- */
   const cfTilt = document.querySelector(".cf-tilt");
   const workGhost = document.querySelector(".work-ghost");
 
@@ -596,6 +609,24 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   if (workGhost) {
+    // Each letter starts at its own depth below the line and rises into the word.
+    const depths = [72, 34, 92, 52];
+    workGhost.innerHTML = Array.from(workGhost.textContent.trim())
+      .map((ch) => `<span class="gl">${escapeHtml(ch)}</span>`)
+      .join("");
+
+    gsap.fromTo(
+      workGhost.querySelectorAll(".gl"),
+      { yPercent: (i) => depths[i % depths.length], opacity: 0 },
+      {
+        yPercent: 0,
+        opacity: 1,
+        ease: "none",
+        stagger: 0.08,
+        scrollTrigger: { trigger: ".work-showcase", start: "top 96%", end: "top 22%", scrub: 0.6 }
+      }
+    );
+
     gsap.fromTo(
       workGhost,
       { xPercent: 7 },
@@ -607,16 +638,183 @@ document.addEventListener("DOMContentLoaded", () => {
     );
   }
 
-  /* ---------- Footer: the wordmark rises into its slot ---------- */
-  const footerWord = document.querySelector(".footer-word span");
+  /* ---------- Work gallery: tiles settle from different depths (desktop) ----------
+     The tile itself stays put (it is the trigger and the thing the wipe-in
+     observer watches); only its inner plate travels. Tiles are re-rendered by
+     work.js on filter / "show more", so new ones are picked up as they land. */
+  media.add("(min-width: 861px)", () => {
+    const workGrid = document.getElementById("workGrid");
+    if (!workGrid) return undefined;
+
+    let drifts = [];
+
+    const drop = (drift) => {
+      if (drift.tween.scrollTrigger) drift.tween.scrollTrigger.kill();
+      drift.tween.kill();
+    };
+
+    const sync = () => {
+      // Let go of tweens whose tile was replaced
+      drifts = drifts.filter((drift) => {
+        if (drift.tile.isConnected) return true;
+        drop(drift);
+        return false;
+      });
+
+      const known = new Set(drifts.map((drift) => drift.tile));
+
+      gsap.utils.toArray(".work-tile", workGrid).forEach((tile, i) => {
+        if (known.has(tile)) return;
+        const plate = tile.querySelector(".tile-media");
+        if (!plate) return;
+
+        drifts.push({
+          tile,
+          plate,
+          tween: gsap.fromTo(
+            plate,
+            { y: 36 + (i % 3) * 34 },
+            {
+              y: 0,
+              ease: "none",
+              scrollTrigger: { trigger: tile, start: "top bottom", end: "top 58%", scrub: 0.5 }
+            }
+          )
+        });
+      });
+    };
+
+    sync();
+    const watcher = new MutationObserver(sync);
+    watcher.observe(workGrid, { childList: true });
+
+    return () => {
+      watcher.disconnect();
+      drifts.forEach((drift) => {
+        drop(drift);
+        gsap.set(drift.plate, { clearProps: "transform" });
+      });
+      drifts = [];
+    };
+  });
+
+  /* ---------- Skills: rows slide against each other, and lean into fast scrolling ---------- */
+  const stackWall = document.getElementById("skillsTrack");
+
+  if (stackWall) {
+    const stackRows = gsap.utils.toArray(".stack-row", stackWall);
+
+    // --slide is added to each marquee's own loop (CSS `translate`), in the
+    // direction that row already travels. It never moves further than the
+    // spare width of the doubled track, so no gap can open at either end.
+    stackRows.forEach((row, i) => {
+      const track = row.querySelector(".stack-track.is-looped");
+      if (!track) return;
+
+      const room = () =>
+        Math.max(0, Math.min(window.innerWidth * 0.18, 280, track.scrollWidth / 2 - row.clientWidth));
+      const reversed = i % 2 === 1;
+
+      gsap.fromTo(
+        track,
+        { "--slide": () => `${reversed ? -room() : 0}px` },
+        {
+          "--slide": () => `${reversed ? 0 : -room()}px`,
+          ease: "none",
+          scrollTrigger: {
+            trigger: stackWall,
+            start: "top bottom",
+            end: "bottom top",
+            scrub: 0.6,
+            invalidateOnRefresh: true
+          }
+        }
+      );
+    });
+
+    // The type leans with scroll speed and eases back upright when you stop.
+    media.add("(min-width: 861px)", () => {
+      const lean = { value: 0 };
+      const setLean = gsap.quickSetter(stackRows, "skewX", "deg");
+      const clampLean = gsap.utils.clamp(-7, 7);
+
+      ScrollTrigger.create({
+        trigger: stackWall,
+        start: "top bottom",
+        end: "bottom top",
+        onUpdate: (self) => {
+          const next = clampLean(self.getVelocity() / -240);
+          if (Math.abs(next) <= Math.abs(lean.value)) return;
+
+          lean.value = next;
+          gsap.to(lean, {
+            value: 0,
+            duration: 0.9,
+            ease: "power3.out",
+            overwrite: true,
+            onUpdate: () => setLean(lean.value)
+          });
+        }
+      });
+
+      return () => gsap.set(stackRows, { clearProps: "transform" });
+    });
+  }
+
+  /* ---------- Contact: the closing line rises word by word, tied to the scroll ---------- */
+  const contactHead = document.querySelector(".contact-intro h2.split-line");
+
+  if (contactHead) {
+    // Hands the words over from the CSS entrance to the scrubbed one.
+    contactHead.classList.add("is-scrub");
+
+    gsap.fromTo(
+      contactHead.querySelectorAll(".w > span"),
+      { y: 0, yPercent: 112, rotation: 4 },
+      {
+        y: 0,
+        yPercent: 0,
+        rotation: 0,
+        ease: "none",
+        stagger: 0.2,
+        scrollTrigger: { trigger: contactHead, start: "top 94%", end: "top 44%", scrub: 0.5 }
+      }
+    );
+  }
+
+  const contactFunnel = document.querySelector(".contact-funnel");
+
+  if (contactFunnel) {
+    gsap.fromTo(
+      contactFunnel,
+      { yPercent: 28, rotation: -10, scale: 0.86, opacity: 0 },
+      {
+        yPercent: 0,
+        rotation: 0,
+        scale: 1,
+        opacity: 1,
+        ease: "none",
+        scrollTrigger: { trigger: ".contact-top", start: "top 88%", end: "top 36%", scrub: 0.5 }
+      }
+    );
+  }
+
+  /* ---------- Footer: the wordmark rises letter by letter, from the middle out ---------- */
+  const footerWord = document.querySelector(".footer-word > span");
 
   if (footerWord) {
+    footerWord.innerHTML = Array.from(footerWord.textContent.trim())
+      .map((ch) => `<span class="fc">${escapeHtml(ch)}</span>`)
+      .join("");
+    footerWord.classList.add("is-split");
+
     gsap.fromTo(
-      footerWord,
-      { yPercent: 46 },
+      footerWord.querySelectorAll(".fc"),
+      { yPercent: 104 },
       {
         yPercent: 0,
         ease: "none",
+        stagger: { each: 0.09, from: "center" },
         scrollTrigger: { trigger: ".footer-word", start: "top bottom", end: "bottom bottom", scrub: 0.4 }
       }
     );
@@ -624,4 +822,5 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Lazy images and web fonts change heights after load.
   window.addEventListener("load", () => ScrollTrigger.refresh());
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => ScrollTrigger.refresh());
 });

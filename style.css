@@ -1582,6 +1582,13 @@ html.js .reveal.show {
   transform: none;
 }
 
+/* A heading whose words are tied to the scroll (scroll-fx.js) drops the
+   timed entrance, so the two never pull against each other */
+.split-line.is-scrub .w > span {
+  transform: none;
+  transition: none;
+}
+
 /* Headings that split their text don't move as a block — only the words do */
 html.js .reveal.has-split {
   transform: none;
@@ -1863,6 +1870,22 @@ html.js .has-split.show > :not(h2) {
   transform-origin: top center;
 }
 
+/* Bright head riding the tip of the fill (added and moved by scroll-fx.js) */
+.xp-comet {
+  position: absolute;
+  left: 17px;
+  top: 29px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow:
+    0 0 0 4px rgba(139, 107, 255, 0.28),
+    0 0 18px 6px rgba(120, 150, 255, 0.75);
+  pointer-events: none;
+  will-change: transform;
+}
+
 .xp-item {
   position: relative;
   padding-left: clamp(60px, 6vw, 76px);
@@ -1900,6 +1923,38 @@ html.js .has-split.show > :not(h2) {
   border-color: transparent;
   color: #fff;
   box-shadow: 0 0 0 6px rgba(139, 107, 255, 0.18);
+}
+
+/* A ring leaves the node as the rail reaches it */
+.xp-node::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: 50%;
+  border: 1px solid rgba(170, 150, 255, 0.9);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.xp-item.is-passed .xp-node::after {
+  animation: xpPulse 0.9s var(--ease-out-quart) both;
+}
+
+@keyframes xpPulse {
+  from {
+    opacity: 0.9;
+    transform: scale(1);
+  }
+
+  to {
+    opacity: 0;
+    transform: scale(2.1);
+  }
+}
+
+/* While the rail is being tracked, roles ahead of it wait a shade dimmer */
+.xp-list.is-tracked .xp-item:not(.is-passed):not(.is-open) .xp-role strong {
+  color: #9db1d3;
 }
 
 .xp-toggle {
@@ -2123,6 +2178,10 @@ html:not(.js) .xp-body-inner {
   .xp-node {
     transition: none;
   }
+
+  .xp-item.is-passed .xp-node::after {
+    animation: none;
+  }
 }
 
 /* =========================================================
@@ -2156,6 +2215,12 @@ html:not(.js) .xp-body-inner {
   display: flex;
   width: max-content;
   will-change: transform;
+  /* Scroll-driven offset on top of the loop (see scroll-fx.js) */
+  translate: var(--slide, 0px) 0;
+}
+
+.stack-row {
+  transform-origin: 50% 100%;
 }
 
 .stack-track.is-looped {
@@ -2659,6 +2724,22 @@ a.contact-card:hover .contact-icon {
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
+}
+
+/* Split into letters by scroll-fx.js. The letters are solid and the fade
+   moves to a mask on the word, so tightly tracked letters that overlap don't
+   show a seam, and each letter rises up into the fade. */
+.footer-word > span.is-split {
+  background: none;
+  -webkit-mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.16) 58%, rgba(0, 0, 0, 0) 96%);
+  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.16) 58%, rgba(0, 0, 0, 0) 96%);
+}
+
+.footer-word .fc {
+  background: linear-gradient(180deg, #96c3ff 0%, #508cff 58%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  will-change: transform;
 }
 
 .footer-copy {
@@ -3692,6 +3773,12 @@ a.contact-card:hover .contact-icon {
   -webkit-text-stroke: 1px rgba(140, 185, 255, 0.16);
   pointer-events: none;
   user-select: none;
+}
+
+/* Letters of the outline word (split by scroll-fx.js) */
+.work-ghost .gl {
+  display: inline-block;
+  will-change: transform;
 }
 
 .work-glow {

@@ -21,8 +21,17 @@ Static HTML/CSS/JS with no build step. Pushing to `main` deploys to Vercel autom
 ## Motion
 
 - CSS handles entrances (`.reveal`, `[data-clip]`, the hero) so content still shows if a CDN script fails.
-- GSAP + ScrollTrigger handle scroll-linked scenes: hero parallax, the About statement, the pinned
-  "How it works" story on wide screens, the experience rail and the carousel entrance.
+- GSAP + ScrollTrigger handle scroll-linked scenes, one signature moment per section:
+  - Hero: copy, photo, frames and chips leave at different depths (desktop)
+  - About: the statement lights up word by word
+  - Services: a spotlight follows the row on the reading line
+  - How it works: pinned story on wide screens (photo wipes, odometer counter, chips); a filling rail elsewhere
+  - Experience: a comet rides the rail and each node pulses as it is reached
+  - Work: the carousel tips up, the outline word assembles, gallery tiles settle from different depths (desktop)
+  - Skills: rows slide against each other with the scroll and lean into fast scrolling (desktop)
+  - Contact and footer: the closing line rises word by word, the wordmark letter by letter
+- Scroll scenes only touch `transform`, `opacity`, `clip-path` and CSS variables. `gsap.matchMedia` keeps the
+  pinned and heavier scenes off phones.
 - Lenis smooth scroll runs on mouse/trackpad devices only; touch keeps native scrolling.
 - Everything respects `prefers-reduced-motion`: content is fully visible and nothing is pinned or scrubbed.
 

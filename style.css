@@ -950,7 +950,10 @@ html.js.hero-go [data-hero] {
   inset: 0;
   border-radius: 30px;
   pointer-events: none;
-  translate: calc(var(--px, 0) * -18px) calc(var(--py, 0) * -18px);
+  /* --px / --py follow the cursor; --sp (0 to 1) is how far the hero has
+     scrolled away. Each layer travels its own distance, so they separate. */
+  translate: calc(var(--px, 0) * -18px) calc(var(--py, 0) * -18px + var(--sp, 0) * 40px);
+  rotate: calc(var(--sp, 0) * -6deg);
 }
 
 .frame-a {
@@ -962,7 +965,8 @@ html.js.hero-go [data-hero] {
   border: 1px solid rgba(139, 107, 255, 0.4);
   background: linear-gradient(160deg, rgba(58, 134, 255, 0.14), rgba(139, 107, 255, 0.04));
   transform: rotate(5deg) translate(4%, 1.5%);
-  translate: calc(var(--px, 0) * -10px) calc(var(--py, 0) * -10px);
+  translate: calc(var(--px, 0) * -10px) calc(var(--py, 0) * -10px + var(--sp, 0) * 84px);
+  rotate: calc(var(--sp, 0) * 8deg);
 }
 
 .hero-image-card {
@@ -985,6 +989,7 @@ html.js.hero-go [data-hero] {
   height: 100%;
   object-fit: cover;
   object-position: 60% 0%;
+  scale: calc(1 + var(--sp, 0) * 0.12);
 }
 
 html.js .hero-photo {
@@ -1042,7 +1047,9 @@ html.js.hero-go .hero-photo {
 .hero-ring {
   position: absolute;
   z-index: 3;
-  translate: calc(var(--px, 0) * var(--depth, 14px)) calc(var(--py, 0) * var(--depth, 14px));
+  translate:
+    calc(var(--px, 0) * var(--depth, 14px))
+    calc(var(--py, 0) * var(--depth, 14px) + var(--sp, 0) * var(--lift, -80px));
 }
 
 html.js .hero-badge,
@@ -1105,6 +1112,7 @@ html.js.hero-go .hero-ring {
 
 .badge-top {
   --depth: 22px;
+  --lift: -90px;
   --chip-delay: 0.85s;
   top: 10%;
   left: calc(var(--pop) * -1.2);
@@ -1112,6 +1120,7 @@ html.js.hero-go .hero-ring {
 
 .badge-bottom {
   --depth: 30px;
+  --lift: -160px;
   --chip-delay: 1s;
   right: calc(var(--pop) * -1.05);
   bottom: 31%;
@@ -1125,6 +1134,7 @@ html.js.hero-go .hero-ring {
 /* Rocket launch + smoke accent */
 .hero-rocket {
   --depth: 36px;
+  --lift: -240px;
   --chip-delay: 1.15s;
   top: -5%;
   right: 7%;
@@ -1204,6 +1214,7 @@ html.js.hero-go .hero-ring {
 /* Rotating "open for work" seal */
 .hero-ring {
   --depth: 26px;
+  --lift: -120px;
   --chip-delay: 1.3s;
   right: calc(var(--pop) * -1.25);
   bottom: -7%;
@@ -3214,6 +3225,50 @@ a.contact-card:hover .contact-icon {
   color: #fff;
 }
 
+/* Scroll spotlight: the row on the reading line (.is-lit, scroll-fx.js) takes
+   the same treatment. With a mouse it steps aside while you point at the list. */
+@media (hover: none) {
+  .svc-row.is-lit::before {
+    transform: scaleX(1);
+  }
+
+  .svc-row.is-lit .svc-num {
+    color: var(--accent-cyan);
+  }
+
+  .svc-row.is-lit h3 {
+    transform: translateX(10px);
+  }
+
+  .svc-row.is-lit .svc-icon {
+    transform: rotate(-12deg) scale(1.08);
+    background-color: var(--accent-sky);
+    border-color: transparent;
+    color: #fff;
+  }
+}
+
+@media (hover: hover) {
+  .svc-list:not(:hover) .svc-row.is-lit::before {
+    transform: scaleX(1);
+  }
+
+  .svc-list:not(:hover) .svc-row.is-lit .svc-num {
+    color: var(--accent-cyan);
+  }
+
+  .svc-list:not(:hover) .svc-row.is-lit h3 {
+    transform: translateX(10px);
+  }
+
+  .svc-list:not(:hover) .svc-row.is-lit .svc-icon {
+    transform: rotate(-12deg) scale(1.08);
+    background-color: var(--accent-sky);
+    border-color: transparent;
+    color: #fff;
+  }
+}
+
 @media (max-width: 1080px) {
   .svc-layout {
     grid-template-columns: minmax(0, 1fr);
@@ -3464,6 +3519,8 @@ a.contact-card:hover .contact-icon {
   position: absolute;
   inset: 0;
   overflow: hidden;
+  /* Keeps each step's chip inside its own layer, so the next photo covers it */
+  isolation: isolate;
 }
 
 .flow-layer img {
@@ -3517,6 +3574,24 @@ a.contact-card:hover .contact-icon {
   font-weight: 700;
   letter-spacing: -0.05em;
   font-variant-numeric: tabular-nums;
+}
+
+/* Pinned story: the number is a strip that rolls inside a one-line window */
+.flow-count b.is-roll {
+  display: block;
+  height: 1em;
+  line-height: 1;
+  overflow: hidden;
+}
+
+.flow-digits,
+.flow-digits span {
+  display: block;
+}
+
+.flow-digits span {
+  height: 1em;
+  line-height: 1;
 }
 
 .flow-count small {

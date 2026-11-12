@@ -296,15 +296,31 @@ document.addEventListener("DOMContentLoaded", () => {
 
   /* =========================================================
      5. GSAP SCROLL SCENES
+     One signature moment per section:
+     - Hero          layers part ways at different depths
+     - About         the statement lights up word by word
+     - Services      a spotlight follows the row being read
+     - How it works  pinned story: photo wipes, odometer, chips
+     - Experience    a comet rides the rail and lights each node
+     - Work          outline letters assemble, tiles settle at depth
+     - Skills        rows slide against each other, lean into speed
+     - Contact       the closing line rises word by word
+     - Footer        the wordmark rises letter by letter
   ========================================================= */
   if (!hasGsap || reduceMotion) return;
 
   const { gsap, ScrollTrigger } = window;
   gsap.registerPlugin(ScrollTrigger);
 
-  const media = gsap.matchMedia();
+  // Phone address bars resize the viewport constantly; don't re-measure for that.
+  ScrollTrigger.config({ ignoreMobileResize: true });
 
-  /* ---------- Hero: copy and photo part ways as you scroll off ---------- */
+  const media = gsap.matchMedia();
+  const pad2 = (n) => String(n).padStart(2, "0");
+
+  /* ---------- Hero: copy, photo, frames and chips leave at different depths ----------
+     --sp (0 to 1) is read by the stage's layers in CSS, so it stacks with
+     the pointer depth instead of fighting it. */
   media.add("(min-width: 861px)", () => {
     if (!hero) return;
 
@@ -320,9 +336,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
     heroOut
       .to(".hero-copy", { y: -110, opacity: 0, duration: 1 }, 0)
+      .to(".kinetic-h1 .h-line:first-child", { xPercent: -7, duration: 1 }, 0)
+      .to(".kinetic-h1 .h-line:last-child", { xPercent: 7, duration: 1 }, 0)
       .to(".hero-visual", { y: 70, scale: 0.93, duration: 1 }, 0)
       .to(".hero-visual", { opacity: 0, duration: 0.5 }, 0.5)
       .to(".hero-ticker", { opacity: 0, duration: 0.6 }, 0.1);
+
+    if (heroStage) heroOut.fromTo(heroStage, { "--sp": 0 }, { "--sp": 1, duration: 1 }, 0);
   });
 
   /* ---------- About: words light up as you read down ---------- */
@@ -375,9 +395,20 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
+  /* ---------- Services: the row crossing the reading line lights up ---------- */
+  gsap.utils.toArray(".svc-row").forEach((row) => {
+    ScrollTrigger.create({
+      trigger: row,
+      start: "top 56%",
+      end: "bottom 56%",
+      toggleClass: "is-lit"
+    });
+  });
+
   /* ---------- How it works ----------
-     Wide, tall screens: the stage pins and the five steps play as one
-     story (photos wipe in, the rail fills, the counter ticks).
+     Wide, tall screens: the frame swings in, then the stage pins and the
+     five steps play as one story (photos wipe over each other, the counter
+     rolls like an odometer, each step's chip pops, the rail fills).
      Everything else: a vertical timeline whose rail fills as you pass. */
   const flow = document.getElementById("system");
   const flowStage = document.getElementById("flowStage");
@@ -386,6 +417,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const flowSteps = gsap.utils.toArray(".flow-step", flow);
     const flowLayers = gsap.utils.toArray(".flow-layer", flow);
     const flowList = flow.querySelector(".flow-steps");
+    const flowFrame = flow.querySelector(".flow-frame");
     const flowCount = document.getElementById("flowCount");
     const lastStep = flowSteps.length - 1;
     const clearSteps = () => flowSteps.forEach((step) => step.classList.remove("is-active"));
@@ -393,26 +425,56 @@ document.addEventListener("DOMContentLoaded", () => {
     media.add("(min-width: 961px) and (min-height: 620px)", () => {
       flow.classList.add("is-pinned");
 
+      // Counter becomes a strip of numbers that rolls inside a one-line window.
+      let digits = null;
+      if (flowCount) {
+        digits = document.createElement("span");
+        digits.className = "flow-digits";
+        digits.innerHTML = flowSteps.map((_, i) => `<span>${pad2(i + 1)}</span>`).join("");
+        flowCount.textContent = "";
+        flowCount.appendChild(digits);
+        flowCount.classList.add("is-roll");
+      }
+
       let current = -1;
       const show = (index) => {
         if (index === current) return;
         current = index;
         flowSteps.forEach((step, i) => step.classList.toggle("is-active", i === index));
-        if (flowCount) flowCount.textContent = String(index + 1).padStart(2, "0");
       };
       show(0);
 
+      // On the way in: the frame settles upright and the steps file in.
+      const arrive = gsap.timeline({
+        defaults: { ease: "none" },
+        scrollTrigger: { trigger: flowStage, start: "top 92%", end: "center center", scrub: 0.6 }
+      });
+
+      if (flowFrame) {
+        arrive.fromTo(
+          flowFrame,
+          { yPercent: 18, scale: 0.84, rotation: 5 },
+          { yPercent: 0, scale: 1, rotation: 0, duration: 1 },
+          0
+        );
+      }
+      arrive.fromTo(flowSteps, { x: -40, opacity: 0 }, { x: 0, opacity: 1, duration: 0.45, stagger: 0.11 }, 0.1);
+
+      // Pinned: one scroll-length per step, plus a short hold on the last one.
+      const hold = 0.4;
       const story = gsap.timeline({
         defaults: { ease: "none" },
+        onUpdate() {
+          show(Math.max(0, Math.min(lastStep, Math.round(this.time()))));
+        },
         scrollTrigger: {
           trigger: flowStage,
           start: "center center",
-          end: () => `+=${Math.round(window.innerHeight * 0.6 * lastStep)}`,
+          end: () => `+=${Math.round(window.innerHeight * 0.6 * (lastStep + hold))}`,
           pin: true,
           scrub: 0.6,
           anticipatePin: 1,
-          invalidateOnRefresh: true,
-          onUpdate: (self) => show(Math.min(lastStep, Math.round(self.progress * lastStep)))
+          invalidateOnRefresh: true
         }
       });
 
@@ -420,18 +482,49 @@ document.addEventListener("DOMContentLoaded", () => {
 
       flowLayers.forEach((layer, i) => {
         if (!i) return;
+        const at = i - 0.85;
+        const before = flowLayers[i - 1].querySelector("img");
+        const chip = layer.querySelector(".flow-chip");
+
+        // The next photo wipes up from the bottom while it settles...
         story.fromTo(
           layer,
           { clipPath: "inset(100% 0% 0% 0%)" },
           { clipPath: "inset(0% 0% 0% 0%)", duration: 0.7 },
-          i - 0.85
+          at
         );
-        story.fromTo(layer.querySelector("img"), { scale: 1.3 }, { scale: 1, duration: 0.7 }, i - 0.85);
+        story.fromTo(layer.querySelector("img"), { scale: 1.3 }, { scale: 1, duration: 0.7 }, at);
+
+        // ...the one underneath is pushed up and out of its way...
+        if (before) story.to(before, { yPercent: -9, duration: 0.7 }, at);
+
+        // ...the counter rolls to the new number and the step's chip pops in.
+        if (digits) {
+          story.to(
+            digits,
+            { yPercent: (-100 / flowSteps.length) * i, duration: 0.7, ease: "power2.inOut" },
+            at
+          );
+        }
+        if (chip) {
+          story.fromTo(
+            chip,
+            { scale: 0, rotation: -80 },
+            { scale: 1, rotation: 0, duration: 0.34, ease: "back.out(2)" },
+            i - 0.42
+          );
+        }
       });
+
+      story.to({}, { duration: hold });
 
       return () => {
         flow.classList.remove("is-pinned");
         clearSteps();
+        if (flowCount) {
+          flowCount.classList.remove("is-roll");
+          flowCount.textContent = pad2(1);
+        }
       };
     });
 

@@ -23,42 +23,24 @@ document.addEventListener("DOMContentLoaded", () => {
   // Animated explainer videos (vertical 9:16, self-hosted)
   const anim = (src, title) => ({ src, type: "anim", title, video: `${ANIM}${src}.mp4`, poster: `${ANIM}${src}.webp`, thumb: `${ANIM}thumb/${src}.webp`, w: 720, h: 1280 });
 
+  // Highlights only: the strongest piece of each kind, no near-duplicates.
   const WORK = [
     anim("walked-backward", "2D animated explainer: What if everyone walked backward?"),
     { src: "ad-property-1", type: "ad", title: "Property management ad", w: 1000, h: 1250 },
-    { src: "ad-cleaning-1", type: "ad", title: "Commercial cleaning ad", w: 1000, h: 1250 },
     { src: "social-1", type: "social", title: "\"Did you know\" post", w: 900, h: 1125 },
     { src: "web-trade-hero", type: "web", title: "Trade company website", w: 1600, h: 687 },
-    { src: "ad-property-2", type: "ad", title: "Owner health-check ad", w: 1000, h: 1250 },
+    { src: "ad-cleaning-1", type: "ad", title: "Commercial cleaning ad", w: 1000, h: 1250 },
     anim("ad-str-reliable-help", "Talking-head video ad: short-term rentals"),
-    { src: "ad-cleaning-2", type: "ad", title: "Signed checklist ad", w: 1000, h: 1250 },
     { src: "social-2", type: "social", title: "Meet-the-team post", w: 900, h: 1125 },
     { src: "ghl-ai-receptionist", type: "ghl", title: "AI receptionist offer page", w: 1143, h: 1089 },
-    { src: "ad-property-sq-a", type: "ad", title: "Multifamily owner ad", w: 1000, h: 1000 },
     { src: "ad-property-3", type: "ad", title: "Transparent pricing ad", w: 1000, h: 1250 },
-    { src: "social-3", type: "social", title: "Stat-driven post", w: 900, h: 1125 },
-    { src: "ad-cleaning-3", type: "ad", title: "Flexible schedule ad", w: 1000, h: 1250 },
-    { src: "web-saas-pricing", type: "web", title: "SaaS pricing page", w: 1600, h: 721 },
-    { src: "ad-property-4", type: "ad", title: "Renovation to lease-up ad", w: 1000, h: 1250 },
+    { src: "ad-cleaning-2", type: "ad", title: "Signed checklist ad", w: 1000, h: 1250 },
     { src: "social-4", type: "social", title: "Fact card post", w: 900, h: 1125 },
-    { src: "ad-cleaning-4", type: "ad", title: "Post-construction ad", w: 1000, h: 1250 },
-    { src: "ghl-roi-calculator", type: "ghl", title: "Interactive ROI calculator", w: 1400, h: 848 },
+    { src: "web-saas-pricing", type: "web", title: "SaaS pricing page", w: 1600, h: 721 },
     { src: "ad-property-sq-b", type: "ad", title: "Underperforming property ad", w: 1000, h: 1000 },
-    { src: "social-5", type: "social", title: "How-we-work post", w: 900, h: 1125 },
-    { src: "ad-property-5", type: "ad", title: "Local market ad", w: 1000, h: 1250 },
-    { src: "web-trade-gallery", type: "web", title: "Image gallery slider", w: 1600, h: 919 },
-    { src: "ad-cleaning-5", type: "ad", title: "Office manager ad", w: 1000, h: 1250 },
+    { src: "ghl-roi-calculator", type: "ghl", title: "Interactive ROI calculator", w: 1400, h: 848 },
     { src: "social-6", type: "social", title: "Free walkthrough post", w: 900, h: 1125 },
-    { src: "ad-property-sq-c", type: "ad", title: "Local presence ad", w: 1000, h: 1000 },
-    { src: "ghl-workflow-map", type: "ghl", title: "Multi-branch automation", w: 1400, h: 923 },
-    { src: "social-7", type: "social", title: "Seasonal stat post", w: 900, h: 1125 },
-    { src: "web-trade-services", type: "web", title: "Services section", w: 1600, h: 754 },
-    { src: "social-8", type: "social", title: "Holiday post", w: 900, h: 1125 },
-    { src: "web-trade-why", type: "web", title: "Why-us section", w: 1600, h: 868 },
-    { src: "social-9", type: "social", title: "Checklist post", w: 900, h: 1125 },
-    { src: "ad-property-wide-a", type: "ad", title: "Wide-format property ad", w: 1200, h: 628 },
-    { src: "ad-property-wide-b", type: "ad", title: "Wide-format property ad", w: 1200, h: 628 },
-    { src: "ad-property-wide-c", type: "ad", title: "Wide-format property ad", w: 1200, h: 628 }
+    { src: "ad-property-wide-b", type: "ad", title: "Wide-format property ad", w: 1200, h: 628 }
   ];
 
   const TYPE_LABEL = { ad: "Ad creative", social: "Social post", web: "Website", ghl: "GoHighLevel", reel: "Motion graphics", anim: "Video" };
@@ -79,8 +61,8 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   // Highlights for the 3D showcase (landscape pieces suit the 16:10 cards)
-  const SHOWCASE = [REEL, ...["ad-property-wide-a", "web-trade-hero", "ad-property-wide-b", "ghl-ai-receptionist",
-    "ad-property-wide-c", "web-saas-pricing", "ghl-roi-calculator", "web-trade-gallery"]
+  const SHOWCASE = [REEL, ...["web-trade-hero", "ad-property-wide-b", "ghl-ai-receptionist",
+    "web-saas-pricing", "ghl-roi-calculator"]
     .map((src) => WORK.find((w) => w.src === src))];
 
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;

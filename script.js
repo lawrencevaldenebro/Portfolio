@@ -11,9 +11,7 @@
    6. LIVE DEMO SIMULATION
    7. COUNTRY + PHONE FIELD LOGIC
    8. SCROLL PROGRESS + HEADER SHRINK
-   9. 3D TILT ON CARDS
-   10. MAGNETIC BUTTONS
-   11. PARALLAX BACKGROUND ORBS
+   9. CARD GLOW
    12. SKILLS MARQUEE
    13. GET TO KNOW ME — FLIP CARDS
    14. LEAD RUSH MINIGAME
@@ -74,7 +72,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   /* =========================================================
      2. REVEAL ON SCROLL
-     - Adds .show once elements enter viewport
+     - Adds .show as soon as any part of an element is a little
+       way into the viewport (a percentage threshold never fires
+       for blocks taller than the screen, leaving them hidden)
   ========================================================= */
   const revealEls = document.querySelectorAll(".reveal");
 
@@ -88,7 +88,7 @@ document.addEventListener("DOMContentLoaded", () => {
           }
         });
       },
-      { threshold: 0.14 }
+      { threshold: 0, rootMargin: "0px 0px -8% 0px" }
     );
 
     revealEls.forEach((el) => revealObserver.observe(el));
@@ -484,7 +484,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
 
     if (scrollProgress) {
-      scrollProgress.style.width = `${progress}%`;
+      // scaleX is drawn by the GPU; changing width would re-layout the page
+      scrollProgress.style.transform = `scaleX(${progress / 100})`;
     }
 
     if (siteHeader) {
@@ -506,65 +507,20 @@ document.addEventListener("DOMContentLoaded", () => {
   handleScrollMotion();
 
   /* =========================================================
-     9. 3D TILT ON CARDS
-     - Cursor-reactive tilt for project / experience / contact cards
-     - Skipped on touch-only devices
+     9. CARD GLOW
+     - A soft glow follows the cursor on cards (colour only, the
+       card itself never moves). Skipped on touch-only devices.
   ========================================================= */
-  const tiltEls = document.querySelectorAll(".project-card, .experience-card, .contact-card, .service-card:not(.service-featured)");
+  const glowEls = document.querySelectorAll(".project-card, .experience-card, .contact-card, .service-card:not(.service-featured)");
 
-  if (tiltEls.length && window.matchMedia("(pointer: fine)").matches) {
-    tiltEls.forEach((card) => {
+  if (glowEls.length && window.matchMedia("(pointer: fine)").matches) {
+    glowEls.forEach((card) => {
       card.classList.add("spotlight");
-
-      const maxTilt = card.classList.contains("experience-card") ? 3 : 6;
-      const lift = card.classList.contains("project-card") || card.classList.contains("service-card")
-        ? -8
-        : card.classList.contains("contact-card")
-        ? -6
-        : -3;
 
       card.addEventListener("mousemove", (event) => {
         const rect = card.getBoundingClientRect();
-        const x = event.clientX - rect.left;
-        const y = event.clientY - rect.top;
-
-        const rotateY = (x / rect.width - 0.5) * maxTilt * 2;
-        const rotateX = (y / rect.height - 0.5) * -maxTilt * 2;
-
-        card.style.transition = "transform 0.08s linear, border-color 0.3s ease, background 0.3s ease";
-        card.style.transform = `perspective(900px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(${lift}px)`;
-
-        card.style.setProperty("--mx", `${(x / rect.width) * 100}%`);
-        card.style.setProperty("--my", `${(y / rect.height) * 100}%`);
-      });
-
-      card.addEventListener("mouseleave", () => {
-        card.style.transition = "transform 0.5s cubic-bezier(.2,.8,.2,1), border-color 0.3s ease, background 0.3s ease";
-        card.style.transform = "";
-      });
-    });
-  }
-
-  /* =========================================================
-     10. MAGNETIC BUTTONS
-     - Primary CTAs subtly follow the cursor on hover
-  ========================================================= */
-  const magneticEls = document.querySelectorAll(".btn-primary, .nav-cta");
-
-  if (magneticEls.length && window.matchMedia("(pointer: fine)").matches) {
-    magneticEls.forEach((btn) => {
-      btn.addEventListener("mousemove", (event) => {
-        const rect = btn.getBoundingClientRect();
-        const x = event.clientX - rect.left - rect.width / 2;
-        const y = event.clientY - rect.top - rect.height / 2;
-
-        btn.style.transition = "transform 0.1s ease";
-        btn.style.transform = `translate(${x * 0.25}px, ${y * 0.25}px)`;
-      });
-
-      btn.addEventListener("mouseleave", () => {
-        btn.style.transition = "transform 0.4s cubic-bezier(.2,.8,.2,1)";
-        btn.style.transform = "translate(0, 0)";
+        card.style.setProperty("--mx", `${((event.clientX - rect.left) / rect.width) * 100}%`);
+        card.style.setProperty("--my", `${((event.clientY - rect.top) / rect.height) * 100}%`);
       });
     });
   }

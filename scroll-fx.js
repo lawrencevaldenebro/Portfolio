@@ -3,8 +3,9 @@
    ---------------------------------------------------------
    1. SPLIT HEADINGS (word-by-word rise, CSS driven)
    2. STAGGERED SERVICE CARDS
-   3. LENIS SMOOTH SCROLL
-   4. GSAP SCROLL SCENES (hero scroll-out, scrubbed text)
+   3. GSAP SCROLL SCENES (scrubbed text + "How it works" line; no parallax)
+   Native scrolling; every scrubbed scene is smoothed (scrub: number)
+   so it eases after the wheel instead of jumping with it.
    ---------------------------------------------------------
    Everything degrades gracefully: if the CDN libraries fail
    to load, or the visitor prefers reduced motion, content is
@@ -13,7 +14,6 @@
 
 document.addEventListener("DOMContentLoaded", () => {
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const finePointer = window.matchMedia("(pointer: fine)").matches;
   const hasGsap = typeof window.gsap !== "undefined" && typeof window.ScrollTrigger !== "undefined";
 
   /* =========================================================
@@ -46,7 +46,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function restagger() {
     if (!servicesGrid) return;
-    const cols = window.innerWidth > 1180 ? 4 : 2;
+    const cols = window.innerWidth > 1180 ? 5 : 2;
 
     servicesGrid.querySelectorAll(".service-card").forEach((card, i) => {
       card.style.setProperty("--stagger", i % cols);
@@ -89,94 +89,12 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   /* =========================================================
-     3. LENIS SMOOTH SCROLL
-     - Desktop only (touch devices keep native momentum)
-     - Pauses while the intro or contact modal is open
-  ========================================================= */
-  let lenis = null;
-
-  if (typeof window.Lenis !== "undefined" && finePointer && !reduceMotion) {
-    lenis = new window.Lenis({
-      duration: 1.15,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      smoothWheel: true
-    });
-
-    document.documentElement.classList.add("has-lenis");
-
-    let lenisStopped = false;
-
-    function syncLenisLock() {
-      const locked =
-        document.body.classList.contains("modal-open") ||
-        document.documentElement.style.overflow === "hidden";
-
-      if (locked && !lenisStopped) {
-        lenis.stop();
-        lenisStopped = true;
-      } else if (!locked && lenisStopped) {
-        lenis.start();
-        lenisStopped = false;
-      }
-    }
-
-    if (hasGsap) {
-      lenis.on("scroll", window.ScrollTrigger.update);
-      window.gsap.ticker.add((time) => {
-        syncLenisLock();
-        lenis.raf(time * 1000);
-      });
-      window.gsap.ticker.lagSmoothing(0);
-    } else {
-      const raf = (time) => {
-        syncLenisLock();
-        lenis.raf(time);
-        requestAnimationFrame(raf);
-      };
-      requestAnimationFrame(raf);
-    }
-
-    // Smooth in-page anchor links, offset for the sticky header.
-    document.addEventListener("click", (event) => {
-      const link = event.target.closest('a[href^="#"]');
-      if (!link) return;
-
-      const id = link.getAttribute("href");
-      if (id.length < 2) return;
-
-      const target = document.querySelector(id);
-      if (!target) return;
-
-      event.preventDefault();
-      lenis.scrollTo(target, { offset: id === "#home" ? 0 : -90 });
-    });
-  }
-
-  /* =========================================================
-     4. GSAP SCROLL SCENES
+     3. GSAP SCROLL SCENES
   ========================================================= */
   if (!hasGsap || reduceMotion) return;
 
   const { gsap, ScrollTrigger } = window;
   gsap.registerPlugin(ScrollTrigger);
-
-  /* ---------- Hero: shrinks and fades as you scroll away ---------- */
-  const heroShell = document.querySelector(".hero-shell");
-
-  if (heroShell) {
-    gsap.to(heroShell, {
-      scale: 0.93,
-      opacity: 0.25,
-      y: 80,
-      ease: "none",
-      scrollTrigger: {
-        trigger: ".hero-section",
-        start: "top top",
-        end: "bottom top",
-        scrub: true
-      }
-    });
-  }
 
   /* ---------- About: words light up as you read down ---------- */
   const scrubText = document.querySelector("#about .section-heading p");
@@ -190,7 +108,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     gsap.fromTo(
       scrubText.querySelectorAll(".scrub-word"),
-      { opacity: 0.18 },
+      { opacity: 0.25 },
       {
         opacity: 1,
         stagger: 0.05,
@@ -199,7 +117,7 @@ document.addEventListener("DOMContentLoaded", () => {
           trigger: scrubText,
           start: "top 85%",
           end: "bottom 45%",
-          scrub: true
+          scrub: 0.6
         }
       }
     );
@@ -226,8 +144,8 @@ document.addEventListener("DOMContentLoaded", () => {
     infographic.querySelectorAll(".info-node").forEach((node, i) => {
       flow.fromTo(
         node,
-        { opacity: 0, y: 40, scale: 0.7 },
-        { opacity: 1, y: 0, scale: 1, duration: 0.25, ease: "back.out(1.7)" },
+        { opacity: 0, y: 20, scale: 0.92 },
+        { opacity: 1, y: 0, scale: 1, duration: 0.25, ease: "power2.out" },
         i * 0.19
       );
     });

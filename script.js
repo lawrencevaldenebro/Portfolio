@@ -6,15 +6,16 @@
    1. MOBILE MENU
    2. REVEAL ON SCROLL
    3. ACTIVE NAV LINK
+   4. SLIDER / CAROUSEL
    5. CONTACT MODAL
    6. LIVE DEMO SIMULATION
    7. COUNTRY + PHONE FIELD LOGIC
-   8. SCROLL PROGRESS + HEADER SHRINK / HIDE
-   9b. EXPERIENCE ACCORDION
+   8. SCROLL PROGRESS + HEADER SHRINK
+   9. 3D TILT ON CARDS
    10. MAGNETIC BUTTONS
    11. PARALLAX BACKGROUND ORBS
-   11b. BACKGROUND MOOD
    12. SKILLS MARQUEE
+   13. GET TO KNOW ME — FLIP CARDS
    14. LEAD RUSH MINIGAME
    15. CONTACT FORM SUBMIT (Formspree AJAX)
 ========================================================= */
@@ -32,19 +33,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function openMobileMenu() {
     if (!mobileMenu) return;
-    mobileMenu.classList.add("open");
+    mobileMenu.style.display = "flex";
     menuToggle?.setAttribute("aria-expanded", "true");
   }
 
   function closeMobileMenu() {
     if (!mobileMenu) return;
-    mobileMenu.classList.remove("open");
+    mobileMenu.style.display = "none";
     menuToggle?.setAttribute("aria-expanded", "false");
   }
 
   function toggleMobileMenu() {
     if (!mobileMenu) return;
-    mobileMenu.classList.contains("open") ? closeMobileMenu() : openMobileMenu();
+    const isOpen = getComputedStyle(mobileMenu).display === "flex";
+    isOpen ? closeMobileMenu() : openMobileMenu();
   }
 
   if (menuToggle && mobileMenu) {
@@ -74,7 +76,7 @@ document.addEventListener("DOMContentLoaded", () => {
      2. REVEAL ON SCROLL
      - Adds .show once elements enter viewport
   ========================================================= */
-  const revealEls = document.querySelectorAll(".reveal, [data-clip]");
+  const revealEls = document.querySelectorAll(".reveal");
 
   if (revealEls.length) {
     const revealObserver = new IntersectionObserver(
@@ -125,6 +127,98 @@ document.addEventListener("DOMContentLoaded", () => {
     window.addEventListener("scroll", setActiveLink);
     setActiveLink();
   }
+
+  /* =========================================================
+     4. SLIDER / CAROUSEL
+     - Buttons
+     - Dots
+     - Touch swipe
+     - Optional autoplay
+  ========================================================= */
+  const sliders = document.querySelectorAll("[data-slider]");
+
+  sliders.forEach((slider) => {
+    const track = slider.querySelector("[data-track]");
+    if (!track) return;
+
+    const slides = Array.from(track.children);
+    const prevBtn = slider.querySelector("[data-prev]");
+    const nextBtn = slider.querySelector("[data-next]");
+    const dotsWrap = slider.querySelector("[data-dots]");
+
+    if (!slides.length) return;
+
+    let index = 0;
+    let timer = null;
+    let startX = 0;
+
+    const dots = slides.map((_, i) => {
+      const dot = document.createElement("button");
+      dot.className = `slider-dot${i === 0 ? " active" : ""}`;
+      dot.type = "button";
+      dot.setAttribute("aria-label", `Go to slide ${i + 1}`);
+      dot.addEventListener("click", () => goTo(i));
+      dotsWrap?.appendChild(dot);
+      return dot;
+    });
+
+    function updateSlider() {
+      track.style.transform = `translateX(-${index * 100}%)`;
+      dots.forEach((dot, i) => {
+        dot.classList.toggle("active", i === index);
+      });
+    }
+
+    function goTo(i) {
+      index = (i + slides.length) % slides.length;
+      updateSlider();
+    }
+
+    function stopAutoplay() {
+      if (timer) clearInterval(timer);
+      timer = null;
+    }
+
+    function startAutoplay() {
+      const autoplay = slider.getAttribute("data-autoplay") === "true";
+      const interval = parseInt(slider.getAttribute("data-interval") || "3500", 10);
+
+      if (!autoplay) return;
+
+      stopAutoplay();
+      timer = setInterval(() => goTo(index + 1), interval);
+    }
+
+    prevBtn?.addEventListener("click", () => goTo(index - 1));
+    nextBtn?.addEventListener("click", () => goTo(index + 1));
+
+    slider.addEventListener("mouseenter", stopAutoplay);
+    slider.addEventListener("mouseleave", startAutoplay);
+
+    slider.addEventListener(
+      "touchstart",
+      (event) => {
+        startX = event.touches[0].clientX;
+      },
+      { passive: true }
+    );
+
+    slider.addEventListener(
+      "touchend",
+      (event) => {
+        const endX = event.changedTouches[0].clientX;
+        const dx = endX - startX;
+
+        if (Math.abs(dx) > 40) {
+          dx > 0 ? goTo(index - 1) : goTo(index + 1);
+        }
+      },
+      { passive: true }
+    );
+
+    updateSlider();
+    startAutoplay();
+  });
 
   /* =========================================================
      5. CONTACT MODAL
@@ -383,7 +477,6 @@ document.addEventListener("DOMContentLoaded", () => {
   ========================================================= */
   const scrollProgress = document.getElementById("scrollProgress");
   const siteHeader = document.querySelector(".site-header");
-  let lastScrollTop = window.scrollY;
 
   function handleScrollMotion() {
     const scrollTop = window.scrollY;
@@ -396,17 +489,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (siteHeader) {
       siteHeader.classList.toggle("scrolled", scrollTop > 40);
-
-      // Tuck the nav away while reading down, bring it back on the way up.
-      const menuOpen = mobileMenu?.classList.contains("open");
-      if (scrollTop > 480 && scrollTop > lastScrollTop + 4 && !menuOpen) {
-        siteHeader.classList.add("nav-hidden");
-      } else if (scrollTop < lastScrollTop - 4 || scrollTop <= 480) {
-        siteHeader.classList.remove("nav-hidden");
-      }
     }
-
-    lastScrollTop = scrollTop;
   }
 
   let scrollMotionTicking = false;
@@ -423,29 +506,50 @@ document.addEventListener("DOMContentLoaded", () => {
   handleScrollMotion();
 
   /* =========================================================
-     9b. EXPERIENCE ACCORDION
-     - Each role opens and closes on its own
-     - Scroll scenes are re-measured once the height settles
+     9. 3D TILT ON CARDS
+     - Cursor-reactive tilt for project / experience / contact cards
+     - Skipped on touch-only devices
   ========================================================= */
-  document.querySelectorAll(".xp-toggle").forEach((toggle) => {
-    toggle.addEventListener("click", () => {
-      const item = toggle.closest(".xp-item");
-      if (!item) return;
+  const tiltEls = document.querySelectorAll(".project-card, .experience-card, .contact-card, .service-card:not(.service-featured)");
 
-      const open = item.classList.toggle("is-open");
-      toggle.setAttribute("aria-expanded", String(open));
+  if (tiltEls.length && window.matchMedia("(pointer: fine)").matches) {
+    tiltEls.forEach((card) => {
+      card.classList.add("spotlight");
 
-      setTimeout(() => {
-        if (window.ScrollTrigger) window.ScrollTrigger.refresh();
-      }, 800);
+      const maxTilt = card.classList.contains("experience-card") ? 3 : 6;
+      const lift = card.classList.contains("project-card") || card.classList.contains("service-card")
+        ? -8
+        : card.classList.contains("contact-card")
+        ? -6
+        : -3;
+
+      card.addEventListener("mousemove", (event) => {
+        const rect = card.getBoundingClientRect();
+        const x = event.clientX - rect.left;
+        const y = event.clientY - rect.top;
+
+        const rotateY = (x / rect.width - 0.5) * maxTilt * 2;
+        const rotateX = (y / rect.height - 0.5) * -maxTilt * 2;
+
+        card.style.transition = "transform 0.08s linear, border-color 0.3s ease, background 0.3s ease";
+        card.style.transform = `perspective(900px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(${lift}px)`;
+
+        card.style.setProperty("--mx", `${(x / rect.width) * 100}%`);
+        card.style.setProperty("--my", `${(y / rect.height) * 100}%`);
+      });
+
+      card.addEventListener("mouseleave", () => {
+        card.style.transition = "transform 0.5s cubic-bezier(.2,.8,.2,1), border-color 0.3s ease, background 0.3s ease";
+        card.style.transform = "";
+      });
     });
-  });
+  }
 
   /* =========================================================
      10. MAGNETIC BUTTONS
      - Primary CTAs subtly follow the cursor on hover
   ========================================================= */
-  const magneticEls = document.querySelectorAll(".btn-primary");
+  const magneticEls = document.querySelectorAll(".btn-primary, .nav-cta");
 
   if (magneticEls.length && window.matchMedia("(pointer: fine)").matches) {
     magneticEls.forEach((btn) => {
@@ -466,38 +570,33 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   /* =========================================================
-     11b. BACKGROUND MOOD
-     - The colour fields behind the page shift with the section
-       crossing the middle of the screen
+     11. PARALLAX BACKGROUND ORBS
+     - Whole background layer drifts slightly with the cursor
   ========================================================= */
-  const moodSections = document.querySelectorAll("[data-mood]");
+  const pageBg = document.querySelector(".page-bg");
 
-  if (moodSections.length && "IntersectionObserver" in window) {
-    const moodObserver = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) document.body.dataset.mood = entry.target.dataset.mood;
-        });
-      },
-      { rootMargin: "-45% 0px -45% 0px" }
-    );
-
-    moodSections.forEach((section) => moodObserver.observe(section));
+  if (pageBg && window.matchMedia("(pointer: fine)").matches) {
+    window.addEventListener("mousemove", (event) => {
+      const px = (event.clientX / window.innerWidth - 0.5) * 30;
+      const py = (event.clientY / window.innerHeight - 0.5) * 30;
+      pageBg.style.transform = `translate(${px}px, ${py}px)`;
+    });
   }
 
   /* =========================================================
      12. SKILLS MARQUEE
-     - Doubles each row of tools so its CSS marquee loop is seamless
+     - Duplicates the skill pills so the CSS marquee loop is seamless
   ========================================================= */
-  document.querySelectorAll("[data-loop]").forEach((track) => {
-    Array.from(track.children).forEach((item) => {
-      const clone = item.cloneNode(true);
-      clone.setAttribute("aria-hidden", "true");
-      track.appendChild(clone);
-    });
+  const skillsTrack = document.getElementById("skillsTrack");
 
-    track.classList.add("is-looped");
-  });
+  if (skillsTrack) {
+    const originalPills = Array.from(skillsTrack.children);
+    originalPills.forEach((pill) => {
+      const clone = pill.cloneNode(true);
+      clone.setAttribute("aria-hidden", "true");
+      skillsTrack.appendChild(clone);
+    });
+  }
 
   /* =========================================================
      15. CONTACT FORM SUBMIT (Formspree AJAX)
@@ -590,13 +689,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const canvas = document.getElementById("gameCanvas");
 
   if (canvas && canvas.getContext) {
-    // Phones get a taller playfield: the wide one scales down too small to
-    // play, and too short for the start screen to fit.
-    if (window.matchMedia("(max-width: 640px)").matches) {
-      canvas.width = 480;
-      canvas.height = 560;
-    }
-
     const ctx = canvas.getContext("2d");
     const W = canvas.width;
     const H = canvas.height;

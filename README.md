@@ -9,42 +9,19 @@ Static HTML/CSS/JS with no build step. Pushing to `main` deploys to Vercel autom
 | File | Purpose |
 |---|---|
 | `index.html` | All page sections |
-| `style.css` | Styles (design tokens first, then one banner per section) |
-| `script.js` | Navigation, reveals, contact form, experience accordion, Lead Rush game |
-| `scroll-fx.js` | Split headings, hero motion, GSAP/ScrollTrigger scenes |
+| `style.css` | Styles (numbered sections) |
+| `script.js` | Navigation, contact form, Lead Rush game |
+| `scroll-fx.js` | GSAP/ScrollTrigger scenes, kinetic headings |
 | `work.js` | Work data, 3D carousel, gallery filters, lightbox |
-| `bg-flow.js` | Animated background lines (lightweight canvas) |
+| `bg-flow.js` | Animated background lines |
 | `samurai-intro.js/.css` | Intro animation (once per session) |
 | `images/work/` | Portfolio pieces |
-| `videos/` | Showreel, plus `anim/` for the animated explainer videos (720p web encodes + posters) |
-
-## Motion
-
-- CSS handles entrances (`.reveal`, `[data-clip]`, the hero) so content still shows if a CDN script fails.
-- GSAP + ScrollTrigger handle scroll-linked scenes, one signature moment per section:
-  - Hero: copy, photo, frames and chips leave at different depths (desktop)
-  - About: the statement lights up word by word
-  - Services: a spotlight follows the row on the reading line
-  - How it works: pinned story on wide screens (photo wipes, odometer counter, chips); a filling rail elsewhere
-  - Experience: a comet rides the rail and each node pulses as it is reached
-  - Work: the carousel tips up, the outline word assembles, gallery tiles settle from different depths (desktop)
-  - Skills: rows slide against each other with the scroll and lean into fast scrolling (desktop)
-  - Contact and footer: the closing line rises word by word, the wordmark letter by letter
-- Scroll scenes only touch `transform`, `opacity`, `clip-path` and CSS variables. `gsap.matchMedia` keeps the
-  pinned and heavier scenes off phones.
-- Native scrolling everywhere (no smooth-scroll library) so the page answers the wheel instantly.
-- The background canvas runs at 1x resolution and 30 fps, pauses while scrolling, and is a static frame on phones.
-- The background glows are static gradients (no loops, no cursor follow).
-- Everything respects `prefers-reduced-motion`: content is fully visible and nothing is pinned or scrubbed.
+| `videos/` | Showreel, plus `anim/` for animated explainers and video ads (720p web encodes + posters) |
 
 ## Libraries (CDN)
 
-GSAP + ScrollTrigger, Font Awesome (loaded non-blocking), Google Fonts (Sora, Inter).
+GSAP + ScrollTrigger, Font Awesome. Everything respects `prefers-reduced-motion`.
 
 ## Local preview
 
-Serve the folder (e.g. `python -m http.server`) and open it in a browser.
-
-## Fallback design
-
-The git tag `base-version` marks the earlier design.
+Open `index.html` in a browser, or serve the folder (e.g. `npx serve .`).

@@ -1,11 +1,10 @@
 /* =========================================================
-   SCROLL FX — scroll-driven motion
+   SCROLL FX — Webflow-style scroll interactions
    ---------------------------------------------------------
    1. SPLIT HEADINGS (word-by-word rise, CSS driven)
-   2. LIVE COUNTS
-   3. HERO (headline fit, kinetic word, pointer depth, ticker)
-   4. NATIVE SCROLL (no smooth-scroll library)
-   5. GSAP SCROLL SCENES
+   2. STAGGERED SERVICE CARDS
+   3. LENIS SMOOTH SCROLL
+   4. GSAP SCROLL SCENES (hero scroll-out, scrubbed text)
    ---------------------------------------------------------
    Everything degrades gracefully: if the CDN libraries fail
    to load, or the visitor prefers reduced motion, content is
@@ -13,729 +12,227 @@
 ========================================================= */
 
 document.addEventListener("DOMContentLoaded", () => {
-  const root = document.documentElement;
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const finePointer = window.matchMedia("(pointer: fine)").matches;
   const hasGsap = typeof window.gsap !== "undefined" && typeof window.ScrollTrigger !== "undefined";
 
-  const escapeHtml = (text) => text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-
-  // Runs cb once <html> carries the given class (set by the inline head script).
-  function onRootClass(name, cb) {
-    if (root.classList.contains(name)) {
-      cb();
-      return;
-    }
-    const observer = new MutationObserver(() => {
-      if (!root.classList.contains(name)) return;
-      observer.disconnect();
-      cb();
-    });
-    observer.observe(root, { attributes: true, attributeFilter: ["class"] });
-  }
-
   /* =========================================================
      1. SPLIT HEADINGS
      - Wraps each word in a mask so it can slide up into view
-     - Keeps <em> highlights (gradient words)
      - Plays when the parent .reveal gets .show
   ========================================================= */
-  const splitTargets = document.querySelectorAll(".section-heading h2");
+  const splitTargets = document.querySelectorAll(".section-heading h2:not(.gtk-title), .skills-left h2, .contact-intro h2");
 
   splitTargets.forEach((heading) => {
-    const label = heading.textContent.trim().replace(/\s+/g, " ");
-    if (!label) return;
+    const text = heading.textContent.trim().replace(/\s+/g, " ");
+    if (!text) return;
 
-    let index = 0;
-    const parts = [];
-
-    heading.childNodes.forEach((node) => {
-      const isEm = node.nodeType === 1 && node.tagName === "EM";
-      node.textContent
-        .split(/\s+/)
-        .filter(Boolean)
-        .forEach((word) => {
-          parts.push(
-            `<span class="w" aria-hidden="true"><span${isEm ? ' class="is-em"' : ""} style="--i:${index}">${escapeHtml(word)}</span></span>`
-          );
-          index += 1;
-        });
-    });
-
-    heading.setAttribute("aria-label", label);
+    heading.setAttribute("aria-label", text);
     heading.classList.add("split-line");
-    heading.innerHTML = parts.join(" ");
+    heading.innerHTML = text
+      .split(" ")
+      .map((word, i) => `<span class="w" aria-hidden="true"><span style="--i:${i}">${word}</span></span>`)
+      .join(" ");
 
     const wrap = heading.closest(".section-heading");
     if (wrap && wrap.classList.contains("reveal")) wrap.classList.add("has-split");
   });
 
   /* =========================================================
-     2. LIVE COUNTS
-     - The About numbers are counted from the page itself, so they
-       can't drift from what is actually listed
+     2. STAGGERED SERVICE CARDS
+     - Cards in the same row cascade in left to right
   ========================================================= */
-  document.querySelectorAll("[data-count-from]").forEach((el) => {
-    const total = document.querySelectorAll(el.dataset.countFrom).length;
-    if (total) el.textContent = String(total);
-  });
+  const servicesGrid = document.getElementById("servicesGrid");
 
-  /* =========================================================
-     3. HERO
-  ========================================================= */
-  const hero = document.getElementById("home");
-  const headline = document.querySelector(".kinetic-h1");
-  const kinetic = document.getElementById("kineticWord");
-  const kineticWords = kinetic ? (kinetic.dataset.words || "").split("|").filter(Boolean) : [];
+  function restagger() {
+    if (!servicesGrid) return;
+    const cols = window.innerWidth > 1180 ? 4 : 2;
 
-  /* ---------- Headline fit ----------
-     The rotating word must never be wider than its column, so the
-     whole headline scales down a touch when the longest word needs it. */
-  function fitHeadline() {
-    if (!headline || !kineticWords.length) return;
-
-    headline.style.setProperty("--fit", "1");
-
-    const probe = document.createElement("span");
-    probe.setAttribute("aria-hidden", "true");
-    probe.style.cssText = "position:absolute;left:0;top:0;visibility:hidden;white-space:nowrap;pointer-events:none";
-    headline.appendChild(probe);
-
-    let widest = 0;
-    kineticWords.forEach((word) => {
-      probe.textContent = word;
-      widest = Math.max(widest, probe.getBoundingClientRect().width);
+    servicesGrid.querySelectorAll(".service-card").forEach((card, i) => {
+      card.style.setProperty("--stagger", i % cols);
     });
-    probe.remove();
-
-    const room = headline.clientWidth;
-    if (widest > 0 && room > 0 && widest > room) {
-      headline.style.setProperty("--fit", (Math.floor((room / widest) * 1000) / 1000).toFixed(3));
-    }
   }
 
-  fitHeadline();
-  if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitHeadline);
+  restagger();
+  window.addEventListener("resize", restagger);
 
-  let fitTimer = null;
-  window.addEventListener("resize", () => {
-    clearTimeout(fitTimer);
-    fitTimer = setTimeout(fitHeadline, 120);
-  });
+  /* =========================================================
+     2b. KINETIC WORDS (hero headline, Get to Know heading)
+     - Cycles data-words; letters flip out, the next word's
+       letters flip in one after another
+  ========================================================= */
+  if (!reduceMotion) {
+    document.querySelectorAll(".kinetic-word[data-words]").forEach((el) => {
+      const words = (el.dataset.words || "").split("|").filter(Boolean);
+      let wordIndex = 0;
 
-  /* ---------- Kinetic word ----------
-     Cycles data-words; letters flip out, the next word's letters
-     flip in one after another. Starts once the entrance has played. */
-  if (kinetic && kineticWords.length > 1 && !reduceMotion) {
-    let wordIndex = 0;
+      function setWord(word, state) {
+        el.innerHTML = Array.from(word)
+          .map((ch, i) => `<span class="kc ${state}" style="--c:${i}">${ch === " " ? "&nbsp;" : ch}</span>`)
+          .join("");
+      }
 
-    const setWord = (word, state) => {
-      kinetic.innerHTML = Array.from(word)
-        .map((ch, i) => `<span class="kc ${state}" style="--c:${i}">${ch === " " ? "&nbsp;" : escapeHtml(ch)}</span>`)
-        .join("");
-    };
+      setWord(words[0], "in");
 
-    setWord(kineticWords[0], "in");
-
-    onRootClass("hero-ready", () => {
       setInterval(() => {
-        if (document.hidden) return;
-
         // Flip current letters out
-        kinetic.querySelectorAll(".kc").forEach((c) => c.classList.replace("in", "out"));
+        el.querySelectorAll(".kc").forEach((c) => c.classList.replace("in", "out"));
 
         setTimeout(() => {
-          wordIndex = (wordIndex + 1) % kineticWords.length;
-          setWord(kineticWords[wordIndex], "pre");
-          void kinetic.offsetWidth; // let "pre" paint before animating in
-          kinetic.querySelectorAll(".kc").forEach((c) => c.classList.replace("pre", "in"));
+          wordIndex = (wordIndex + 1) % words.length;
+          setWord(words[wordIndex], "pre");
+          void el.offsetWidth; // let "pre" paint before animating in
+          el.querySelectorAll(".kc").forEach((c) => c.classList.replace("pre", "in"));
         }, 520);
       }, 2800);
     });
   }
 
-  /* ---------- Pointer depth ----------
-     The photo stage leans toward the cursor; chips, frames and the
-     seal drift at different depths (driven by --px / --py). */
-  const heroStage = document.getElementById("heroStage");
+  /* =========================================================
+     3. LENIS SMOOTH SCROLL
+     - Desktop only (touch devices keep native momentum)
+     - Pauses while the intro or contact modal is open
+  ========================================================= */
+  let lenis = null;
 
-  if (hero && heroStage && finePointer && !reduceMotion) {
-    let targetX = 0;
-    let targetY = 0;
-    let currentX = 0;
-    let currentY = 0;
-    let depthRaf = null;
-
-    const stepDepth = () => {
-      currentX += (targetX - currentX) * 0.07;
-      currentY += (targetY - currentY) * 0.07;
-      heroStage.style.setProperty("--px", currentX.toFixed(4));
-      heroStage.style.setProperty("--py", currentY.toFixed(4));
-
-      const settled = Math.abs(targetX - currentX) < 0.002 && Math.abs(targetY - currentY) < 0.002;
-      depthRaf = settled ? null : requestAnimationFrame(stepDepth);
-    };
-
-    const aim = (x, y) => {
-      targetX = x;
-      targetY = y;
-      if (!depthRaf) depthRaf = requestAnimationFrame(stepDepth);
-    };
-
-    hero.addEventListener("pointermove", (event) => {
-      const rect = hero.getBoundingClientRect();
-      aim(
-        Math.max(-1, Math.min(1, ((event.clientX - rect.left) / rect.width - 0.5) * 2)),
-        Math.max(-1, Math.min(1, ((event.clientY - rect.top) / rect.height - 0.5) * 2))
-      );
+  if (typeof window.Lenis !== "undefined" && finePointer && !reduceMotion) {
+    lenis = new window.Lenis({
+      duration: 1.15,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      smoothWheel: true
     });
 
-    hero.addEventListener("pointerleave", () => aim(0, 0));
-  }
+    document.documentElement.classList.add("has-lenis");
 
-  /* ---------- Services ticker ----------
-     Items are doubled so the CSS loop is seamless. */
-  const ticker = document.getElementById("heroTicker");
+    let lenisStopped = false;
 
-  if (ticker) {
-    ticker.innerHTML += ticker.innerHTML;
-    if (!reduceMotion) ticker.classList.add("is-looped");
+    function syncLenisLock() {
+      const locked =
+        document.body.classList.contains("modal-open") ||
+        document.documentElement.style.overflow === "hidden";
+
+      if (locked && !lenisStopped) {
+        lenis.stop();
+        lenisStopped = true;
+      } else if (!locked && lenisStopped) {
+        lenis.start();
+        lenisStopped = false;
+      }
+    }
+
+    if (hasGsap) {
+      lenis.on("scroll", window.ScrollTrigger.update);
+      window.gsap.ticker.add((time) => {
+        syncLenisLock();
+        lenis.raf(time * 1000);
+      });
+      window.gsap.ticker.lagSmoothing(0);
+    } else {
+      const raf = (time) => {
+        syncLenisLock();
+        lenis.raf(time);
+        requestAnimationFrame(raf);
+      };
+      requestAnimationFrame(raf);
+    }
+
+    // Smooth in-page anchor links, offset for the sticky header.
+    document.addEventListener("click", (event) => {
+      const link = event.target.closest('a[href^="#"]');
+      if (!link) return;
+
+      const id = link.getAttribute("href");
+      if (id.length < 2) return;
+
+      const target = document.querySelector(id);
+      if (!target) return;
+
+      event.preventDefault();
+      lenis.scrollTo(target, { offset: id === "#home" ? 0 : -90 });
+    });
   }
 
   /* =========================================================
-     4. NATIVE SCROLL
-     - No smooth-scroll library: the browser's own scrolling is the
-       most responsive. In-page links glide via CSS scroll-behavior,
-       and section[id] carries scroll-margin-top for the header.
-  ========================================================= */
-
-  /* =========================================================
-     5. GSAP SCROLL SCENES
-     One signature moment per section:
-     - Hero          layers part ways at different depths
-     - About         the statement lights up word by word
-     - Services      a spotlight follows the row being read
-     - How it works  pinned story: photo wipes, odometer, chips
-     - Experience    a comet rides the rail and lights each node
-     - Work          outline letters assemble, tiles settle at depth
-     - Skills        rows slide against each other, lean into speed
-     - Contact       the closing line rises word by word
-     - Footer        the wordmark rises letter by letter
+     4. GSAP SCROLL SCENES
   ========================================================= */
   if (!hasGsap || reduceMotion) return;
 
   const { gsap, ScrollTrigger } = window;
   gsap.registerPlugin(ScrollTrigger);
 
-  // Phone address bars resize the viewport constantly; don't re-measure for that.
-  ScrollTrigger.config({ ignoreMobileResize: true });
+  /* ---------- Hero: shrinks and fades as you scroll away ---------- */
+  const heroShell = document.querySelector(".hero-shell");
 
-  const media = gsap.matchMedia();
-  const pad2 = (n) => String(n).padStart(2, "0");
-
-  /* ---------- Hero: copy, photo, frames and chips leave at different depths ----------
-     --sp (0 to 1) is read by the stage's layers in CSS, so it stacks with
-     the pointer depth instead of fighting it. */
-  media.add("(min-width: 861px)", () => {
-    if (!hero) return;
-
-    const heroOut = gsap.timeline({
-      defaults: { ease: "none" },
+  if (heroShell) {
+    gsap.to(heroShell, {
+      scale: 0.93,
+      opacity: 0.25,
+      y: 80,
+      ease: "none",
       scrollTrigger: {
-        trigger: hero,
+        trigger: ".hero-section",
         start: "top top",
         end: "bottom top",
         scrub: true
       }
     });
-
-    heroOut
-      .to(".hero-copy", { y: -110, opacity: 0, duration: 1 }, 0)
-      .to(".kinetic-h1 .h-line:first-child", { xPercent: -7, duration: 1 }, 0)
-      .to(".kinetic-h1 .h-line:last-child", { xPercent: 7, duration: 1 }, 0)
-      .to(".hero-visual", { y: 70, scale: 0.93, duration: 1 }, 0)
-      .to(".hero-visual", { opacity: 0, duration: 0.5 }, 0.5)
-      .to(".hero-ticker", { opacity: 0, duration: 0.6 }, 0.1);
-
-    if (heroStage) heroOut.fromTo(heroStage, { "--sp": 0 }, { "--sp": 1, duration: 1 }, 0);
-  });
+  }
 
   /* ---------- About: words light up as you read down ---------- */
-  const scrubText = document.getElementById("aboutLead");
+  const scrubText = document.querySelector("#about .section-heading p");
 
   if (scrubText) {
     scrubText.innerHTML = scrubText.textContent
       .trim()
       .split(/\s+/)
-      .map((word) => `<span class="scrub-word">${escapeHtml(word)}</span>`)
+      .map((word) => `<span class="scrub-word">${word}</span>`)
       .join(" ");
 
     gsap.fromTo(
       scrubText.querySelectorAll(".scrub-word"),
-      { opacity: 0.16 },
+      { opacity: 0.18 },
       {
         opacity: 1,
         stagger: 0.05,
         ease: "none",
         scrollTrigger: {
           trigger: scrubText,
-          start: "top 84%",
-          end: "bottom 52%",
+          start: "top 85%",
+          end: "bottom 45%",
           scrub: true
         }
       }
     );
   }
 
-  /* ---------- About: numbers count up once, when first seen ---------- */
-  gsap.utils.toArray("[data-count]").forEach((el) => {
-    ScrollTrigger.create({
-      trigger: el,
-      start: "top 90%",
-      once: true,
-      onEnter: () => {
-        const end = parseInt(el.textContent, 10);
-        if (!end) return;
+  /* ---------- How it works: line draws + nodes pop, tied to scroll ---------- */
+  const infographic = document.querySelector(".infographic");
 
-        const counter = { value: 0 };
-        gsap.to(counter, {
-          value: end,
-          duration: 1.6,
-          ease: "power3.out",
-          onUpdate: () => {
-            el.textContent = String(Math.round(counter.value));
-          }
-        });
+  if (infographic) {
+    // Hands control from the one-shot CSS reveal to the scrubbed timeline.
+    infographic.classList.add("is-scrubbed");
+
+    const flow = gsap.timeline({
+      scrollTrigger: {
+        trigger: infographic,
+        start: "top 85%",
+        end: "bottom 50%",
+        scrub: 0.6
       }
     });
-  });
 
-  /* ---------- Services: the row crossing the reading line lights up ---------- */
-  gsap.utils.toArray(".svc-row").forEach((row) => {
-    ScrollTrigger.create({
-      trigger: row,
-      start: "top 56%",
-      end: "bottom 56%",
-      toggleClass: "is-lit"
-    });
-  });
+    flow.fromTo(infographic, { "--line": 0 }, { "--line": 1, ease: "none", duration: 1 }, 0);
 
-  /* ---------- How it works ----------
-     Wide, tall screens: the frame swings in, then the stage pins and the
-     five steps play as one story (photos wipe over each other, the counter
-     rolls like an odometer, each step's chip pops, the rail fills).
-     Everything else: a vertical timeline whose rail fills as you pass. */
-  const flow = document.getElementById("system");
-  const flowStage = document.getElementById("flowStage");
-
-  if (flow && flowStage) {
-    const flowSteps = gsap.utils.toArray(".flow-step", flow);
-    const flowLayers = gsap.utils.toArray(".flow-layer", flow);
-    const flowList = flow.querySelector(".flow-steps");
-    const flowFrame = flow.querySelector(".flow-frame");
-    const flowCount = document.getElementById("flowCount");
-    const lastStep = flowSteps.length - 1;
-    const clearSteps = () => flowSteps.forEach((step) => step.classList.remove("is-active"));
-
-    media.add("(min-width: 961px) and (min-height: 620px)", () => {
-      flow.classList.add("is-pinned");
-
-      // Counter becomes a strip of numbers that rolls inside a one-line window.
-      let digits = null;
-      if (flowCount) {
-        digits = document.createElement("span");
-        digits.className = "flow-digits";
-        digits.innerHTML = flowSteps.map((_, i) => `<span>${pad2(i + 1)}</span>`).join("");
-        flowCount.textContent = "";
-        flowCount.appendChild(digits);
-        flowCount.classList.add("is-roll");
-      }
-
-      let current = -1;
-      const show = (index) => {
-        if (index === current) return;
-        current = index;
-        flowSteps.forEach((step, i) => step.classList.toggle("is-active", i === index));
-      };
-      show(0);
-
-      // On the way in: the frame settles upright and the steps file in.
-      const arrive = gsap.timeline({
-        defaults: { ease: "none" },
-        scrollTrigger: { trigger: flowStage, start: "top 92%", end: "center center", scrub: 0.6 }
-      });
-
-      if (flowFrame) {
-        arrive.fromTo(
-          flowFrame,
-          { yPercent: 18, scale: 0.84, rotation: 5 },
-          { yPercent: 0, scale: 1, rotation: 0, duration: 1 },
-          0
-        );
-      }
-      arrive.fromTo(flowSteps, { x: -40, opacity: 0 }, { x: 0, opacity: 1, duration: 0.45, stagger: 0.11 }, 0.1);
-
-      // Pinned: one scroll-length per step, plus a short hold on the last one.
-      const hold = 0.4;
-      const story = gsap.timeline({
-        defaults: { ease: "none" },
-        onUpdate() {
-          show(Math.max(0, Math.min(lastStep, Math.round(this.time()))));
-        },
-        scrollTrigger: {
-          trigger: flowStage,
-          start: "center center",
-          end: () => `+=${Math.round(window.innerHeight * 0.6 * (lastStep + hold))}`,
-          pin: true,
-          scrub: 0.6,
-          anticipatePin: 1,
-          invalidateOnRefresh: true
-        }
-      });
-
-      story.fromTo(flowList, { "--flow": 0 }, { "--flow": 1, duration: lastStep }, 0);
-
-      flowLayers.forEach((layer, i) => {
-        if (!i) return;
-        const at = i - 0.85;
-        const before = flowLayers[i - 1].querySelector("img");
-        const chip = layer.querySelector(".flow-chip");
-
-        // The next photo wipes up from the bottom while it settles...
-        story.fromTo(
-          layer,
-          { clipPath: "inset(100% 0% 0% 0%)" },
-          { clipPath: "inset(0% 0% 0% 0%)", duration: 0.7 },
-          at
-        );
-        story.fromTo(layer.querySelector("img"), { scale: 1.3 }, { scale: 1, duration: 0.7 }, at);
-
-        // ...the one underneath is pushed up and out of its way...
-        if (before) story.to(before, { yPercent: -9, duration: 0.7 }, at);
-
-        // ...the counter rolls to the new number and the step's chip pops in.
-        if (digits) {
-          story.to(
-            digits,
-            { yPercent: (-100 / flowSteps.length) * i, duration: 0.7, ease: "power2.inOut" },
-            at
-          );
-        }
-        if (chip) {
-          story.fromTo(
-            chip,
-            { scale: 0, rotation: -80 },
-            { scale: 1, rotation: 0, duration: 0.34, ease: "back.out(2)" },
-            i - 0.42
-          );
-        }
-      });
-
-      story.to({}, { duration: hold });
-
-      return () => {
-        flow.classList.remove("is-pinned");
-        clearSteps();
-        if (flowCount) {
-          flowCount.classList.remove("is-roll");
-          flowCount.textContent = pad2(1);
-        }
-      };
-    });
-
-    media.add("(max-width: 960px), (max-height: 619px)", () => {
-      gsap.fromTo(
-        flowList,
-        { "--flow": 0 },
-        {
-          "--flow": 1,
-          ease: "none",
-          scrollTrigger: { trigger: flowList, start: "top 72%", end: "bottom 60%", scrub: 0.4 }
-        }
-      );
-
-      flowSteps.forEach((step) => {
-        ScrollTrigger.create({
-          trigger: step,
-          start: "top 70%",
-          onEnter: () => step.classList.add("is-active"),
-          onLeaveBack: () => step.classList.remove("is-active")
-        });
-      });
-
-      return clearSteps;
-    });
-  }
-
-  /* ---------- Experience: a comet rides the rail and lights each node it passes ---------- */
-  const xpList = document.getElementById("xpList");
-
-  if (xpList) {
-    const comet = document.createElement("li");
-    comet.className = "xp-comet";
-    comet.setAttribute("aria-hidden", "true");
-    comet.setAttribute("role", "presentation");
-    xpList.appendChild(comet);
-    xpList.classList.add("is-tracked");
-
-    gsap
-      .timeline({
-        defaults: { ease: "none" },
-        scrollTrigger: {
-          trigger: xpList,
-          start: "top 72%",
-          end: "bottom 62%",
-          scrub: 0.4,
-          invalidateOnRefresh: true
-        }
-      })
-      .fromTo(xpList, { "--xp": 0 }, { "--xp": 1, duration: 1 }, 0)
-      .fromTo(comet, { y: 0 }, { y: () => Math.max(0, xpList.offsetHeight - 68), duration: 1 }, 0)
-      .fromTo(comet, { opacity: 0 }, { opacity: 1, duration: 0.04 }, 0)
-      .to(comet, { opacity: 0, duration: 0.04 }, 0.96);
-
-    gsap.utils.toArray(".xp-item", xpList).forEach((item) => {
-      ScrollTrigger.create({
-        trigger: item,
-        start: "top 70%",
-        onEnter: () => item.classList.add("is-passed"),
-        onLeaveBack: () => item.classList.remove("is-passed")
-      });
-    });
-  }
-
-  /* ---------- Work: the carousel tips up, the outline word assembles behind it ---------- */
-  const cfTilt = document.querySelector(".cf-tilt");
-  const workGhost = document.querySelector(".work-ghost");
-
-  if (cfTilt) {
-    gsap.fromTo(
-      cfTilt,
-      { rotateX: 24, scale: 0.82, y: 80, opacity: 0.35 },
-      {
-        rotateX: 0,
-        scale: 1,
-        y: 0,
-        opacity: 1,
-        ease: "none",
-        scrollTrigger: { trigger: cfTilt, start: "top 96%", end: "top 36%", scrub: 0.5 }
-      }
-    );
-  }
-
-  if (workGhost) {
-    // Each letter starts at its own depth below the line and rises into the word.
-    const depths = [72, 34, 92, 52];
-    workGhost.innerHTML = Array.from(workGhost.textContent.trim())
-      .map((ch) => `<span class="gl">${escapeHtml(ch)}</span>`)
-      .join("");
-
-    gsap.fromTo(
-      workGhost.querySelectorAll(".gl"),
-      { yPercent: (i) => depths[i % depths.length], opacity: 0 },
-      {
-        yPercent: 0,
-        opacity: 1,
-        ease: "none",
-        stagger: 0.08,
-        scrollTrigger: { trigger: ".work-showcase", start: "top 96%", end: "top 22%", scrub: 0.6 }
-      }
-    );
-
-    gsap.fromTo(
-      workGhost,
-      { xPercent: 7 },
-      {
-        xPercent: -7,
-        ease: "none",
-        scrollTrigger: { trigger: ".work-showcase", start: "top bottom", end: "bottom top", scrub: true }
-      }
-    );
-  }
-
-  /* ---------- Work gallery: tiles settle from different depths (desktop) ----------
-     The tile itself stays put (it is the trigger and the thing the wipe-in
-     observer watches); only its inner plate travels. Tiles are re-rendered by
-     work.js on filter / "show more", so new ones are picked up as they land. */
-  media.add("(min-width: 861px)", () => {
-    const workGrid = document.getElementById("workGrid");
-    if (!workGrid) return undefined;
-
-    let drifts = [];
-
-    const drop = (drift) => {
-      if (drift.tween.scrollTrigger) drift.tween.scrollTrigger.kill();
-      drift.tween.kill();
-    };
-
-    const sync = () => {
-      // Let go of tweens whose tile was replaced
-      drifts = drifts.filter((drift) => {
-        if (drift.tile.isConnected) return true;
-        drop(drift);
-        return false;
-      });
-
-      const known = new Set(drifts.map((drift) => drift.tile));
-
-      gsap.utils.toArray(".work-tile", workGrid).forEach((tile, i) => {
-        if (known.has(tile)) return;
-        const plate = tile.querySelector(".tile-media");
-        if (!plate) return;
-
-        drifts.push({
-          tile,
-          plate,
-          tween: gsap.fromTo(
-            plate,
-            { y: 36 + (i % 3) * 34 },
-            {
-              y: 0,
-              ease: "none",
-              scrollTrigger: { trigger: tile, start: "top bottom", end: "top 58%", scrub: 0.5 }
-            }
-          )
-        });
-      });
-    };
-
-    sync();
-    const watcher = new MutationObserver(sync);
-    watcher.observe(workGrid, { childList: true });
-
-    return () => {
-      watcher.disconnect();
-      drifts.forEach((drift) => {
-        drop(drift);
-        gsap.set(drift.plate, { clearProps: "transform" });
-      });
-      drifts = [];
-    };
-  });
-
-  /* ---------- Skills: rows slide against each other, and lean into fast scrolling ---------- */
-  const stackWall = document.getElementById("skillsTrack");
-
-  if (stackWall) {
-    const stackRows = gsap.utils.toArray(".stack-row", stackWall);
-
-    // --slide is added to each marquee's own loop (CSS `translate`), in the
-    // direction that row already travels. It never moves further than the
-    // spare width of the doubled track, so no gap can open at either end.
-    stackRows.forEach((row, i) => {
-      const track = row.querySelector(".stack-track.is-looped");
-      if (!track) return;
-
-      const room = () =>
-        Math.max(0, Math.min(window.innerWidth * 0.18, 280, track.scrollWidth / 2 - row.clientWidth));
-      const reversed = i % 2 === 1;
-
-      gsap.fromTo(
-        track,
-        { "--slide": () => `${reversed ? -room() : 0}px` },
-        {
-          "--slide": () => `${reversed ? 0 : -room()}px`,
-          ease: "none",
-          scrollTrigger: {
-            trigger: stackWall,
-            start: "top bottom",
-            end: "bottom top",
-            scrub: 0.6,
-            invalidateOnRefresh: true
-          }
-        }
+    infographic.querySelectorAll(".info-node").forEach((node, i) => {
+      flow.fromTo(
+        node,
+        { opacity: 0, y: 40, scale: 0.7 },
+        { opacity: 1, y: 0, scale: 1, duration: 0.25, ease: "back.out(1.7)" },
+        i * 0.19
       );
     });
-
-    // The type leans with scroll speed and eases back upright when you stop.
-    media.add("(min-width: 861px)", () => {
-      const lean = { value: 0 };
-      const setLean = gsap.quickSetter(stackRows, "skewX", "deg");
-      const clampLean = gsap.utils.clamp(-7, 7);
-
-      ScrollTrigger.create({
-        trigger: stackWall,
-        start: "top bottom",
-        end: "bottom top",
-        onUpdate: (self) => {
-          const next = clampLean(self.getVelocity() / -240);
-          if (Math.abs(next) <= Math.abs(lean.value)) return;
-
-          lean.value = next;
-          gsap.to(lean, {
-            value: 0,
-            duration: 0.9,
-            ease: "power3.out",
-            overwrite: true,
-            onUpdate: () => setLean(lean.value)
-          });
-        }
-      });
-
-      return () => gsap.set(stackRows, { clearProps: "transform" });
-    });
-  }
-
-  /* ---------- Contact: the closing line rises word by word, tied to the scroll ---------- */
-  const contactHead = document.querySelector(".contact-intro h2.split-line");
-
-  if (contactHead) {
-    // Hands the words over from the CSS entrance to the scrubbed one.
-    contactHead.classList.add("is-scrub");
-
-    gsap.fromTo(
-      contactHead.querySelectorAll(".w > span"),
-      { y: 0, yPercent: 112, rotation: 4 },
-      {
-        y: 0,
-        yPercent: 0,
-        rotation: 0,
-        ease: "none",
-        stagger: 0.2,
-        scrollTrigger: { trigger: contactHead, start: "top 94%", end: "top 44%", scrub: 0.5 }
-      }
-    );
-  }
-
-  const contactFunnel = document.querySelector(".contact-funnel");
-
-  if (contactFunnel) {
-    gsap.fromTo(
-      contactFunnel,
-      { yPercent: 28, rotation: -10, scale: 0.86, opacity: 0 },
-      {
-        yPercent: 0,
-        rotation: 0,
-        scale: 1,
-        opacity: 1,
-        ease: "none",
-        scrollTrigger: { trigger: ".contact-top", start: "top 88%", end: "top 36%", scrub: 0.5 }
-      }
-    );
-  }
-
-  /* ---------- Footer: the wordmark rises letter by letter, from the middle out ---------- */
-  const footerWord = document.querySelector(".footer-word > span");
-
-  if (footerWord) {
-    footerWord.innerHTML = Array.from(footerWord.textContent.trim())
-      .map((ch) => `<span class="fc">${escapeHtml(ch)}</span>`)
-      .join("");
-    footerWord.classList.add("is-split");
-
-    gsap.fromTo(
-      footerWord.querySelectorAll(".fc"),
-      { yPercent: 104 },
-      {
-        yPercent: 0,
-        ease: "none",
-        stagger: { each: 0.09, from: "center" },
-        scrollTrigger: { trigger: ".footer-word", start: "top bottom", end: "bottom bottom", scrub: 0.4 }
-      }
-    );
   }
 
   // Lazy images and web fonts change heights after load.
   window.addEventListener("load", () => ScrollTrigger.refresh());
-  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => ScrollTrigger.refresh());
 });

@@ -24,39 +24,12 @@
   <meta name="apple-mobile-web-app-title" content="Lawrence V.">
   <meta name="application-name" content="Lawrence V.">
 
-  <!-- Marks JS as available and releases the hero entrance (after the intro, when it plays) -->
-  <script>
-    (function () {
-      var d = document.documentElement;
-      d.classList.add("js");
-      var intro = false;
-      try { intro = !sessionStorage.getItem("si-intro-played"); } catch (e) { intro = true; }
-      if (window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches) intro = false;
-      var gone = false;
-      function go() {
-        if (gone) return;
-        gone = true;
-        d.classList.add("hero-go");
-        setTimeout(function () { d.classList.add("hero-ready"); }, 1900);
-      }
-      window.__heroGo = go;
-      if (intro) setTimeout(go, 2250);
-      else if (window.requestAnimationFrame) requestAnimationFrame(function () { requestAnimationFrame(go); });
-      else go();
-    })();
-  </script>
-
+  <link rel="stylesheet" href="style.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Sora:wght@500;600;700;800&display=swap"
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;700;800;900&display=swap"
     rel="stylesheet">
-  <link rel="preload" as="image" href="./images/formal.webp" fetchpriority="high">
-  <link rel="stylesheet" href="style.css" />
-  <!-- Icons load without blocking the first paint -->
-  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
-  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
-    onload="this.onload=null;this.rel='stylesheet'">
-  <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" /></noscript>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
 
   <!-- Samurai slash intro -->
   <link rel="stylesheet" href="./samurai-intro.css" />
@@ -83,14 +56,14 @@
     <canvas id="bg-flow-canvas" aria-hidden="true"></canvas>
   </div>
 
-  <header class="site-header" id="siteHeader">
-    <div class="nav-wrap">
-      <a href="#home" class="brand" aria-label="Lawrence, back to top">
-        <img src="./favicon.svg" class="brand-mark" width="32" height="32" alt="" />
+  <header class="site-header">
+    <div class="container nav-wrap glass">
+      <a href="#home" class="brand">
+        <span class="brand-dot"></span>
         <span>Lawrence</span>
       </a>
 
-      <nav class="desktop-nav" aria-label="Primary">
+      <nav class="desktop-nav">
         <a href="#about">About</a>
         <a href="#services">Services</a>
         <a href="#experience">Experience</a>
@@ -100,93 +73,78 @@
         <a href="#contact">Contact</a>
       </nav>
 
-      <a href="#" class="btn btn-primary nav-btn" data-open-form>
+      <a href="#" class="btn btn-primary" data-open-form>
         Let’s Talk
-        <i class="fas fa-arrow-right" aria-hidden="true"></i>
       </a>
 
-      <button class="menu-toggle" id="menuToggle" type="button" aria-label="Toggle menu" aria-expanded="false"
-        aria-controls="mobileMenu">
+      <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
         <span></span><span></span><span></span>
       </button>
     </div>
 
-    <nav class="mobile-menu" id="mobileMenu" aria-label="Mobile">
-      <a href="#home" style="--i:0">Home</a>
-      <a href="#about" style="--i:1">About</a>
-      <a href="#services" style="--i:2">Services</a>
-      <a href="#experience" style="--i:3">Experience</a>
-      <a href="#projects" style="--i:4">Work</a>
-      <a href="#skills" style="--i:5">Skills</a>
-      <a href="#game" style="--i:6">Play</a>
-      <a href="#contact" style="--i:7">Contact</a>
-    </nav>
+    <div class="mobile-menu glass" id="mobileMenu">
+      <a href="#home">Home</a>
+      <a href="#about">About</a>
+      <a href="#services">Services</a>
+      <a href="#experience">Experience</a>
+      <a href="#projects">Work</a>
+      <a href="#skills">Skills</a>
+      <a href="#game">Play</a>
+      <a href="#contact">Contact</a>
+    </div>
   </header>
 
   <main>
     <!-- HERO -->
-    <section class="hero" id="home" data-mood="base">
-      <div class="container hero-grid">
-        <div class="hero-copy">
-          <div class="eyebrow" data-hero style="--i:0">
+    <section class="hero-section" id="home">
+      <div class="container hero-shell glass">
+        <div class="hero-copy reveal">
+          <div class="eyebrow">
             <span class="eyebrow-pill"></span>
             Marketing Automation • Funnels • AI Systems
           </div>
 
           <h1 class="kinetic-h1" aria-label="I build funnels, CRM automations, AI chatbots, and websites that convert.">
-            <span class="h-line" aria-hidden="true"><span class="h-inner" style="--i:1">I build</span></span>
-            <span class="h-line h-line-kinetic" aria-hidden="true"><span class="h-inner" style="--i:2"><span
-                  class="kinetic-word" id="kineticWord"
-                  data-words="funnels|CRM automations|AI chatbots|websites|lead systems">funnels</span></span></span>
-            <span class="h-line" aria-hidden="true"><span class="h-inner" style="--i:3">that convert.</span></span>
+            <span aria-hidden="true">I build</span>
+            <span class="kinetic-word" id="kineticWord" aria-hidden="true"
+              data-words="funnels|CRM automations|AI chatbots|websites|lead systems">funnels</span>
+            <span aria-hidden="true">that convert.</span>
           </h1>
 
-          <p class="hero-description" data-hero style="--i:5">
+          <p class="hero-description">
             I’m Lawrence. I build GoHighLevel funnels, CRM automations, and AI
             systems that turn clicks into booked calls.
           </p>
 
-          <div class="hero-actions" data-hero style="--i:6">
+          <div class="hero-actions">
             <a href="#" class="btn btn-primary" data-open-form>
-              <i class="fas fa-paper-plane" aria-hidden="true"></i>
+              <i class="fas fa-paper-plane"></i>
               Contact Me
             </a>
 
             <a href="#projects" class="btn btn-secondary">
-              <i class="fas fa-briefcase" aria-hidden="true"></i>
+              <i class="fas fa-briefcase"></i>
               See My Work
             </a>
 
-            <a href="./Lawrence-Valdenebro-Resume.pdf" class="btn btn-ghost" download="Lawrence-Valdenebro-Resume.pdf">
-              <i class="fas fa-download" aria-hidden="true"></i>
+            <a href="./Lawrence-Valdenebro-Resume.pdf" class="btn btn-secondary" download="Lawrence-Valdenebro-Resume.pdf">
+              <i class="fas fa-download"></i>
               Download Resume
             </a>
           </div>
         </div>
 
-        <div class="hero-visual">
-          <div class="hero-stage" id="heroStage" data-hero="stage" style="--i:2">
-            <span class="hero-glow" aria-hidden="true"></span>
-            <span class="hero-orbit" aria-hidden="true"></span>
-            <span class="hero-frame frame-a" aria-hidden="true"></span>
-            <span class="hero-frame frame-b" aria-hidden="true"></span>
-
-            <div class="hero-image-card">
-              <img src="./images/formal.webp" width="900" height="900" alt="Portrait of Lawrence" class="hero-photo"
-                fetchpriority="high" />
-              <div class="hero-plate">
-                <strong>Lawrence</strong>
-                <span>Marketing Automation &amp; Funnel Specialist</span>
-              </div>
-            </div>
-
+        <div class="hero-visual reveal">
+          <div class="hero-image-card">
             <div class="hero-badge badge-top">
-              <i class="fas fa-bolt" aria-hidden="true"></i>
+              <i class="fas fa-bolt"></i>
               Fast execution
             </div>
 
+            <img src="./images/formal.webp" width="900" height="900" alt="Lawrence portfolio profile" class="hero-photo" />
+
             <div class="hero-badge badge-bottom">
-              <i class="fas fa-chart-line" aria-hidden="true"></i>
+              <i class="fas fa-chart-line"></i>
               Marketing-focused
             </div>
 
@@ -196,448 +154,296 @@
               <span class="smoke-puff puff-2"></span>
               <span class="smoke-puff puff-3"></span>
             </div>
-
-            <div class="hero-ring" aria-hidden="true">
-              <svg viewBox="0 0 200 200">
-                <defs>
-                  <path id="heroRingPath" d="M100,100 m-76,0 a76,76 0 1,1 152,0 a76,76 0 1,1 -152,0" />
-                </defs>
-                <text>
-                  <textPath href="#heroRingPath" textLength="466">Open for freelance • Contract work • Remote •</textPath>
-                </text>
-              </svg>
-              <img src="./favicon.svg" width="40" height="40" alt="" />
-            </div>
           </div>
-        </div>
-      </div>
-
-      <div class="hero-ticker" aria-hidden="true">
-        <div class="ticker-track" id="heroTicker">
-          <span>Funnels &amp; Websites</span>
-          <span>GoHighLevel CRM</span>
-          <span>Workflow Automation</span>
-          <span>AI Chatbots</span>
-          <span>Quizzes &amp; Lead Scoring</span>
-          <span>Email, SMS &amp; A2P</span>
-          <span>Meta &amp; Microsoft Ads</span>
-          <span>Domains, DNS &amp; Fixes</span>
         </div>
       </div>
     </section>
 
     <!-- ABOUT -->
-    <section class="section-block about" id="about" data-mood="violet">
+    <section class="section-block" id="about">
       <div class="container">
-        <div class="about-grid">
-          <aside class="about-side reveal">
-            <span class="section-kicker"><b>01</b>About</span>
-
-            <ul class="about-points">
-              <li><i class="fas fa-bolt" aria-hidden="true"></i> Fast turnaround</li>
-              <li><i class="fas fa-shield-halved" aria-hidden="true"></i> Reliable builds</li>
-              <li><i class="fas fa-arrows-rotate" aria-hidden="true"></i> End-to-end setup</li>
-              <li><i class="fas fa-wand-magic-sparkles" aria-hidden="true"></i> AI-assisted builds</li>
-            </ul>
-          </aside>
-
-          <div class="about-main">
-            <div class="section-heading reveal">
-              <h2>Complete lead systems, <em>not just pages.</em></h2>
-            </div>
-
-            <p class="about-lead" id="aboutLead">
+        <div class="about-layout">
+          <div class="section-heading reveal">
+            <span class="section-kicker">ABOUT</span>
+            <h2>Complete lead systems, not just pages.</h2>
+            <p>
               Funnels, CRM, automation, and AI wired into one clean system,
               so your tools finally work together.
             </p>
-          </div>
-        </div>
 
-        <div class="about-plate">
-          <ul class="about-stats reveal" aria-label="This site in numbers">
-            <li>
-              <strong data-count data-count-from=".svc-row">8</strong>
-              <span>Services I build</span>
-            </li>
-            <li>
-              <strong data-count data-count-from=".stack-item:not([aria-hidden])">22</strong>
-              <span>Tools in my stack</span>
-            </li>
-            <li>
-              <strong data-count data-work-count>39</strong>
-              <span>Pieces in the gallery</span>
-            </li>
-          </ul>
-
-          <figure class="about-visual" data-clip>
-            <div class="clip-box">
-              <img src="./images/automation-flow.svg" width="620" height="330"
-                alt="Diagram showing leads flowing from landing pages and ads into a CRM, then through conditional if/then workflows to conversion" />
-              <figcaption><span>Fig. 01</span> How a lead moves through a system I build</figcaption>
+            <div class="about-highlights">
+              <div class="about-chip"><i class="fas fa-bolt"></i> Fast turnaround</div>
+              <div class="about-chip"><i class="fas fa-shield-halved"></i> Reliable builds</div>
+              <div class="about-chip"><i class="fas fa-arrows-rotate"></i> End-to-end setup</div>
+              <div class="about-chip"><i class="fas fa-wand-magic-sparkles"></i> AI-assisted builds</div>
             </div>
+          </div>
+
+          <figure class="about-visual glass reveal" data-reveal="right">
+            <img src="./images/automation-flow.svg" alt="Diagram showing leads flowing from landing pages and ads into a CRM, then through conditional if/then workflows to conversion" />
+            <figcaption>How a lead moves through a system I build</figcaption>
           </figure>
         </div>
       </div>
     </section>
 
     <!-- SERVICES -->
-    <section class="section-block services" id="services" data-mood="blue">
-      <div class="container svc-layout">
-        <div class="section-heading svc-head reveal">
-          <span class="section-kicker"><b>02</b>Services</span>
-          <h2>What I can build <em>for you.</em></h2>
+    <section class="section-block" id="services">
+      <div class="container">
+        <div class="section-heading reveal">
+          <span class="section-kicker">SERVICES</span>
+          <h2>What I can build for you.</h2>
         </div>
 
-        <ol class="svc-list" id="servicesGrid">
-          <li class="svc-row reveal">
-            <span class="svc-num">01</span>
+        <div class="services-grid" id="servicesGrid">
+          <article class="service-card glass reveal">
+            <div class="service-icon"><i class="fas fa-filter"></i></div>
             <h3>Funnels &amp; Websites</h3>
             <p>Landing pages, booking funnels, and AI-built sites.</p>
-            <span class="svc-icon" aria-hidden="true"><i class="fas fa-filter"></i></span>
-          </li>
-          <li class="svc-row reveal">
-            <span class="svc-num">02</span>
+          </article>
+
+          <article class="service-card glass reveal">
+            <div class="service-icon"><i class="fas fa-diagram-project"></i></div>
             <h3>GoHighLevel CRM</h3>
             <p>Pipelines, calendars, and clean CRM setup.</p>
-            <span class="svc-icon" aria-hidden="true"><i class="fas fa-diagram-project"></i></span>
-          </li>
-          <li class="svc-row reveal">
-            <span class="svc-num">03</span>
+          </article>
+
+          <article class="service-card glass reveal">
+            <div class="service-icon"><i class="fas fa-gears"></i></div>
             <h3>Workflow Automation</h3>
             <p>Triggers, nurture sequences, and follow-up on autopilot.</p>
-            <span class="svc-icon" aria-hidden="true"><i class="fas fa-gears"></i></span>
-          </li>
-          <li class="svc-row reveal">
-            <span class="svc-num">04</span>
+          </article>
+
+          <article class="service-card glass reveal">
+            <div class="service-icon"><i class="fas fa-robot"></i></div>
             <h3>AI Chatbots</h3>
             <p>AI agents that qualify leads and book calls.</p>
-            <span class="svc-icon" aria-hidden="true"><i class="fas fa-robot"></i></span>
-          </li>
-          <li class="svc-row reveal">
-            <span class="svc-num">05</span>
+          </article>
+
+          <article class="service-card glass reveal">
+            <div class="service-icon"><i class="fas fa-list-check"></i></div>
             <h3>Quizzes &amp; Lead Scoring</h3>
             <p>Surveys with score-based logic and triggers.</p>
-            <span class="svc-icon" aria-hidden="true"><i class="fas fa-list-check"></i></span>
-          </li>
-          <li class="svc-row reveal">
-            <span class="svc-num">06</span>
+          </article>
+
+          <article class="service-card glass reveal">
+            <div class="service-icon"><i class="fas fa-comment-sms"></i></div>
             <h3>Email, SMS &amp; A2P</h3>
             <p>Campaigns plus A2P 10DLC registration.</p>
-            <span class="svc-icon" aria-hidden="true"><i class="fas fa-comment-sms"></i></span>
-          </li>
-          <li class="svc-row reveal">
-            <span class="svc-num">07</span>
+          </article>
+
+          <article class="service-card glass reveal">
+            <div class="service-icon"><i class="fas fa-bullhorn"></i></div>
             <h3>Meta &amp; Microsoft Ads</h3>
             <p>Ad account setup and lead-gen campaigns.</p>
-            <span class="svc-icon" aria-hidden="true"><i class="fas fa-bullhorn"></i></span>
-          </li>
-          <li class="svc-row reveal">
-            <span class="svc-num">08</span>
+          </article>
+
+          <article class="service-card glass reveal">
+            <div class="service-icon"><i class="fas fa-globe"></i></div>
             <h3>Domains, DNS &amp; Fixes</h3>
             <p>Cloudflare, hosting, integrations, troubleshooting.</p>
-            <span class="svc-icon" aria-hidden="true"><i class="fas fa-globe"></i></span>
-          </li>
-        </ol>
+          </article>
+        </div>
       </div>
     </section>
 
     <!-- HOW IT WORKS -->
-    <section class="section-block flow" id="system" data-mood="cyan">
+    <section class="section-block" id="system">
       <div class="container">
-        <div class="flow-stage" id="flowStage">
-          <div class="section-heading flow-head reveal">
-            <span class="section-kicker"><b>03</b>How it works</span>
-            <h2>From click to <em>booked call.</em></h2>
-          </div>
-
-          <ol class="flow-steps" aria-label="Lead system flow">
-            <li class="flow-step">
-              <span class="flow-num">01</span>
-              <div class="flow-text">
-                <h3>Traffic</h3>
-                <p>Ads bring leads in</p>
-                <div class="flow-thumb" data-clip>
-                  <div class="clip-box">
-                    <img src="https://images.pexels.com/photos/3861957/pexels-photo-3861957.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=800&amp;h=450&amp;fit=crop" width="800" height="450" alt="" loading="lazy" decoding="async" />
-                  </div>
-                </div>
-              </div>
-            </li>
-            <li class="flow-step">
-              <span class="flow-num">02</span>
-              <div class="flow-text">
-                <h3>Capture</h3>
-                <p>Funnels &amp; quizzes</p>
-                <div class="flow-thumb" data-clip>
-                  <div class="clip-box">
-                    <img src="https://images.pexels.com/photos/196644/pexels-photo-196644.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=800&amp;h=450&amp;fit=crop" width="800" height="450" alt="" loading="lazy" decoding="async" />
-                  </div>
-                </div>
-              </div>
-            </li>
-            <li class="flow-step">
-              <span class="flow-num">03</span>
-              <div class="flow-text">
-                <h3>Qualify</h3>
-                <p>AI scores intent</p>
-                <div class="flow-thumb" data-clip>
-                  <div class="clip-box">
-                    <img src="https://images.pexels.com/photos/8386440/pexels-photo-8386440.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=800&amp;h=450&amp;fit=crop" width="800" height="450" alt="" loading="lazy" decoding="async" />
-                  </div>
-                </div>
-              </div>
-            </li>
-            <li class="flow-step">
-              <span class="flow-num">04</span>
-              <div class="flow-text">
-                <h3>Book</h3>
-                <p>Calendar &amp; pipeline</p>
-                <div class="flow-thumb" data-clip>
-                  <div class="clip-box">
-                    <img src="https://images.pexels.com/photos/12969403/pexels-photo-12969403.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=800&amp;h=450&amp;fit=crop" width="800" height="450" alt="" loading="lazy" decoding="async" />
-                  </div>
-                </div>
-              </div>
-            </li>
-            <li class="flow-step">
-              <span class="flow-num">05</span>
-              <div class="flow-text">
-                <h3>Follow up</h3>
-                <p>Email &amp; SMS on autopilot</p>
-                <div class="flow-thumb" data-clip>
-                  <div class="clip-box">
-                    <img src="https://images.pexels.com/photos/267389/pexels-photo-267389.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=800&amp;h=450&amp;fit=crop" width="800" height="450" alt="" loading="lazy" decoding="async" />
-                  </div>
-                </div>
-              </div>
-            </li>
-          </ol>
-
-          <!-- Large frame used by the pinned (desktop) version -->
-          <div class="flow-visual" aria-hidden="true">
-            <div class="flow-frame">
-              <div class="flow-layer">
-                <img src="https://images.pexels.com/photos/3861957/pexels-photo-3861957.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=900&amp;h=1125&amp;fit=crop" width="900" height="1125" alt="" loading="lazy" decoding="async" />
-                <span class="flow-chip"><i class="fas fa-bullhorn"></i></span>
-              </div>
-              <div class="flow-layer">
-                <img src="https://images.pexels.com/photos/196644/pexels-photo-196644.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=900&amp;h=1125&amp;fit=crop" width="900" height="1125" alt="" loading="lazy" decoding="async" />
-                <span class="flow-chip"><i class="fas fa-filter"></i></span>
-              </div>
-              <div class="flow-layer">
-                <img src="https://images.pexels.com/photos/8386440/pexels-photo-8386440.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=900&amp;h=1125&amp;fit=crop" width="900" height="1125" alt="" loading="lazy" decoding="async" />
-                <span class="flow-chip"><i class="fas fa-robot"></i></span>
-              </div>
-              <div class="flow-layer">
-                <img src="https://images.pexels.com/photos/12969403/pexels-photo-12969403.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=900&amp;h=1125&amp;fit=crop" width="900" height="1125" alt="" loading="lazy" decoding="async" />
-                <span class="flow-chip"><i class="fas fa-calendar-check"></i></span>
-              </div>
-              <div class="flow-layer">
-                <img src="https://images.pexels.com/photos/267389/pexels-photo-267389.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=900&amp;h=1125&amp;fit=crop" width="900" height="1125" alt="" loading="lazy" decoding="async" />
-                <span class="flow-chip"><i class="fas fa-comment-sms"></i></span>
-              </div>
-              <span class="flow-count"><b id="flowCount">01</b><small>/ 05</small></span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- EXPERIENCE -->
-    <section class="section-block xp" id="experience" data-mood="violet">
-      <div class="container xp-layout">
-        <div class="section-heading xp-head reveal">
-          <span class="section-kicker"><b>04</b>Experience</span>
-          <h2>Experience.</h2>
-          <p>Open a role to see the details.</p>
+        <div class="section-heading reveal">
+          <span class="section-kicker">HOW IT WORKS</span>
+          <h2>From click to booked call.</h2>
         </div>
 
-        <ol class="xp-list" id="xpList">
-          <li class="xp-item is-open reveal">
-            <span class="xp-node" aria-hidden="true"><i class="fas fa-laptop-code"></i></span>
-
-            <button class="xp-toggle" type="button" aria-expanded="true" aria-controls="xp-1">
-              <span class="xp-role">
-                <strong>Marketing Automation &amp; Funnel Specialist</strong>
-                <span class="xp-meta">
-                  <span class="job-company">Freelance clients</span>
-                  <span class="job-date">Dec 2025 – Present</span>
-                </span>
-              </span>
-              <span class="job-tag">Current</span>
-              <span class="xp-plus" aria-hidden="true"></span>
-            </button>
-
-            <div class="xp-body" id="xp-1">
-              <div class="xp-body-inner">
-                <ul class="feature-list">
-                  <li>Built AI-powered funnels and websites using Replit and GoHighLevel</li>
-                  <li>Created quizzes, surveys, and score-based workflow triggers</li>
-                  <li>Developed advanced automations: triggers, conditions, pipelines, and nurture sequences</li>
-                  <li>Implemented AI agents and chatbots for lead qualification</li>
-                  <li>Configured domains, DNS, and hosting using Cloudflare and SiteGround</li>
-                  <li>Set up Meta and Microsoft Ads accounts; built end-to-end lead gen systems (capture → booking → follow-up)</li>
-                  <li>Troubleshot funnels, CRM systems, domains, and integrations for clients</li>
-                </ul>
-              </div>
-            </div>
+        <ol class="infographic reveal" aria-label="Lead system flow">
+          <li class="info-node">
+            <div class="info-img"><img src="https://images.pexels.com/photos/3861957/pexels-photo-3861957.jpeg?auto=compress&cs=tinysrgb&w=300&h=300&fit=crop" alt="" loading="lazy" decoding="async" /><i class="fas fa-bullhorn"></i></div>
+            <span class="info-num">01</span>
+            <h3>Traffic</h3>
+            <p>Ads bring leads in</p>
           </li>
-          <li class="xp-item reveal">
-            <span class="xp-node" aria-hidden="true"><i class="fas fa-chart-line"></i></span>
-
-            <button class="xp-toggle" type="button" aria-expanded="false" aria-controls="xp-2">
-              <span class="xp-role">
-                <strong>Digital Marketing Manager</strong>
-                <span class="xp-meta">
-                  <span class="job-company">US healthcare practice</span>
-                  <span class="job-date">Aug 2025 – Nov 2025</span>
-                </span>
-              </span>
-              <span class="job-tag blue">Client Role</span>
-              <span class="xp-plus" aria-hidden="true"></span>
-            </button>
-
-            <div class="xp-body" id="xp-2">
-              <div class="xp-body-inner">
-                <ul class="feature-list">
-                  <li>Managed GoHighLevel funnels, automations, and pipelines</li>
-                  <li>Built and optimized email and SMS campaigns</li>
-                  <li>Troubleshot technical issues across domains, integrations, and CRM</li>
-                  <li>Handled client communication and follow-ups</li>
-                </ul>
-              </div>
-            </div>
+          <li class="info-node">
+            <div class="info-img"><img src="https://images.pexels.com/photos/196644/pexels-photo-196644.jpeg?auto=compress&cs=tinysrgb&w=300&h=300&fit=crop" alt="" loading="lazy" decoding="async" /><i class="fas fa-filter"></i></div>
+            <span class="info-num">02</span>
+            <h3>Capture</h3>
+            <p>Funnels &amp; quizzes</p>
           </li>
-          <li class="xp-item reveal">
-            <span class="xp-node" aria-hidden="true"><i class="fas fa-headset"></i></span>
-
-            <button class="xp-toggle" type="button" aria-expanded="false" aria-controls="xp-3">
-              <span class="xp-role">
-                <strong>Virtual Assistant (Digital Marketing)</strong>
-                <span class="xp-meta">
-                  <span class="job-company">Remote staffing agency</span>
-                  <span class="job-date">Sep 2024 – Jul 2025</span>
-                </span>
-              </span>
-              <span class="job-tag soft">Remote</span>
-              <span class="xp-plus" aria-hidden="true"></span>
-            </button>
-
-            <div class="xp-body" id="xp-3">
-              <div class="xp-body-inner">
-                <ul class="feature-list">
-                  <li>Managed email marketing using ActiveCampaign and GoHighLevel</li>
-                  <li>Handled social media scheduling and content posting</li>
-                  <li>Organized CRM data and managed contacts</li>
-                  <li>Assisted with eCommerce product listings and admin tasks</li>
-                </ul>
-              </div>
-            </div>
+          <li class="info-node">
+            <div class="info-img"><img src="https://images.pexels.com/photos/8386440/pexels-photo-8386440.jpeg?auto=compress&cs=tinysrgb&w=300&h=300&fit=crop" alt="" loading="lazy" decoding="async" /><i class="fas fa-robot"></i></div>
+            <span class="info-num">03</span>
+            <h3>Qualify</h3>
+            <p>AI scores intent</p>
           </li>
-          <li class="xp-item reveal">
-            <span class="xp-node" aria-hidden="true"><i class="fas fa-graduation-cap"></i></span>
-
-            <button class="xp-toggle" type="button" aria-expanded="false" aria-controls="xp-4">
-              <span class="xp-role">
-                <strong>E-Commerce Intern</strong>
-                <span class="xp-meta">
-                  <span class="job-company">Retail brand</span>
-                  <span class="job-date">Mar 2024 – Jul 2024</span>
-                </span>
-              </span>
-              <span class="job-tag muted">Internship</span>
-              <span class="xp-plus" aria-hidden="true"></span>
-            </button>
-
-            <div class="xp-body" id="xp-4">
-              <div class="xp-body-inner">
-                <ul class="feature-list">
-                  <li>Managed Shopify product listings and inventory</li>
-                  <li>Assisted with email marketing and customer support</li>
-                  <li>Optimized product descriptions and visuals</li>
-                </ul>
-              </div>
-            </div>
+          <li class="info-node">
+            <div class="info-img"><img src="https://images.pexels.com/photos/12969403/pexels-photo-12969403.jpeg?auto=compress&cs=tinysrgb&w=300&h=300&fit=crop" alt="" loading="lazy" decoding="async" /><i class="fas fa-calendar-check"></i></div>
+            <span class="info-num">04</span>
+            <h3>Book</h3>
+            <p>Calendar &amp; pipeline</p>
           </li>
-          <li class="xp-item reveal">
-            <span class="xp-node" aria-hidden="true"><i class="fas fa-pen-ruler"></i></span>
-
-            <button class="xp-toggle" type="button" aria-expanded="false" aria-controls="xp-5">
-              <span class="xp-role">
-                <strong>Freelance Graphic Designer</strong>
-                <span class="xp-meta">
-                  <span class="job-company">Self-Employed</span>
-                  <span class="job-date">2021 – Present</span>
-                </span>
-              </span>
-              <span class="job-tag">Ongoing</span>
-              <span class="xp-plus" aria-hidden="true"></span>
-            </button>
-
-            <div class="xp-body" id="xp-5">
-              <div class="xp-body-inner">
-                <ul class="feature-list">
-                  <li>Created branding assets, social media graphics, and marketing materials</li>
-                  <li>Worked with clients to align visuals with brand identity</li>
-                  <li>Delivered high-quality designs using Canva and Photoshop</li>
-                </ul>
-              </div>
-            </div>
+          <li class="info-node">
+            <div class="info-img"><img src="https://images.pexels.com/photos/267389/pexels-photo-267389.jpeg?auto=compress&cs=tinysrgb&w=300&h=300&fit=crop" alt="" loading="lazy" decoding="async" /><i class="fas fa-comment-sms"></i></div>
+            <span class="info-num">05</span>
+            <h3>Follow up</h3>
+            <p>Email &amp; SMS on autopilot</p>
           </li>
         </ol>
       </div>
     </section>
-
-    <!-- WORK (3D showcase + filterable gallery; data + logic in work.js) -->
-    <section class="section-block work" id="projects" data-mood="deep">
+    <!-- EXPERIENCE -->
+    <section class="section-block" id="experience">
       <div class="container">
-        <div class="work-head">
-          <div class="section-heading reveal">
-            <span class="section-kicker"><b>05</b>Work</span>
-            <h2>Selected <em>work.</em></h2>
-          </div>
+        <div class="section-heading reveal">
+          <span class="section-kicker">EXPERIENCE</span>
+          <h2>Experience.</h2>
+        </div>
 
-          <div class="work-intro reveal">
-            <p>Drag the carousel, or open any piece to see it full size.</p>
-            <ul class="work-disciplines" aria-label="Disciplines">
-              <li>Ad creatives</li>
-              <li>Social posts</li>
-              <li>Websites</li>
-              <li>GoHighLevel</li>
-              <li>Motion graphics</li>
-              <li>Animated videos</li>
+        <div class="experience-layout">
+          <article class="experience-card glass reveal">
+            <div class="experience-top">
+              <div class="experience-heading">
+                <div class="experience-icon"><i class="fas fa-laptop-code"></i></div>
+                <div>
+                  <span class="job-tag">Current</span>
+                  <h3>Marketing Automation & Funnel Specialist</h3>
+                  <p class="job-company">Freelance clients</p>
+                </div>
+              </div>
+              <span class="job-date">Dec 2025 – Present</span>
+            </div>
+
+            <ul class="feature-list">
+              <li>Built AI-powered funnels and websites using Replit and GoHighLevel</li>
+              <li>Created quizzes, surveys, and score-based workflow triggers</li>
+              <li>Developed advanced automations: triggers, conditions, pipelines, and nurture sequences</li>
+              <li>Implemented AI agents and chatbots for lead qualification</li>
+              <li>Configured domains, DNS, and hosting using Cloudflare and SiteGround</li>
+              <li>Set up Meta and Microsoft Ads accounts; built end-to-end lead gen systems (capture → booking → follow-up)</li>
+              <li>Troubleshot funnels, CRM systems, domains, and integrations for clients</li>
             </ul>
-          </div>
+          </article>
+
+          <article class="experience-card glass reveal">
+            <div class="experience-top">
+              <div class="experience-heading">
+                <div class="experience-icon"><i class="fas fa-chart-line"></i></div>
+                <div>
+                  <span class="job-tag blue">Client Role</span>
+                  <h3>Digital Marketing Manager</h3>
+                  <p class="job-company">US healthcare practice</p>
+                </div>
+              </div>
+              <span class="job-date">Aug 2025 – Nov 2025</span>
+            </div>
+
+            <ul class="feature-list">
+              <li>Managed GoHighLevel funnels, automations, and pipelines</li>
+              <li>Built and optimized email and SMS campaigns</li>
+              <li>Troubleshot technical issues across domains, integrations, and CRM</li>
+              <li>Handled client communication and follow-ups</li>
+            </ul>
+          </article>
+
+          <article class="experience-card glass reveal">
+            <div class="experience-top">
+              <div class="experience-heading">
+                <div class="experience-icon"><i class="fas fa-headset"></i></div>
+                <div>
+                  <span class="job-tag soft">Remote</span>
+                  <h3>Virtual Assistant (Digital Marketing)</h3>
+                  <p class="job-company">Remote staffing agency</p>
+                </div>
+              </div>
+              <span class="job-date">Sep 2024 – Jul 2025</span>
+            </div>
+
+            <ul class="feature-list">
+              <li>Managed email marketing using ActiveCampaign and GoHighLevel</li>
+              <li>Handled social media scheduling and content posting</li>
+              <li>Organized CRM data and managed contacts</li>
+              <li>Assisted with eCommerce product listings and admin tasks</li>
+            </ul>
+          </article>
+
+          <article class="experience-card glass reveal">
+            <div class="experience-top">
+              <div class="experience-heading">
+                <div class="experience-icon"><i class="fas fa-graduation-cap"></i></div>
+                <div>
+                  <span class="job-tag muted">Internship</span>
+                  <h3>E-Commerce Intern</h3>
+                  <p class="job-company">Retail brand</p>
+                </div>
+              </div>
+              <span class="job-date">Mar 2024 – Jul 2024</span>
+            </div>
+
+            <ul class="feature-list">
+              <li>Managed Shopify product listings and inventory</li>
+              <li>Assisted with email marketing and customer support</li>
+              <li>Optimized product descriptions and visuals</li>
+            </ul>
+          </article>
+
+          <article class="experience-card glass reveal">
+            <div class="experience-top">
+              <div class="experience-heading">
+                <div class="experience-icon"><i class="fas fa-pen-ruler"></i></div>
+                <div>
+                  <span class="job-tag">Ongoing</span>
+                  <h3>Freelance Graphic Designer</h3>
+                  <p class="job-company">Self-Employed</p>
+                </div>
+              </div>
+              <span class="job-date">2021 – Present</span>
+            </div>
+
+            <ul class="feature-list">
+              <li>Created branding assets, social media graphics, and marketing materials</li>
+              <li>Worked with clients to align visuals with brand identity</li>
+              <li>Delivered high-quality designs using Canva and Photoshop</li>
+            </ul>
+          </article>
         </div>
       </div>
+    </section>
 
-      <div class="work-showcase">
-        <span class="work-ghost" aria-hidden="true">Work</span>
-        <span class="work-glow" aria-hidden="true"></span>
-
-        <div class="cf-tilt">
-          <div class="cf-stage" id="cfStage" aria-roledescription="carousel"></div>
+    <!-- WORK (3D showcase + filterable gallery; data + logic in work.js) -->
+    <section class="section-block" id="projects">
+      <div class="container">
+        <div class="section-heading reveal">
+          <span class="section-kicker">WORK</span>
+          <h2>Selected work.</h2>
         </div>
 
-        <div class="container cf-bar">
-          <div class="cf-index" aria-hidden="true"><b id="cfIndex">01</b><span id="cfTotal">/ 09</span></div>
+        <div class="work-showcase reveal">
+          <svg class="work-morph" viewBox="0 0 600 400" aria-hidden="true">
+            <defs>
+              <linearGradient id="morphGrad" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#4cc9f0" />
+                <stop offset="50%" stop-color="#3a86ff" />
+                <stop offset="100%" stop-color="#7b61ff" />
+              </linearGradient>
+            </defs>
+            <path fill="url(#morphGrad)">
+              <animate attributeName="d" dur="14s" repeatCount="indefinite" calcMode="spline"
+                keySplines="0.45 0 0.55 1; 0.45 0 0.55 1; 0.45 0 0.55 1"
+                values="M300,60 C420,50 540,120 530,210 C520,300 420,350 300,340 C180,330 70,290 70,200 C70,110 180,70 300,60 Z;
+                        M300,40 C450,70 560,160 510,240 C460,320 380,370 280,350 C160,325 50,260 90,170 C130,80 190,30 300,40 Z;
+                        M320,70 C430,40 520,140 540,220 C560,300 440,360 310,345 C200,332 60,300 60,210 C60,120 220,95 320,70 Z;
+                        M300,60 C420,50 540,120 530,210 C520,300 420,350 300,340 C180,330 70,290 70,200 C70,110 180,70 300,60 Z" />
+            </path>
+          </svg>
 
-          <p class="cf-caption" id="cfCaption" aria-live="polite"></p>
+          <div class="cf-stage" id="cfStage" aria-roledescription="carousel"></div>
 
           <div class="cf-controls">
             <button type="button" class="cf-arrow" id="cfPrev" aria-label="Previous"><i class="fas fa-arrow-left"></i></button>
+            <p class="cf-caption" id="cfCaption" aria-live="polite"></p>
             <button type="button" class="cf-arrow" id="cfNext" aria-label="Next"><i class="fas fa-arrow-right"></i></button>
-            <button type="button" class="btn btn-secondary cf-open" id="cfOpen">
-              View full size
-              <i class="fas fa-up-right-and-down-left-from-center" aria-hidden="true"></i>
-            </button>
           </div>
+          <div class="cf-dots" id="cfDots"></div>
         </div>
 
-        <div class="cf-dots" id="cfDots"></div>
-      </div>
-
-      <div class="container">
         <div class="work-tabs reveal" role="tablist" aria-label="Filter work">
           <button type="button" class="work-tab" role="tab" aria-selected="true" data-filter="all">All <em></em></button>
           <button type="button" class="work-tab" role="tab" aria-selected="false" data-filter="ad">Ad creatives <em></em></button>
@@ -645,82 +451,71 @@
           <button type="button" class="work-tab" role="tab" aria-selected="false" data-filter="web">Websites <em></em></button>
           <button type="button" class="work-tab" role="tab" aria-selected="false" data-filter="ghl">GoHighLevel <em></em></button>
           <button type="button" class="work-tab" role="tab" aria-selected="false" data-filter="anim">Animation <em></em></button>
+          <button type="button" class="work-tab" role="tab" aria-selected="false" data-filter="vad">Video ads <em></em></button>
         </div>
 
         <div class="work-grid" id="workGrid"></div>
 
         <div class="work-more-wrap">
-          <button type="button" class="btn btn-secondary" id="workMore"><i class="fas fa-plus" aria-hidden="true"></i> <span>Show more</span></button>
+          <button type="button" class="btn btn-secondary" id="workMore"><i class="fas fa-plus"></i> <span>Show more</span></button>
         </div>
       </div>
     </section>
 
     <!-- SKILLS -->
-    <section class="section-block stack" id="skills" data-mood="blue">
+    <section class="section-block" id="skills">
       <div class="container">
-        <div class="section-heading skills-left reveal">
-          <span class="section-kicker"><b>06</b>Skills</span>
-          <h2>Tools I <em>use.</em></h2>
-          <p>Automation, AI, websites, integrations, and animated video.</p>
-        </div>
-      </div>
+        <div class="skills-wrap glass reveal">
+          <div class="skills-left">
+            <span class="section-kicker">SKILLS</span>
+            <h2>Tools I use.</h2>
+            <p>Automation, AI, websites, integrations, and animated video.</p>
+          </div>
 
-      <div class="stack-wall" id="skillsTrack">
-        <div class="stack-row">
-          <ul class="stack-track" data-loop>
-            <li class="stack-item"><i class="fas fa-diagram-project" aria-hidden="true"></i>GoHighLevel</li>
-            <li class="stack-item"><i class="fas fa-filter" aria-hidden="true"></i>Funnel Creation/Web Development</li>
-            <li class="stack-item"><i class="fas fa-gears" aria-hidden="true"></i>CRM Automations</li>
-            <li class="stack-item"><i class="fas fa-robot" aria-hidden="true"></i>AI Chatbots</li>
-            <li class="stack-item"><i class="fas fa-magnet" aria-hidden="true"></i>Lead Gen Systems</li>
-            <li class="stack-item"><i class="fas fa-comment-sms" aria-hidden="true"></i>Email &amp; SMS Automation</li>
-            <li class="stack-item"><i class="fas fa-shield-halved" aria-hidden="true"></i>A2P 10DLC Registration</li>
-            <li class="stack-item"><i class="fas fa-envelope-open-text" aria-hidden="true"></i>ActiveCampaign</li>
-          </ul>
-        </div>
-        <div class="stack-row">
-          <ul class="stack-track" data-loop>
-            <li class="stack-item"><i class="fas fa-terminal" aria-hidden="true"></i>Replit</li>
-            <li class="stack-item"><i class="fa-brands fa-shopify" aria-hidden="true"></i>Shopify</li>
-            <li class="stack-item"><i class="fa-brands fa-google" aria-hidden="true"></i>Google Workspace</li>
-            <li class="stack-item"><i class="fas fa-cloud" aria-hidden="true"></i>Cloudflare</li>
-            <li class="stack-item"><i class="fas fa-server" aria-hidden="true"></i>SiteGround</li>
-            <li class="stack-item"><i class="fas fa-network-wired" aria-hidden="true"></i>DNS Setup</li>
-            <li class="stack-item"><i class="fa-brands fa-microsoft" aria-hidden="true"></i>Microsoft Ads</li>
-          </ul>
-        </div>
-        <div class="stack-row">
-          <ul class="stack-track" data-loop>
-            <li class="stack-item"><i class="fas fa-palette" aria-hidden="true"></i>Canva</li>
-            <li class="stack-item"><i class="fa-brands fa-adobe" aria-hidden="true"></i>Adobe Photoshop</li>
-            <li class="stack-item"><i class="fas fa-bolt" aria-hidden="true"></i>Zapier</li>
-            <li class="stack-item"><i class="fas fa-plug" aria-hidden="true"></i>API Integrations</li>
-            <li class="stack-item"><i class="fa-brands fa-meta" aria-hidden="true"></i>Meta Ads (Facebook &amp; Instagram)</li>
-            <li class="stack-item"><i class="fas fa-code" aria-hidden="true"></i>AI-Assisted Web Development</li>
-            <li class="stack-item"><i class="fas fa-wand-magic-sparkles" aria-hidden="true"></i>AI-Augmented Automation &amp; Prompt Engineering</li>
-          </ul>
-        </div>
-        <div class="stack-row">
-          <ul class="stack-track" data-loop>
-            <li class="stack-item"><i class="fas fa-clapperboard" aria-hidden="true"></i>AI Video &amp; Animation</li>
-            <li class="stack-item"><i class="fas fa-film" aria-hidden="true"></i>Remotion (React Video)</li>
-            <li class="stack-item"><i class="fas fa-cube" aria-hidden="true"></i>Blender 3D</li>
-            <li class="stack-item"><i class="fas fa-image" aria-hidden="true"></i>ComfyUI &amp; AI Image/Video Generation</li>
-            <li class="stack-item"><i class="fas fa-microphone-lines" aria-hidden="true"></i>AI Voiceover (TTS)</li>
-            <li class="stack-item"><i class="fas fa-closed-captioning" aria-hidden="true"></i>Kinetic Captions, Music &amp; SFX</li>
-            <li class="stack-item"><i class="fas fa-photo-film" aria-hidden="true"></i>FFmpeg</li>
-            <li class="stack-item"><i class="fas fa-terminal" aria-hidden="true"></i>Claude Code &amp; AI Agents</li>
-          </ul>
+          <div class="skills-right">
+            <div class="skills-track" id="skillsTrack">
+              <div class="skill-pill"><i class="fas fa-diagram-project"></i>GoHighLevel</div>
+              <div class="skill-pill"><i class="fas fa-filter"></i>Funnel Creation/Web Development</div>
+              <div class="skill-pill"><i class="fas fa-gears"></i>CRM Automations</div>
+              <div class="skill-pill"><i class="fas fa-robot"></i>AI Chatbots</div>
+              <div class="skill-pill"><i class="fas fa-magnet"></i>Lead Gen Systems</div>
+              <div class="skill-pill"><i class="fas fa-comment-sms"></i>Email & SMS Automation</div>
+              <div class="skill-pill"><i class="fas fa-shield-halved"></i>A2P 10DLC Registration</div>
+              <div class="skill-pill"><i class="fas fa-envelope-open-text"></i>ActiveCampaign</div>
+              <div class="skill-pill"><i class="fas fa-terminal"></i>Replit</div>
+              <div class="skill-pill"><i class="fa-brands fa-shopify"></i>Shopify</div>
+              <div class="skill-pill"><i class="fa-brands fa-google"></i>Google Workspace</div>
+              <div class="skill-pill"><i class="fas fa-cloud"></i>Cloudflare</div>
+              <div class="skill-pill"><i class="fas fa-server"></i>SiteGround</div>
+              <div class="skill-pill"><i class="fas fa-network-wired"></i>DNS Setup</div>
+              <div class="skill-pill"><i class="fa-brands fa-microsoft"></i>Microsoft Ads</div>
+              <div class="skill-pill"><i class="fas fa-palette"></i>Canva</div>
+              <div class="skill-pill"><i class="fa-brands fa-adobe"></i>Adobe Photoshop</div>
+              <div class="skill-pill"><i class="fas fa-bolt"></i>Zapier</div>
+              <div class="skill-pill"><i class="fas fa-plug"></i>API Integrations</div>
+              <div class="skill-pill"><i class="fa-brands fa-meta"></i>Meta Ads (Facebook & Instagram)</div>
+              <div class="skill-pill"><i class="fas fa-code"></i>AI-Assisted Web Development</div>
+              <div class="skill-pill"><i class="fas fa-wand-magic-sparkles"></i>AI-Augmented Automation & Prompt Engineering</div>
+              <div class="skill-pill"><i class="fas fa-clapperboard"></i>AI Video & Animation</div>
+              <div class="skill-pill"><i class="fas fa-film"></i>Remotion (React Video)</div>
+              <div class="skill-pill"><i class="fas fa-cube"></i>Blender 3D</div>
+              <div class="skill-pill"><i class="fas fa-image"></i>ComfyUI & AI Image/Video Generation</div>
+              <div class="skill-pill"><i class="fas fa-microphone-lines"></i>AI Voiceover (TTS)</div>
+              <div class="skill-pill"><i class="fas fa-closed-captioning"></i>Kinetic Captions, Music & SFX</div>
+              <div class="skill-pill"><i class="fas fa-photo-film"></i>FFmpeg</div>
+              <div class="skill-pill"><i class="fas fa-terminal"></i>Claude Code & AI Agents</div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
 
     <!-- MINIGAME -->
-    <section class="section-block game" id="game" data-mood="deep">
+    <section class="section-block" id="game">
       <div class="container">
         <div class="section-heading reveal">
-          <span class="section-kicker"><b>07</b>Play</span>
-          <h2><em>Lead Rush.</em> Catch the leads, dodge the spam.</h2>
+          <span class="section-kicker">PLAY</span>
+          <h2>Lead Rush — catch the leads, dodge the spam.</h2>
           <p>
             Catch the good leads, filter out the junk.
           </p>
@@ -774,50 +569,43 @@
     </section>
 
     <!-- CONTACT -->
-    <section class="section-block contact" id="contact" data-mood="cyan">
+    <section class="section-block" id="contact">
       <div class="container">
-        <div class="contact-top">
-          <div class="section-heading contact-intro reveal">
-            <span class="section-kicker"><b>08</b>Contact</span>
-            <h2>Let’s build <em>your system.</em></h2>
+        <div class="contact-shell">
+          <div class="contact-intro glass reveal">
+            <div class="contact-intro-copy">
+              <span class="section-kicker">CONTACT</span>
+              <h2>Let’s build your system.</h2>
+              <p>Open for freelance and contract work.</p>
+            </div>
+            <img src="./images/funnel-viz.svg" class="contact-funnel"
+              alt="Conversion funnel showing traffic narrowing through leads and qualified prospects to closed customers" />
           </div>
 
-          <img src="./images/funnel-viz.svg" class="contact-funnel" width="420" height="330" loading="lazy"
-            alt="Conversion funnel showing traffic narrowing through leads and qualified prospects to closed customers" />
-        </div>
+          <div class="contact-grid">
+            <a href="#" class="contact-card glass reveal" data-open-form>
+              <div class="contact-icon"><i class="fas fa-paper-plane"></i></div>
+              <div>
+                <h3>Project Inquiry</h3>
+                <p>Use the contact form to get in touch.</p>
+              </div>
+            </a>
 
-        <div class="contact-cta reveal">
-          <p>Open for freelance and contract work.</p>
+            <div class="contact-card glass reveal">
+              <div class="contact-icon"><i class="fas fa-briefcase"></i></div>
+              <div>
+                <h3>Work Samples</h3>
+                <p>Browse selected project folders and completed tasks above.</p>
+              </div>
+            </div>
 
-          <a href="#" class="btn btn-primary btn-xl" data-open-form>
-            Let’s Talk
-            <i class="fas fa-arrow-right" aria-hidden="true"></i>
-          </a>
-        </div>
-
-        <div class="contact-grid">
-          <a href="#" class="contact-card reveal" data-open-form>
-            <span class="contact-icon"><i class="fas fa-paper-plane" aria-hidden="true"></i></span>
-            <h3>Project Inquiry</h3>
-            <p>Use the contact form to get in touch.</p>
-          </a>
-
-          <a href="mailto:lawrencevaldenebro@gmail.com?subject=Portfolio%20Inquiry" class="contact-card reveal">
-            <span class="contact-icon"><i class="fas fa-envelope" aria-hidden="true"></i></span>
-            <h3>Email</h3>
-            <p>lawrencevaldenebro@gmail.com</p>
-          </a>
-
-          <a href="#projects" class="contact-card reveal">
-            <span class="contact-icon"><i class="fas fa-briefcase" aria-hidden="true"></i></span>
-            <h3>Work Samples</h3>
-            <p>Browse selected project folders and completed tasks above.</p>
-          </a>
-
-          <div class="contact-card reveal">
-            <span class="contact-icon"><i class="fas fa-globe" aria-hidden="true"></i></span>
-            <h3>Remote Availability</h3>
-            <p>Open to freelance and contract-based opportunities.</p>
+            <div class="contact-card glass reveal">
+              <div class="contact-icon"><i class="fas fa-globe"></i></div>
+              <div>
+                <h3>Remote Availability</h3>
+                <p>Open to freelance and contract-based opportunities.</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -825,31 +613,19 @@
   </main>
 
   <footer class="site-footer">
-    <div class="container">
-      <div class="footer-inner">
-        <div class="footer-brand">
-          <a href="#home" class="brand" aria-label="Lawrence, back to top">
-            <img src="./favicon.svg" class="brand-mark" width="32" height="32" alt="" />
-            <span>Lawrence</span>
-          </a>
-          <p>Marketing Automation &amp; Funnel Specialist</p>
-        </div>
-
-        <nav class="footer-links" aria-label="Footer">
-          <a href="#home">Home</a>
-          <a href="#services">Services</a>
-          <a href="#experience">Experience</a>
-          <a href="#projects">Work</a>
-          <a href="#contact">Contact</a>
-        </nav>
-
-        <a href="#home" class="footer-up">
-          Back to top
-          <i class="fas fa-arrow-up" aria-hidden="true"></i>
-        </a>
+    <div class="container footer-inner glass">
+      <div>
+        <h3>Lawrence</h3>
+        <p>Marketing Automation & Funnel Specialist</p>
       </div>
 
-      <div class="footer-word" aria-hidden="true"><span>Lawrence</span></div>
+      <div class="footer-links">
+        <a href="#home">Home</a>
+        <a href="#services">Services</a>
+        <a href="#experience">Experience</a>
+        <a href="#projects">Work</a>
+        <a href="#contact">Contact</a>
+      </div>
 
       <p class="footer-copy">© 2026 Lawrence. All rights reserved.</p>
     </div>
@@ -860,7 +636,7 @@
   <div class="form-modal" id="formModal">
     <div class="form-overlay" id="closeForm"></div>
 
-    <div class="form-box">
+    <div class="form-box" data-lenis-prevent>
       <button class="form-close" id="closeFormBtn" type="button" aria-label="Close">&times;</button>
 
       <h3>Let's Connect</h3>
@@ -978,7 +754,7 @@
   </div>
 
   <!-- Work lightbox (filled by work.js) -->
-  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Work viewer" aria-hidden="true">
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Work viewer" aria-hidden="true" data-lenis-prevent>
     <div class="lb-backdrop"></div>
     <button type="button" class="lb-close" aria-label="Close"><i class="fas fa-xmark"></i></button>
     <button type="button" class="lb-arrow lb-prev" aria-label="Previous"><i class="fas fa-arrow-left"></i></button>

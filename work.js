@@ -4,7 +4,7 @@
    1. DATA
    2. COVERFLOW (3D carousel of highlights)
    3. GALLERY (filter tabs + masonry grid + "show more")
-   4. LIGHTBOX (image / video viewer with prev/next)
+   4. LIGHTBOX (image / Drive video viewer with prev/next)
    ---------------------------------------------------------
    Images live in images/work/. An item with a `drive` id
    plays in Google Drive's preview player instead.
@@ -13,16 +13,16 @@
 document.addEventListener("DOMContentLoaded", () => {
   /* =========================================================
      1. DATA
-     - type: "ad" | "social" | "web" | "ghl" | "anim"
+     - type: "ad" | "social" | "web" | "ghl" | "anim" | "vad"
      - w/h: image size, used to reserve space before load
      - drive: optional Drive file id (videos)
-     - video/poster: self-hosted video (videos/anim/)
   ========================================================= */
   const IMG = "./images/work/";
   const ANIM = "./videos/anim/";
 
   // Animated explainer videos (vertical 9:16, self-hosted)
   const anim = (src, title) => ({ src, type: "anim", title, video: `${ANIM}${src}.mp4`, poster: `${ANIM}${src}.jpg`, w: 720, h: 1280 });
+  const vad = (src, title) => ({ ...anim(src, title), type: "vad" });
 
   const WORK = [
     anim("walked-backward", "What if everyone walked backward?"),
@@ -33,9 +33,12 @@ document.addEventListener("DOMContentLoaded", () => {
     { src: "web-trade-hero", type: "web", title: "Trade company website", w: 1600, h: 687 },
     anim("water-ran-out", "What if the water ran out for 3 days?"),
     { src: "ad-property-2", type: "ad", title: "Owner health-check ad", w: 1000, h: 1250 },
+    vad("ad-str-running-you", "Short-term rental ad: \"Is your Airbnb running you?\""),
     anim("five-dollar-coffee", "The $5 coffee"),
     anim("ship-above-ice", "The ship that rides above ice (3D)"),
     anim("3d-cartoon-test", "3D cartoon character test"),
+    vad("ad-str-reliable-help", "Short-term rental ad: reliable help"),
+    vad("ad-landlord-vacancy", "Landlord ad: empty units cost money"),
     { src: "ad-cleaning-2", type: "ad", title: "Signed checklist ad", w: 1000, h: 1250 },
     { src: "social-2", type: "social", title: "Meet-the-team post", w: 900, h: 1125 },
     { src: "ghl-ai-receptionist", type: "ghl", title: "AI receptionist offer page", w: 1143, h: 1089 },
@@ -66,18 +69,8 @@ document.addEventListener("DOMContentLoaded", () => {
     { src: "ad-property-wide-c", type: "ad", title: "Wide-format property ad", w: 1200, h: 628 }
   ];
 
-  const TYPE_LABEL = { ad: "Ad creative", social: "Social post", web: "Website", ghl: "GoHighLevel", reel: "Motion graphics", anim: "Animation" };
-  const TYPE_ICON = { ad: "fa-bullhorn", social: "fa-hashtag", web: "fa-code", ghl: "fa-diagram-project", reel: "fa-film", anim: "fa-clapperboard" };
-
-  // One line on what each discipline is (shown under the carousel title)
-  const TYPE_NOTE = {
-    ad: "Static ad creative for lead-gen campaigns",
-    social: "Branded graphic for social media",
-    web: "Website and landing page design",
-    ghl: "Built inside GoHighLevel",
-    reel: "A short reel of motion work",
-    anim: "Narrated animated explainer, from script to final cut"
-  };
+  const TYPE_LABEL = { ad: "Ad creative", social: "Social post", web: "Website", ghl: "GoHighLevel", reel: "Motion graphics", anim: "Animation", vad: "Video ad" };
+  const TYPE_ICON = { ad: "fa-bullhorn", social: "fa-hashtag", web: "fa-code", ghl: "fa-diagram-project", reel: "fa-film", anim: "fa-clapperboard", vad: "fa-video" };
 
   // Motion showreel. `hold` keeps it
   // in front of the carousel for its full length before rotating on.
@@ -98,7 +91,11 @@ document.addEventListener("DOMContentLoaded", () => {
     .map((src) => WORK.find((w) => w.src === src))];
 
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const pad2 = (n) => String(n).padStart(2, "0");
+
+  // SMIL morphs can't be stopped from CSS — pause them for reduced motion.
+  if (reduceMotion) {
+    document.querySelectorAll("svg.work-morph").forEach((svg) => svg.pauseAnimations?.());
+  }
 
   const imgUrl = (item) => item.poster || `${IMG}${item.src}.jpg`;
 
@@ -198,8 +195,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const cfStage = document.getElementById("cfStage");
   const cfDots = document.getElementById("cfDots");
   const cfCaption = document.getElementById("cfCaption");
-  const cfIndex = document.getElementById("cfIndex");
-  const cfTotal = document.getElementById("cfTotal");
 
   if (cfStage && SHOWCASE.length) {
     let active = 0;
@@ -215,8 +210,6 @@ document.addEventListener("DOMContentLoaded", () => {
       </button>`).join("");
 
     const cards = Array.from(cfStage.querySelectorAll(".cf-card"));
-
-    if (cfTotal) cfTotal.textContent = `/ ${pad2(SHOWCASE.length)}`;
 
     // Only the front card's video plays, and only while the carousel is on screen.
     function syncVideos() {
@@ -262,19 +255,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
       cfDots?.querySelectorAll("button").forEach((d, i) => d.classList.toggle("is-active", i === active));
 
-      const item = SHOWCASE[active];
-
       if (cfCaption) {
+        const item = SHOWCASE[active];
         cfCaption.classList.remove("is-in");
         void cfCaption.offsetWidth;
-        cfCaption.innerHTML =
-          `<span><i class="fas ${TYPE_ICON[item.type]}"></i> ${TYPE_LABEL[item.type]}</span>` +
-          `<strong>${item.title}</strong>` +
-          `<em>${TYPE_NOTE[item.type]}</em>`;
+        cfCaption.innerHTML = `<span><i class="fas ${TYPE_ICON[item.type]}"></i> ${TYPE_LABEL[item.type]}</span>${item.title}`;
         cfCaption.classList.add("is-in");
       }
-
-      if (cfIndex) cfIndex.textContent = pad2(active + 1);
     }
 
     function go(i) {
@@ -328,9 +315,6 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("cfPrev")?.addEventListener("click", () => go(active - 1));
     document.getElementById("cfNext")?.addEventListener("click", () => go(active + 1));
 
-    // The clear way in: opens whatever is at the front, full size.
-    document.getElementById("cfOpen")?.addEventListener("click", () => openLightbox(SHOWCASE, active));
-
     const showcase = cfStage.closest(".work-showcase");
     showcase?.addEventListener("mouseenter", stop);
     showcase?.addEventListener("mouseleave", play);
@@ -364,7 +348,7 @@ document.addEventListener("DOMContentLoaded", () => {
   /* =========================================================
      3. GALLERY
      - Masonry columns, filter tabs, "show more"
-     - Each tile wipes open as it scrolls into view
+     - Tiles fade + rise in with a stagger on every filter
   ========================================================= */
   const grid = document.getElementById("workGrid");
   const tabs = document.querySelectorAll(".work-tab");
@@ -372,53 +356,30 @@ document.addEventListener("DOMContentLoaded", () => {
   const PAGE = 9;
   let filter = "all";
   let shown = PAGE;
-  let rendered = 0;
 
   function currentList() {
     return filter === "all" ? WORK : WORK.filter((w) => w.type === filter);
   }
 
-  // Tiles reveal one by one; without the observer (or with reduced motion) they just show.
-  const tileObserver = "IntersectionObserver" in window && !reduceMotion
-    ? new IntersectionObserver((entries, observer) => {
-      entries.forEach((entry) => {
-        if (!entry.isIntersecting) return;
-        entry.target.classList.add("is-in");
-        observer.unobserve(entry.target);
-      });
-    }, { rootMargin: "0px 0px -6% 0px", threshold: 0.08 })
-    : null;
-
-  const tileHtml = (item, i) => `
-      <button type="button" class="work-tile${item.drive || item.video ? " is-video" : ""}" data-i="${i}" style="--d:${(i % 3) * 90}ms">
-        <span class="tile-media">
-          <img src="${imgUrl(item)}" alt="${item.title}" width="${item.w}" height="${item.h}" loading="lazy" decoding="async" />
-          ${item.drive || item.video ? '<span class="tile-play" aria-hidden="true"><i class="fas fa-play"></i></span>' : ""}
-          <span class="tile-info">
-            <span class="tile-type"><i class="fas ${TYPE_ICON[item.type]}"></i> ${TYPE_LABEL[item.type]}</span>
-            <span class="tile-title">${item.title}</span>
-          </span>
-          <span class="tile-open" aria-hidden="true"><i class="fas fa-up-right-and-down-left-from-center"></i></span>
-        </span>
-      </button>`;
-
-  // append = true keeps the tiles already on screen and only adds the new page
-  function renderGrid(append) {
+  function renderGrid() {
     if (!grid) return;
     const list = currentList();
     const visible = list.slice(0, shown);
-    const from = append ? rendered : 0;
-    const html = visible.slice(from).map((item, k) => tileHtml(item, from + k)).join("");
 
-    if (append) grid.insertAdjacentHTML("beforeend", html);
-    else grid.innerHTML = html;
+    grid.innerHTML = visible.map((item, i) => `
+      <button type="button" class="work-tile${item.drive || item.video ? " is-video" : ""}" data-i="${i}" style="--d:${(i % PAGE) * 55}ms">
+        <img src="${imgUrl(item)}" alt="${item.title}" width="${item.w}" height="${item.h}" loading="lazy" decoding="async" />
+        ${item.drive || item.video ? '<span class="tile-play" aria-hidden="true"><i class="fas fa-play"></i></span>' : ""}
+        <span class="tile-info">
+          <span class="tile-type"><i class="fas ${TYPE_ICON[item.type]}"></i> ${TYPE_LABEL[item.type]}</span>
+          <span class="tile-title">${item.title}</span>
+        </span>
+      </button>`).join("");
 
-    rendered = visible.length;
-    grid.classList.remove("is-swapping");
+    requestAnimationFrame(() => grid.classList.add("is-in"));
 
-    grid.querySelectorAll(".work-tile:not(.is-in)").forEach((tile) => {
-      if (tileObserver) tileObserver.observe(tile);
-      else tile.classList.add("is-in");
+    grid.querySelectorAll(".work-tile").forEach((tile) => {
+      tile.addEventListener("click", () => openLightbox(list, Number(tile.dataset.i)));
     });
 
     if (moreBtn) {
@@ -430,25 +391,19 @@ document.addEventListener("DOMContentLoaded", () => {
     if (window.ScrollTrigger) window.ScrollTrigger.refresh();
   }
 
-  // One listener for every tile, present or future
-  grid?.addEventListener("click", (event) => {
-    const tile = event.target.closest(".work-tile");
-    if (tile) openLightbox(currentList(), Number(tile.dataset.i));
-  });
-
   tabs.forEach((tab) => {
     tab.addEventListener("click", () => {
       filter = tab.dataset.filter;
       shown = PAGE;
       tabs.forEach((t) => t.setAttribute("aria-selected", String(t === tab)));
-      grid?.classList.add("is-swapping");
-      setTimeout(() => renderGrid(false), 200);
+      grid?.classList.remove("is-in");
+      setTimeout(renderGrid, 180);
     });
   });
 
   moreBtn?.addEventListener("click", () => {
     shown += PAGE;
-    renderGrid(true);
+    renderGrid();
   });
 
   // Count badges on tabs
@@ -459,10 +414,5 @@ document.addEventListener("DOMContentLoaded", () => {
     if (badge) badge.textContent = n;
   });
 
-  // The About section quotes the gallery size; keep it honest.
-  document.querySelectorAll("[data-work-count]").forEach((el) => {
-    el.textContent = String(WORK.length);
-  });
-
-  renderGrid(false);
+  renderGrid();
 });

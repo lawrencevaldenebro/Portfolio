@@ -13,7 +13,7 @@
 document.addEventListener("DOMContentLoaded", () => {
   /* =========================================================
      1. DATA
-     - type: "ad" | "social" | "web" | "ghl" | "anim" | "vad"
+     - type: "ad" | "social" | "web" | "ghl" | "anim"
      - w/h: image size, used to reserve space before load
      - drive: optional Drive file id (videos)
   ========================================================= */
@@ -22,23 +22,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Animated explainer videos (vertical 9:16, self-hosted)
   const anim = (src, title) => ({ src, type: "anim", title, video: `${ANIM}${src}.mp4`, poster: `${ANIM}${src}.webp`, thumb: `${ANIM}thumb/${src}.webp`, w: 720, h: 1280 });
-  const vad = (src, title) => ({ ...anim(src, title), type: "vad" });
 
   const WORK = [
-    anim("walked-backward", "What if everyone walked backward?"),
+    anim("walked-backward", "2D animated explainer: What if everyone walked backward?"),
     { src: "ad-property-1", type: "ad", title: "Property management ad", w: 1000, h: 1250 },
     { src: "ad-cleaning-1", type: "ad", title: "Commercial cleaning ad", w: 1000, h: 1250 },
-    anim("alcatraz", "Escape from Alcatraz"),
     { src: "social-1", type: "social", title: "\"Did you know\" post", w: 900, h: 1125 },
     { src: "web-trade-hero", type: "web", title: "Trade company website", w: 1600, h: 687 },
-    anim("water-ran-out", "What if the water ran out for 3 days?"),
     { src: "ad-property-2", type: "ad", title: "Owner health-check ad", w: 1000, h: 1250 },
-    vad("ad-str-running-you", "Short-term rental ad: \"Is your Airbnb running you?\""),
-    anim("five-dollar-coffee", "The $5 coffee"),
-    anim("ship-above-ice", "The ship that rides above ice (3D)"),
-    anim("3d-cartoon-test", "3D cartoon character test"),
-    vad("ad-str-reliable-help", "Short-term rental ad: reliable help"),
-    vad("ad-landlord-vacancy", "Landlord ad: empty units cost money"),
+    anim("ad-str-reliable-help", "Talking-head video ad: short-term rentals"),
     { src: "ad-cleaning-2", type: "ad", title: "Signed checklist ad", w: 1000, h: 1250 },
     { src: "social-2", type: "social", title: "Meet-the-team post", w: 900, h: 1125 },
     { src: "ghl-ai-receptionist", type: "ghl", title: "AI receptionist offer page", w: 1143, h: 1089 },
@@ -69,8 +61,8 @@ document.addEventListener("DOMContentLoaded", () => {
     { src: "ad-property-wide-c", type: "ad", title: "Wide-format property ad", w: 1200, h: 628 }
   ];
 
-  const TYPE_LABEL = { ad: "Ad creative", social: "Social post", web: "Website", ghl: "GoHighLevel", reel: "Motion graphics", anim: "Animation", vad: "Video ad" };
-  const TYPE_ICON = { ad: "fa-bullhorn", social: "fa-hashtag", web: "fa-code", ghl: "fa-diagram-project", reel: "fa-film", anim: "fa-clapperboard", vad: "fa-video" };
+  const TYPE_LABEL = { ad: "Ad creative", social: "Social post", web: "Website", ghl: "GoHighLevel", reel: "Motion graphics", anim: "Video" };
+  const TYPE_ICON = { ad: "fa-bullhorn", social: "fa-hashtag", web: "fa-code", ghl: "fa-diagram-project", reel: "fa-film", anim: "fa-clapperboard" };
 
   // Motion showreel. `hold` keeps it
   // in front of the carousel for its full length before rotating on.
@@ -78,10 +70,10 @@ document.addEventListener("DOMContentLoaded", () => {
     src: "showreel",
     type: "reel",
     title: "Showreel",
-    video: "./videos/showreel-2026.mp4",
+    video: "./videos/showreel-v3.mp4",
     av1: true,
     poster: "./videos/showreel-poster.jpg",
-    hold: 25300,
+    hold: 22300,
     w: 1280,
     h: 800
   };

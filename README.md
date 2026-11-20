@@ -16,7 +16,7 @@ Static HTML/CSS/JS with no build step. Pushing to `main` deploys to Vercel autom
 | `bg-flow.js` | Animated background lines |
 | `samurai-intro.js/.css` | Intro animation (once per session) |
 | `images/work/` | Portfolio pieces |
-| `videos/` | Showreel |
+| `videos/` | Showreel, plus `anim/` for the animated explainer videos (720p web encodes + posters) |
 
 ## Motion
 

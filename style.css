@@ -2236,6 +2236,11 @@ html:not(.js) .xp-body-inner {
   animation-duration: 58s;
 }
 
+.stack-row:nth-child(4) .stack-track.is-looped {
+  animation-duration: 70s;
+  animation-direction: reverse;
+}
+
 /* Hovering a row holds it still so a name can be read */
 @media (hover: hover) {
   .stack-row:hover .stack-track {
@@ -2286,6 +2291,17 @@ html:not(.js) .xp-body-inner {
 
 .stack-row:nth-child(3) .stack-item i {
   color: var(--accent-teal);
+}
+
+/* Fourth row (video & animation) is outlined like the second */
+.stack-row:nth-child(4) .stack-item {
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(170, 205, 255, 0.6);
+}
+
+.stack-row:nth-child(4) .stack-item i {
+  color: var(--accent-cyan);
+  -webkit-text-stroke: 0;
 }
 
 .stack-item:hover {
@@ -4313,6 +4329,15 @@ a.contact-card:hover .contact-icon {
   box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
 }
 
+/* Vertical (9:16) animation videos */
+.lb-reel.is-vertical {
+  width: auto;
+  height: 78vh;
+  max-width: calc(100vw - 48px);
+  aspect-ratio: 9 / 16;
+  object-fit: contain;
+}
+
 .lb-video {
   height: 78vh;
   aspect-ratio: 9 / 16;
@@ -4474,6 +4499,11 @@ a.contact-card:hover .contact-icon {
 
   .lb-reel {
     width: calc(100vw - 32px);
+  }
+
+  .lb-reel.is-vertical {
+    width: auto;
+    height: 70vh;
   }
 
   .lb-video {

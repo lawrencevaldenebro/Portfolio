@@ -13,18 +13,29 @@
 document.addEventListener("DOMContentLoaded", () => {
   /* =========================================================
      1. DATA
-     - type: "ad" | "social" | "web" | "ghl"
+     - type: "ad" | "social" | "web" | "ghl" | "anim"
      - w/h: image size, used to reserve space before load
      - drive: optional Drive file id (videos)
+     - video/poster: self-hosted video (videos/anim/)
   ========================================================= */
   const IMG = "./images/work/";
+  const ANIM = "./videos/anim/";
+
+  // Animated explainer videos (vertical 9:16, self-hosted)
+  const anim = (src, title) => ({ src, type: "anim", title, video: `${ANIM}${src}.mp4`, poster: `${ANIM}${src}.jpg`, w: 720, h: 1280 });
 
   const WORK = [
+    anim("walked-backward", "What if everyone walked backward?"),
     { src: "ad-property-1", type: "ad", title: "Property management ad", w: 1000, h: 1250 },
     { src: "ad-cleaning-1", type: "ad", title: "Commercial cleaning ad", w: 1000, h: 1250 },
+    anim("alcatraz", "Escape from Alcatraz"),
     { src: "social-1", type: "social", title: "\"Did you know\" post", w: 900, h: 1125 },
     { src: "web-trade-hero", type: "web", title: "Trade company website", w: 1600, h: 687 },
+    anim("water-ran-out", "What if the water ran out for 3 days?"),
     { src: "ad-property-2", type: "ad", title: "Owner health-check ad", w: 1000, h: 1250 },
+    anim("five-dollar-coffee", "The $5 coffee"),
+    anim("ship-above-ice", "The ship that rides above ice (3D)"),
+    anim("3d-cartoon-test", "3D cartoon character test"),
     { src: "ad-cleaning-2", type: "ad", title: "Signed checklist ad", w: 1000, h: 1250 },
     { src: "social-2", type: "social", title: "Meet-the-team post", w: 900, h: 1125 },
     { src: "ghl-ai-receptionist", type: "ghl", title: "AI receptionist offer page", w: 1143, h: 1089 },
@@ -55,8 +66,8 @@ document.addEventListener("DOMContentLoaded", () => {
     { src: "ad-property-wide-c", type: "ad", title: "Wide-format property ad", w: 1200, h: 628 }
   ];
 
-  const TYPE_LABEL = { ad: "Ad creative", social: "Social post", web: "Website", ghl: "GoHighLevel", reel: "Motion graphics" };
-  const TYPE_ICON = { ad: "fa-bullhorn", social: "fa-hashtag", web: "fa-code", ghl: "fa-diagram-project", reel: "fa-film" };
+  const TYPE_LABEL = { ad: "Ad creative", social: "Social post", web: "Website", ghl: "GoHighLevel", reel: "Motion graphics", anim: "Animation" };
+  const TYPE_ICON = { ad: "fa-bullhorn", social: "fa-hashtag", web: "fa-code", ghl: "fa-diagram-project", reel: "fa-film", anim: "fa-clapperboard" };
 
   // One line on what each discipline is (shown under the carousel title)
   const TYPE_NOTE = {
@@ -64,7 +75,8 @@ document.addEventListener("DOMContentLoaded", () => {
     social: "Branded graphic for social media",
     web: "Website and landing page design",
     ghl: "Built inside GoHighLevel",
-    reel: "A short reel of motion work"
+    reel: "A short reel of motion work",
+    anim: "Narrated animated explainer, from script to final cut"
   };
 
   // Motion showreel. `hold` keeps it
@@ -108,7 +120,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     lbStage.classList.remove("is-in");
     if (item.video) {
-      lbStage.innerHTML = `<video class="lb-reel" src="${item.video}" poster="${item.poster}" controls autoplay playsinline loop></video>`;
+      const vertical = item.h > item.w ? " is-vertical" : "";
+      lbStage.innerHTML = `<video class="lb-reel${vertical}" src="${item.video}" poster="${item.poster}" controls autoplay playsinline loop></video>`;
     } else if (item.drive) {
       lbStage.innerHTML = `<div class="lb-video"><iframe src="https://drive.google.com/file/d/${item.drive}/preview" allow="autoplay; fullscreen" allowfullscreen title="${item.title}"></iframe></div>`;
     } else {
@@ -377,10 +390,10 @@ document.addEventListener("DOMContentLoaded", () => {
     : null;
 
   const tileHtml = (item, i) => `
-      <button type="button" class="work-tile${item.drive ? " is-video" : ""}" data-i="${i}" style="--d:${(i % 3) * 90}ms">
+      <button type="button" class="work-tile${item.drive || item.video ? " is-video" : ""}" data-i="${i}" style="--d:${(i % 3) * 90}ms">
         <span class="tile-media">
           <img src="${imgUrl(item)}" alt="${item.title}" width="${item.w}" height="${item.h}" loading="lazy" decoding="async" />
-          ${item.drive ? '<span class="tile-play" aria-hidden="true"><i class="fas fa-play"></i></span>' : ""}
+          ${item.drive || item.video ? '<span class="tile-play" aria-hidden="true"><i class="fas fa-play"></i></span>' : ""}
           <span class="tile-info">
             <span class="tile-type"><i class="fas ${TYPE_ICON[item.type]}"></i> ${TYPE_LABEL[item.type]}</span>
             <span class="tile-title">${item.title}</span>

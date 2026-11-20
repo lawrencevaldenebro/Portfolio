@@ -5,7 +5,7 @@
    Plays once per browser session; click / Esc / the Skip button ends it early.
    Replay manually with: SamuraiIntro.play({ force: true })            */
 (function () {
-  var DURATION = 3400;
+  var DURATION = 1700;
   var KEY = 'si-intro-played';
 
   function samuraiSvg() {

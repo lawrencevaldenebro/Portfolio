@@ -79,6 +79,7 @@ document.addEventListener("DOMContentLoaded", () => {
     type: "reel",
     title: "Showreel",
     video: "./videos/showreel-2026.mp4",
+    av1: true,
     poster: "./videos/showreel-poster.jpg",
     hold: 25300,
     w: 1280,
@@ -98,6 +99,13 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Full-size image (viewer + carousel) and a small WebP for gallery tiles.
+  // Items with `av1: true` also ship an .av1.mp4 (about half the size);
+  // browsers without AV1 fall back to the H.264 file.
+  const AV1 = 'video/mp4; codecs="av01.0.05M.08"';
+  const videoSources = (item) => !item.av1
+    ? `<source src="${item.video}" type="video/mp4">`
+    : `<source src="${item.video.replace(/\.mp4$/, ".av1.mp4")}" type='${AV1}'><source src="${item.video}" type="video/mp4">`;
+
   const imgUrl = (item) => item.poster || `${IMG}${item.src}.webp`;
   const thumbUrl = (item) => item.thumb || (item.poster ? item.poster : `${IMG}thumb/${item.src}.webp`);
 
@@ -120,7 +128,7 @@ document.addEventListener("DOMContentLoaded", () => {
     lbStage.classList.remove("is-in");
     if (item.video) {
       const vertical = item.h > item.w ? " is-vertical" : "";
-      lbStage.innerHTML = `<video class="lb-reel${vertical}" src="${item.video}" poster="${item.poster}" controls autoplay playsinline loop></video>`;
+      lbStage.innerHTML = `<video class="lb-reel${vertical}" poster="${item.poster}" controls autoplay playsinline loop>${videoSources(item)}</video>`;
     } else if (item.drive) {
       lbStage.innerHTML = `<div class="lb-video"><iframe src="https://drive.google.com/file/d/${item.drive}/preview" allow="autoplay; fullscreen" allowfullscreen title="${item.title}"></iframe></div>`;
     } else {
@@ -206,7 +214,7 @@ document.addEventListener("DOMContentLoaded", () => {
     cfStage.innerHTML = SHOWCASE.map((item, i) => `
       <button type="button" class="cf-card${item.video ? " is-reel" : ""}" data-i="${i}" aria-label="${item.title}">
         ${item.video
-          ? `<video src="${item.video}" poster="${item.poster}" muted loop playsinline preload="none" aria-hidden="true"></video>`
+          ? `<video poster="${item.poster}" muted loop playsinline preload="none" aria-hidden="true">${videoSources(item)}</video>`
           : `<img src="${imgUrl(item)}" alt="" loading="lazy" decoding="async" />`}
         <span class="cf-shine" aria-hidden="true"></span>
       </button>`).join("");

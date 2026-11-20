@@ -90,20 +90,6 @@ html {
   }
 }
 
-/* Lenis drives the scroll position itself on desktop, so native
-   smooth scrolling has to stay out of its way */
-html.lenis {
-  scroll-behavior: auto;
-}
-
-html.lenis,
-html.lenis body {
-  height: auto;
-}
-
-html.lenis [data-lenis-prevent] {
-  overscroll-behavior: contain;
-}
 
 body {
   font-family: var(--font-body);
@@ -217,10 +203,8 @@ section[id] {
 .bg-orb {
   position: absolute;
   border-radius: 50%;
-  will-change: transform;
-  /* --bx / --by follow the cursor (set in script.js) */
-  translate: calc(var(--bx, 0) * var(--drift, 18px)) calc(var(--by, 0) * var(--drift, 18px));
-  transition: translate 1.4s var(--ease-out-quart), opacity 1.6s ease;
+  /* Static fields (no loop, no cursor follow): cheap to keep on screen */
+  transition: opacity 1.6s ease;
 }
 
 /* The colour mood shifts with the section in view (body[data-mood], set in script.js) */
@@ -243,7 +227,6 @@ body[data-mood="deep"] .orb-three { opacity: 0.22; }
   top: -180px;
   left: -260px;
   background: radial-gradient(closest-side, rgba(98, 60, 255, 0.3), rgba(98, 60, 255, 0));
-  animation: floatOrb 16s ease-in-out infinite;
 }
 
 .orb-two {
@@ -251,9 +234,7 @@ body[data-mood="deep"] .orb-three { opacity: 0.22; }
   height: 680px;
   right: -240px;
   top: 40px;
-  --drift: -26px;
   background: radial-gradient(closest-side, rgba(30, 120, 255, 0.28), rgba(30, 120, 255, 0));
-  animation: floatOrb 19s ease-in-out infinite reverse;
 }
 
 .orb-three {
@@ -262,7 +243,6 @@ body[data-mood="deep"] .orb-three { opacity: 0.22; }
   bottom: -320px;
   left: calc(50% - 380px);
   background: radial-gradient(closest-side, rgba(40, 190, 240, 0.16), rgba(40, 190, 240, 0));
-  animation: floatOrb 22s ease-in-out infinite;
 }
 
 @keyframes floatOrb {
@@ -472,11 +452,11 @@ body[data-mood="deep"] .orb-three { opacity: 0.22; }
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  background: rgba(8, 18, 38, 0.66);
+  background: rgba(8, 18, 38, 0.82);
   border: 1px solid var(--border);
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
-  -webkit-backdrop-filter: blur(16px) saturate(150%);
-  backdrop-filter: blur(16px) saturate(150%);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
   transition: background-color 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
 }
 

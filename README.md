@@ -11,9 +11,9 @@ Static HTML/CSS/JS with no build step. Pushing to `main` deploys to Vercel autom
 | `index.html` | All page sections |
 | `style.css` | Styles (design tokens first, then one banner per section) |
 | `script.js` | Navigation, reveals, contact form, experience accordion, Lead Rush game |
-| `scroll-fx.js` | Split headings, hero motion, Lenis smooth scroll, GSAP/ScrollTrigger scenes |
+| `scroll-fx.js` | Split headings, hero motion, GSAP/ScrollTrigger scenes |
 | `work.js` | Work data, 3D carousel, gallery filters, lightbox |
-| `bg-flow.js` | Animated background lines |
+| `bg-flow.js` | Animated background lines (lightweight canvas) |
 | `samurai-intro.js/.css` | Intro animation (once per session) |
 | `images/work/` | Portfolio pieces |
 | `videos/` | Showreel, plus `anim/` for the animated explainer videos (720p web encodes + posters) |
@@ -32,12 +32,14 @@ Static HTML/CSS/JS with no build step. Pushing to `main` deploys to Vercel autom
   - Contact and footer: the closing line rises word by word, the wordmark letter by letter
 - Scroll scenes only touch `transform`, `opacity`, `clip-path` and CSS variables. `gsap.matchMedia` keeps the
   pinned and heavier scenes off phones.
-- Lenis smooth scroll runs on mouse/trackpad devices only; touch keeps native scrolling.
+- Native scrolling everywhere (no smooth-scroll library) so the page answers the wheel instantly.
+- The background canvas runs at 1x resolution and 30 fps, pauses while scrolling, and is a static frame on phones.
+- The background glows are static gradients (no loops, no cursor follow).
 - Everything respects `prefers-reduced-motion`: content is fully visible and nothing is pinned or scrubbed.
 
 ## Libraries (CDN)
 
-GSAP + ScrollTrigger, Lenis, Font Awesome, Google Fonts (Sora, Inter).
+GSAP + ScrollTrigger, Font Awesome (loaded non-blocking), Google Fonts (Sora, Inter).
 
 ## Local preview
 

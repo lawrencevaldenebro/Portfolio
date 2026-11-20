@@ -52,7 +52,11 @@
     rel="stylesheet">
   <link rel="preload" as="image" href="./images/formal.webp" fetchpriority="high">
   <link rel="stylesheet" href="style.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  <!-- Icons load without blocking the first paint -->
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" /></noscript>
 
   <!-- Samurai slash intro -->
   <link rel="stylesheet" href="./samurai-intro.css" />
@@ -61,10 +65,9 @@
   <!-- Animated flowing-lines background -->
   <script src="./bg-flow.js" defer></script>
 
-  <!-- Scroll animations: GSAP + ScrollTrigger, Lenis smooth scroll -->
+  <!-- Scroll animations: GSAP + ScrollTrigger -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
-  <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js" defer></script>
   <script src="./scroll-fx.js" defer></script>
   <script src="./work.js" defer></script>
 </head>
@@ -857,7 +860,7 @@
   <div class="form-modal" id="formModal">
     <div class="form-overlay" id="closeForm"></div>
 
-    <div class="form-box" data-lenis-prevent>
+    <div class="form-box">
       <button class="form-close" id="closeFormBtn" type="button" aria-label="Close">&times;</button>
 
       <h3>Let's Connect</h3>
@@ -975,7 +978,7 @@
   </div>
 
   <!-- Work lightbox (filled by work.js) -->
-  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Work viewer" aria-hidden="true" data-lenis-prevent>
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Work viewer" aria-hidden="true">
     <div class="lb-backdrop"></div>
     <button type="button" class="lb-close" aria-label="Close"><i class="fas fa-xmark"></i></button>
     <button type="button" class="lb-arrow lb-prev" aria-label="Previous"><i class="fas fa-arrow-left"></i></button>

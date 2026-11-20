@@ -466,29 +466,6 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   /* =========================================================
-     11. PARALLAX BACKGROUND ORBS
-     - Whole background layer drifts slightly with the cursor
-  ========================================================= */
-  const pageBg = document.querySelector(".page-bg");
-  const calmMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-  if (pageBg && !calmMotion && window.matchMedia("(pointer: fine)").matches) {
-    let bgTicking = false;
-
-    window.addEventListener("mousemove", (event) => {
-      if (bgTicking) return;
-      bgTicking = true;
-
-      requestAnimationFrame(() => {
-        // The colour fields read these and ease toward them in CSS.
-        pageBg.style.setProperty("--bx", ((event.clientX / window.innerWidth - 0.5) * 2).toFixed(3));
-        pageBg.style.setProperty("--by", ((event.clientY / window.innerHeight - 0.5) * 2).toFixed(3));
-        bgTicking = false;
-      });
-    }, { passive: true });
-  }
-
-  /* =========================================================
      11b. BACKGROUND MOOD
      - The colour fields behind the page shift with the section
        crossing the middle of the screen

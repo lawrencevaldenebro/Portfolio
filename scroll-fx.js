@@ -4,7 +4,7 @@
    1. SPLIT HEADINGS (word-by-word rise, CSS driven)
    2. LIVE COUNTS
    3. HERO (headline fit, kinetic word, pointer depth, ticker)
-   4. LENIS SMOOTH SCROLL
+   4. NATIVE SCROLL (no smooth-scroll library)
    5. GSAP SCROLL SCENES
    ---------------------------------------------------------
    Everything degrades gracefully: if the CDN libraries fail
@@ -203,96 +203,11 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   /* =========================================================
-     4. LENIS SMOOTH SCROLL
-     - Desktop only (touch devices keep native momentum)
-     - Pauses while the intro or contact modal is open
+     4. NATIVE SCROLL
+     - No smooth-scroll library: the browser's own scrolling is the
+       most responsive. In-page links glide via CSS scroll-behavior,
+       and section[id] carries scroll-margin-top for the header.
   ========================================================= */
-  let lenis = null;
-
-  if (typeof window.Lenis !== "undefined" && finePointer && !reduceMotion) {
-    lenis = new window.Lenis({
-      duration: 1.15,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      smoothWheel: true
-    });
-
-    let lenisStopped = false;
-
-    function syncLenisLock() {
-      const locked =
-        document.body.classList.contains("modal-open") ||
-        document.documentElement.style.overflow === "hidden";
-
-      if (locked && !lenisStopped) {
-        lenis.stop();
-        lenisStopped = true;
-      } else if (!locked && lenisStopped) {
-        lenis.start();
-        lenisStopped = false;
-      }
-    }
-
-    if (hasGsap) {
-      lenis.on("scroll", window.ScrollTrigger.update);
-      window.gsap.ticker.add((time) => {
-        syncLenisLock();
-        lenis.raf(time * 1000);
-      });
-      window.gsap.ticker.lagSmoothing(0);
-    } else {
-      const raf = (time) => {
-        syncLenisLock();
-        lenis.raf(time);
-        requestAnimationFrame(raf);
-      };
-      requestAnimationFrame(raf);
-    }
-
-    // Smooth in-page anchor links, offset for the floating header.
-    document.addEventListener("click", (event) => {
-      const link = event.target.closest('a[href^="#"]');
-      if (!link) return;
-
-      const id = link.getAttribute("href");
-      if (id.length < 2) return;
-
-      const target = document.querySelector(id);
-      if (!target) return;
-
-      event.preventDefault();
-      lenis.scrollTo(target, { offset: id === "#home" ? 0 : -84 });
-    });
-
-    // Marquees lean into the scroll: they speed up while the page is moving.
-    const loopTracks = Array.from(document.querySelectorAll(".ticker-track.is-looped, .stack-track.is-looped"));
-
-    if (loopTracks.length && typeof loopTracks[0].getAnimations === "function") {
-      let rate = 1;
-      let targetRate = 1;
-      let loopAnimations = null;
-
-      lenis.on("scroll", (instance) => {
-        const velocity = Math.abs(instance.velocity || 0);
-        targetRate = 1 + Math.min(6, velocity * 0.18);
-      });
-
-      const easeRate = () => {
-        if (!loopAnimations) {
-          loopAnimations = loopTracks.map((track) => track.getAnimations()[0]).filter(Boolean);
-        }
-
-        targetRate += (1 - targetRate) * 0.06;
-        rate += (targetRate - rate) * 0.12;
-
-        loopAnimations.forEach((animation) => {
-          if (Math.abs(animation.playbackRate - rate) > 0.01) animation.playbackRate = rate;
-        });
-
-        requestAnimationFrame(easeRate);
-      };
-      requestAnimationFrame(easeRate);
-    }
-  }
 
   /* =========================================================
      5. GSAP SCROLL SCENES

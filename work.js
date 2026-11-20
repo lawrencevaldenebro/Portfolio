@@ -98,7 +98,6 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll("svg.work-morph").forEach((svg) => svg.pauseAnimations?.());
   }
 
-  // Full-size image (viewer + carousel) and a small WebP for gallery tiles.
   // Items with `av1: true` also ship an .av1.mp4 (about half the size);
   // browsers without AV1 fall back to the H.264 file.
   const AV1 = 'video/mp4; codecs="av01.0.05M.08"';
@@ -106,6 +105,7 @@ document.addEventListener("DOMContentLoaded", () => {
     ? `<source src="${item.video}" type="video/mp4">`
     : `<source src="${item.video.replace(/\.mp4$/, ".av1.mp4")}" type='${AV1}'><source src="${item.video}" type="video/mp4">`;
 
+  // Full-size image (viewer + carousel) and a small WebP for gallery tiles.
   const imgUrl = (item) => item.poster || `${IMG}${item.src}.webp`;
   const thumbUrl = (item) => item.thumb || (item.poster ? item.poster : `${IMG}thumb/${item.src}.webp`);
 

@@ -21,7 +21,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const ANIM = "./videos/anim/";
 
   // Animated explainer videos (vertical 9:16, self-hosted)
-  const anim = (src, title) => ({ src, type: "anim", title, video: `${ANIM}${src}.mp4`, poster: `${ANIM}${src}.jpg`, w: 720, h: 1280 });
+  const anim = (src, title) => ({ src, type: "anim", title, video: `${ANIM}${src}.mp4`, poster: `${ANIM}${src}.webp`, thumb: `${ANIM}thumb/${src}.webp`, w: 720, h: 1280 });
   const vad = (src, title) => ({ ...anim(src, title), type: "vad" });
 
   const WORK = [
@@ -97,7 +97,9 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll("svg.work-morph").forEach((svg) => svg.pauseAnimations?.());
   }
 
-  const imgUrl = (item) => item.poster || `${IMG}${item.src}.jpg`;
+  // Full-size image (viewer + carousel) and a small WebP for gallery tiles.
+  const imgUrl = (item) => item.poster || `${IMG}${item.src}.webp`;
+  const thumbUrl = (item) => item.thumb || (item.poster ? item.poster : `${IMG}thumb/${item.src}.webp`);
 
   /* =========================================================
      4. LIGHTBOX (defined first — coverflow + gallery open it)
@@ -204,7 +206,7 @@ document.addEventListener("DOMContentLoaded", () => {
     cfStage.innerHTML = SHOWCASE.map((item, i) => `
       <button type="button" class="cf-card${item.video ? " is-reel" : ""}" data-i="${i}" aria-label="${item.title}">
         ${item.video
-          ? `<video src="${item.video}" poster="${item.poster}" muted loop playsinline preload="metadata" aria-hidden="true"></video>`
+          ? `<video src="${item.video}" poster="${item.poster}" muted loop playsinline preload="none" aria-hidden="true"></video>`
           : `<img src="${imgUrl(item)}" alt="" loading="lazy" decoding="async" />`}
         <span class="cf-shine" aria-hidden="true"></span>
       </button>`).join("");
@@ -368,7 +370,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     grid.innerHTML = visible.map((item, i) => `
       <button type="button" class="work-tile${item.drive || item.video ? " is-video" : ""}" data-i="${i}" style="--d:${(i % PAGE) * 55}ms">
-        <img src="${imgUrl(item)}" alt="${item.title}" width="${item.w}" height="${item.h}" loading="lazy" decoding="async" />
+        <img src="${thumbUrl(item)}" alt="${item.title}" width="${item.w}" height="${item.h}" loading="lazy" decoding="async" />
         ${item.drive || item.video ? '<span class="tile-play" aria-hidden="true"><i class="fas fa-play"></i></span>' : ""}
         <span class="tile-info">
           <span class="tile-type"><i class="fas ${TYPE_ICON[item.type]}"></i> ${TYPE_LABEL[item.type]}</span>

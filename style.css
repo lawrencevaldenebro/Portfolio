@@ -123,8 +123,10 @@ img {
 }
 
 /* =========================================================
-   3. BACKGROUND EFFECTS
-   - Fixed futuristic page glow and grid
+   3. BACKGROUND
+   - One still layer: deep navy, three soft colour glows and a
+     faint grid that fades out down the screen. Nothing animates,
+     so it costs nothing while scrolling.
 ========================================================= */
 .page-bg {
   position: fixed;
@@ -132,67 +134,22 @@ img {
   pointer-events: none;
   overflow: hidden;
   z-index: -2;
-  transition: transform 0.6s ease-out;
-  will-change: transform;
+  background:
+    radial-gradient(60% 45% at 8% 0%, rgba(102, 60, 255, 0.22), transparent 70%),
+    radial-gradient(55% 40% at 95% 12%, rgba(33, 110, 255, 0.18), transparent 70%),
+    radial-gradient(70% 50% at 50% 110%, rgba(40, 190, 240, 0.12), transparent 70%),
+    linear-gradient(180deg, #050b18 0%, #071225 55%, #081630 100%);
 }
 
 .bg-grid {
   position: absolute;
   inset: 0;
   background-image:
-    linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-  background-size: 42px 42px;
-  mask-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.45), transparent 80%);
-}
-
-#bg-flow-canvas {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  display: block;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  #bg-flow-canvas {
-    opacity: 0.6;
-  }
-}
-
-.bg-orb {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(100px);
-  opacity: 0.35;
-}
-
-.orb-one {
-  width: 320px;
-  height: 320px;
-  background: rgba(102, 1, 255, 0.34);
-  top: 90px;
-  left: -60px;
-  animation: floatOrb 10s ease-in-out infinite;
-}
-
-.orb-two {
-  width: 280px;
-  height: 280px;
-  background: rgba(33, 92, 255, 0.24);
-  right: -40px;
-  top: 140px;
-  animation: floatOrb 12s ease-in-out infinite reverse;
-}
-
-.orb-three {
-  width: 280px;
-  height: 280px;
-  background: rgba(124, 179, 255, 0.16);
-  bottom: 40px;
-  left: 50%;
-  transform: translateX(-50%);
-  animation: floatOrb 14s ease-in-out infinite;
+    linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+  background-size: 48px 48px;
+  -webkit-mask-image: radial-gradient(ellipse 85% 70% at 50% 0%, #000 25%, transparent 75%);
+  mask-image: radial-gradient(ellipse 85% 70% at 50% 0%, #000 25%, transparent 75%);
 }
 
 @keyframes floatOrb {
@@ -2322,7 +2279,7 @@ html.has-lenis {
 /* ---------- Services ---------- */
 .services-grid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 18px;
 }
 
@@ -2333,6 +2290,13 @@ html.has-lenis {
 .service-card {
   padding: 24px;
   border-radius: 22px;
+}
+
+/* Five per row on wide screens: a touch less padding so titles fit */
+@media (min-width: 1181px) {
+  .service-card {
+    padding: 22px 20px;
+  }
 }
 
 .service-card:hover {

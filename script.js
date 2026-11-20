@@ -570,20 +570,6 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   /* =========================================================
-     11. PARALLAX BACKGROUND ORBS
-     - Whole background layer drifts slightly with the cursor
-  ========================================================= */
-  const pageBg = document.querySelector(".page-bg");
-
-  if (pageBg && window.matchMedia("(pointer: fine)").matches) {
-    window.addEventListener("mousemove", (event) => {
-      const px = (event.clientX / window.innerWidth - 0.5) * 30;
-      const py = (event.clientY / window.innerHeight - 0.5) * 30;
-      pageBg.style.transform = `translate(${px}px, ${py}px)`;
-    });
-  }
-
-  /* =========================================================
      12. SKILLS MARQUEE
      - Duplicates the skill pills so the CSS marquee loop is seamless
   ========================================================= */

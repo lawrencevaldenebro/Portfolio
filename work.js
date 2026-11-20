@@ -78,7 +78,7 @@ document.addEventListener("DOMContentLoaded", () => {
     src: "showreel",
     type: "reel",
     title: "Showreel",
-    video: "./videos/showreel.mp4",
+    video: "./videos/showreel-2026.mp4",
     poster: "./videos/showreel-poster.jpg",
     hold: 25300,
     w: 1280,

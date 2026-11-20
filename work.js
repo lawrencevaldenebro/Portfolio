@@ -80,7 +80,7 @@ document.addEventListener("DOMContentLoaded", () => {
     title: "Showreel",
     video: "./videos/showreel.mp4",
     poster: "./videos/showreel-poster.jpg",
-    hold: 18000,
+    hold: 25300,
     w: 1280,
     h: 800
   };

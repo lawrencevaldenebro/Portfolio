@@ -2280,7 +2280,7 @@ img {
 /* ---------- Services ---------- */
 .services-grid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 18px;
 }
 
@@ -2293,6 +2293,13 @@ img {
   border-radius: 22px;
 }
 
+
+/* Five per row on wide screens: a touch less padding so titles fit */
+@media (min-width: 1181px) {
+  .service-card {
+    padding: 22px 20px;
+  }
+}
 
 .service-card:hover {
   border-color: rgba(135, 190, 255, 0.34);
@@ -3306,7 +3313,7 @@ img {
 
 .pricing-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 18px;
   align-items: stretch;
 }
@@ -3392,6 +3399,22 @@ img {
   color: #8fe6ff;
 }
 
-@media (max-width: 860px) {
+.price-note {
+  margin-top: auto;
+  padding-top: 14px;
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+@media (max-width: 1180px) {
+  .pricing-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 26px 18px; }
+}
+
+@media (max-width: 640px) {
   .pricing-grid { grid-template-columns: 1fr; }
+}
+
+/* Five services on a 2-column grid: the lead card spans the full row */
+@media (max-width: 1180px) {
+  .services-grid .service-card:first-child { grid-column: 1 / -1; }
 }
